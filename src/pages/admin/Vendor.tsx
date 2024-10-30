@@ -67,9 +67,9 @@ const Vendor = () => {
 						table.getColumn("store_name")?.setFilterValue(e)
 					}
 					mainStyle="max-w-[450px]"
-					placeholder="Search vendors by store name"
+					placeholder="Search vendors by store"
 				/>
-                <div className="flex items-center gap-4">
+				<div className="flex items-center gap-4">
 					<Popover>
 						<PopoverTrigger
 							asChild

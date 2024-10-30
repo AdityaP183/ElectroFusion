@@ -38,7 +38,7 @@ const Dashboard = () => {
 		() =>
 			categoriesData
 				.sort((a, b) => b.itemsSold - a.itemsSold)
-				.slice(0, 7),
+				.slice(0, 8),
 		[]
 	);
 

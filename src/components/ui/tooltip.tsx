@@ -29,22 +29,39 @@ const TooltipWrapper = ({
 	trigger,
 	content,
 	className,
+	arrowClassName,
 	side = "top",
 	sideOffset = 3,
+	isHidden = false,
 }: {
 	trigger: React.ReactNode;
 	content: React.ReactNode;
 	className?: string;
+	arrowClassName?: string;
 	side?: "top" | "right" | "bottom" | "left";
 	sideOffset?: number;
+	isHidden?: boolean;
 }) => {
 	return (
 		<TooltipProvider>
 			<Tooltip delayDuration={200}>
 				<TooltipTrigger asChild>{trigger}</TooltipTrigger>
-				<TooltipContent side={side} sideOffset={sideOffset} className={cn("bg-secondary bg-opacity-80 text-primary", className)}>
+				<TooltipContent
+					side={side}
+					sideOffset={sideOffset}
+					className={cn(
+						`bg-secondary bg-opacity-80 text-primary ${
+							isHidden && "hidden"
+						}`,
+						className
+					)}
+				>
 					{content}
-                    <TooltipPrimitive.Arrow className="fill-secondary" width={10} height={8}/>
+					<TooltipPrimitive.Arrow
+						className={cn("fill-secondary", arrowClassName)}
+						width={10}
+						height={8}
+					/>
 				</TooltipContent>
 			</Tooltip>
 		</TooltipProvider>

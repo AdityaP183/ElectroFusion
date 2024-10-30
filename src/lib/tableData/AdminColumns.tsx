@@ -43,8 +43,11 @@ export const AdminCategoryColumns: ColumnDef<Categories>[] = [
 
 export const AdminOrderColumns: ColumnDef<Orders>[] = [
 	{
-		accessorKey: "id",
-		header: "Id",
+		accessorKey: "rowId",
+		header: "No.",
+		cell: ({ row }) => {
+			return <div className="px-2">{row.index + 1}</div>;
+		},
 	},
 	{
 		accessorKey: "productName",

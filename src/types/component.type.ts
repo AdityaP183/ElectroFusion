@@ -51,7 +51,7 @@ export type ChartWrapperProps =
 	| { data?: unknown; type: "line" };
 
 export type SalesType = {
-    id?: string;
+	id?: string;
 	date: string;
 	sales: number;
 	profit: number;
@@ -74,47 +74,52 @@ export type Categories = {
 };
 
 export type Products = {
-    id: string;
-    productName: string;
-    category: string;
-    stock: number;
-    price: number;
-    image: string;
-}
+	id: string;
+	productName: string;
+	category: string;
+	stock: number;
+	price: number;
+	image: string;
+};
 
 export type UserRoles = "admin" | "vendor" | "customer" | undefined;
 
 export type User = {
-    id: string;
-    username: string;
-    email: string;
-    password: string;
-    first_name: string;
-    last_name: string;
-    address?: string;
-    phone_number?: string;
-    role: UserRoles;
-    avatar?: string;
-}
-
-// export type Customers = {
-    
-// }
+	id: string;
+	username: string;
+	email: string;
+	password: string;
+	first_name: string;
+	last_name: string;
+	address?: string;
+	phone_number?: string;
+	role: UserRoles;
+	avatar?: string;
+};
 
 export type Vendors = {
-    id: string;
-    owner: User;
-    store_name: string;
-    store_description?: string;
-    store_logo?: string;
-    store_address?: string;
-    monthly_sales?: number;
-}
+	id: string;
+	owner: User;
+	store_name: string;
+	store_description?: string;
+	store_logo?: string;
+	store_address?: string;
+	monthly_sales?: number;
+};
 
 export type TableWrapperProps<TData> = {
 	table: Table<TData>;
 	columnsLength: number;
 	height?: number;
-    tableHeaderStyle?: string;
-    tableCellStyle?: string;
+	tableHeaderStyle?: string;
+	tableCellStyle?: string;
+};
+
+export type CouponT = {
+	id: string;
+	code: string;
+	discount: number;
+	category: string;
+	description: string;
+	expire_date: string;
 };

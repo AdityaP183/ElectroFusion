@@ -1,5 +1,6 @@
 import {
 	Categories,
+	CouponT,
 	DashboardOverview,
 	Orders,
 	Products,
@@ -125,7 +126,7 @@ export const salesData = Array.from({ length: 20 }, () => {
 	// const profit = Math.floor(Math.random() * sales); // Generate profit that is less than sales
 
 	return {
-        id: faker.database.mongodbObjectId(),
+		id: faker.database.mongodbObjectId(),
 		date: faker.date.past().toISOString(),
 		sales: faker.number.int({ min: 100, max: 1000 }),
 		profit: faker.number.int({ min: 100, max: 1000 }),
@@ -237,3 +238,44 @@ export const customersData: Array<User & { orders: number }> = Array.from(
 		};
 	}
 );
+
+const couponsDesc = [
+	"Black Friday Discount",
+	"Summer Sale",
+	"Winter Sale",
+	"New Year Sale",
+	"Halloween Sale",
+	"Christmas Sale",
+	"Thanksgiving Sale",
+	"Easter Sale",
+	"Valentine's Day Sale",
+	"Mother's Day Sale",
+];
+
+export const couponsData: CouponT[] = Array.from({ length: 5 }, () => {
+	const number = String(Math.floor(Math.random() * 50)).padStart(2, "0");
+	const code =
+		faker.helpers.arrayElement([
+			"OFF",
+			"SALE",
+			"GET",
+			"DISCOUNT",
+			"FREE",
+			"REDUCE",
+		]) + number;
+
+	return {
+		id: faker.database.mongodbObjectId(),
+		code,
+		discount: Math.floor(Math.random() * 50),
+		category: faker.helpers.arrayElement([
+			"Phones",
+			"Laptops",
+			"Headphones",
+			"Watches",
+			"Tablets",
+		]),
+		description: faker.helpers.arrayElement(couponsDesc),
+		expire_date: faker.date.future().toISOString(),
+	};
+});

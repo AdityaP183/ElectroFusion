@@ -7,6 +7,7 @@ import AdminRoutes from "./layouts/routes/AdminRoutes";
 import ProtectedRoute from "./layouts/routes/ProtectedRoute";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import Colors from "./pages/Colors";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ const App = () => {
 					<Router>
 						<Routes>
 							<Route path="/" element={<Home />} />
+							<Route path="/colors" element={<Colors />} />
 							<Route path="/register" element={<Register />} />
 							<Route path="/login" element={<Login />} />
 							<Route path="/contact" element={<ContactUs />} />
@@ -44,7 +46,7 @@ const App = () => {
 						</Routes>
 					</Router>
 
-                    {/* <ReactQueryDevtools initialIsOpen={false} position="bottom" buttonPosition="bottom-left"/> */}
+					{/* <ReactQueryDevtools initialIsOpen={false} position="bottom" buttonPosition="bottom-left"/> */}
 				</QueryClientProvider>
 			</ThemeDataProvider>
 		</ThemeProvider>
