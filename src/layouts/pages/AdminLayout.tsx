@@ -1,6 +1,6 @@
 import TopBar from "@/components/app/common/dashboard/TopBar";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
 	Sidebar,
 	SidebarContent,
@@ -29,6 +29,8 @@ import { ChevronsUpDown, Cog, Database, Home, LogOut } from "lucide-react";
 
 const AdminLayout = () => {
 	const { pathname } = useLocation();
+	const navigate = useNavigate();
+
 	return (
 		<div className="block w-full h-screen gap-1 md:flex">
 			<SidebarProvider>
@@ -145,15 +147,35 @@ const AdminLayout = () => {
 										</DropdownMenuLabel>
 										<DropdownMenuSeparator />
 										<DropdownMenuGroup>
-											<DropdownMenuItem>
+											<DropdownMenuItem
+												onClick={() =>
+													navigate("/", {
+														replace: true,
+													})
+												}
+											>
 												<Home />
 												Back to Site
 											</DropdownMenuItem>
-											<DropdownMenuItem>
+											<DropdownMenuItem
+												onClick={() =>
+													window.open(
+														"https://cloud.appwrite.io/console/",
+														"_blank"
+													)
+												}
+											>
 												<Database />
 												Database
 											</DropdownMenuItem>
-											<DropdownMenuItem>
+											<DropdownMenuItem
+												onClick={() =>
+													navigate(
+														"/admin/settings",
+														{ replace: true }
+													)
+												}
+											>
 												<Cog />
 												Settings
 											</DropdownMenuItem>
@@ -170,11 +192,11 @@ const AdminLayout = () => {
 					</SidebarFooter>
 				</Sidebar>
 				<SidebarInset>
-					<Card className="h-screen rounded-none">
+					<Card className="h-screen p-0 rounded-none">
 						<CardHeader className="px-3 py-3 border-b md:px-5 border-border">
 							<TopBar />
 						</CardHeader>
-						<CardContent className="h-[calc(100%-80px)] w-full overflow-hidden overflow-y-auto">
+						<CardContent className="h-[calc(100%-80px)] w-full overflow-hidden overflow-y-auto py-0">
 							<Outlet />
 						</CardContent>
 					</Card>

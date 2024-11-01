@@ -2,11 +2,11 @@ import { useTheme } from "next-themes";
 
 const colors = [
 	"accent",
-	"accentForeground",
+	"accent-foreground",
 	"background",
 	"border",
 	"card",
-	"cardForeground",
+	"card-foreground",
 	"chart1",
 	"chart2",
 	"chart3",
@@ -14,6 +14,8 @@ const colors = [
 	"chart5",
 	"destructive",
 	"destructiveForeground",
+	"success",
+	"successForeground",
 	"foreground",
 	"input",
 	"muted",
@@ -38,7 +40,6 @@ const Colors = () => {
 						<div
 							key={color}
 							className={`flex items-center justify-center w-10 h-10 rounded-full bg-${color}`}
-							// style={{ background: `var(--${color})` }}
 						/>
 					))}
 				</div>

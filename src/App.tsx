@@ -5,14 +5,15 @@ import { AboutUs, ContactUs, Home, Login, Register } from "./pages/common";
 import ProductDetails from "./pages/common/ProductDetails";
 import AdminRoutes from "./layouts/routes/AdminRoutes";
 import ProtectedRoute from "./layouts/routes/ProtectedRoute";
+import { Toaster } from "react-hot-toast";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Colors from "./pages/Colors";
+import { toastOptions } from "./lib/utils";
 
 const queryClient = new QueryClient();
 
 const App = () => {
-
 	return (
 		<ThemeProvider
 			defaultTheme="dark"
@@ -45,7 +46,7 @@ const App = () => {
 							/>
 						</Routes>
 					</Router>
-
+					<Toaster toastOptions={toastOptions} />
 					{/* <ReactQueryDevtools initialIsOpen={false} position="bottom" buttonPosition="bottom-left"/> */}
 				</QueryClientProvider>
 			</ThemeDataProvider>

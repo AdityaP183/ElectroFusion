@@ -10,6 +10,7 @@ import {
 	Sales,
 	Vendor,
 } from "@/pages/admin";
+import { Settings } from "@/pages/common";
 
 const AdminRoutes = () => {
 	return (
@@ -17,6 +18,8 @@ const AdminRoutes = () => {
 			<Route path="/" element={<AdminLayout />}>
 				<Route index element={<Navigate to="dashboard" />} />
 				<Route path="dashboard" element={<Dashboard />} />
+
+				<Route path="settings" element={<Settings />} />
 
 				<Route path="products" element={<Products />} />
 				<Route path="product/:id" element={<h1>Product Details</h1>} />

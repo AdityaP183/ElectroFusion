@@ -10,3 +10,6 @@ export { default as ContactUs } from "./details/ContactUs";
 
 // Exporting the Home component
 export { default as Home } from "./Home";
+
+// Exporting components from the main directory
+export { default as Settings } from "./settings/Settings";
