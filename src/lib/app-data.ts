@@ -24,7 +24,7 @@ export const tempUser: User = {
 	id: "8d3902ed0efcb0fb1ef884c3",
 	username: "iambatman18",
 	email: "iambatman@google.com",
-	role: "admin",
+	role: "vendor",
 	password: "testuser",
 	first_name: "Bruce",
 	last_name: "Wayne",
@@ -114,20 +114,28 @@ export const userCountData: UserCount = {
 	vendors: { label: "vendors", value: 4000 },
 };
 
-export const salesData = Array.from({ length: 20 }, () => {
-	// const date = new Date();
-	// date.setHours(date.getHours() - (11 - index));
+export const salesData = Array.from({ length: 24 }, () => {
+	const hour = faker.number.int({ min: 0, max: 11 }); // 12 AM to 11 AM
+	const minute = faker.number.int({ min: 0, max: 59 }); // Random minute
 
-	// const hours = date.getHours() % 12 || 12; // 12-hour format
-	// const period = date.getHours() < 12 ? "AM" : "PM"; // Determine AM/PM
-	// const time = `${hours}:00 ${period}`; // Construct time string
-
-	// const sales = Math.floor(Math.random() * 1000); // Generate random sales
-	// const profit = Math.floor(Math.random() * sales); // Generate profit that is less than sales
-
+	// Format the time as "hh:mm AM/PM"
+	const formattedTime = new Date()
+		.toLocaleTimeString("en-US", {
+			hour: "numeric",
+			minute: "numeric",
+			hour12: true,
+			hourCycle: "h12",
+		})
+		.replace(
+			/\d{1,2}:\d{2} (AM|PM)/,
+			(_, ampm) =>
+				`${hour === 0 ? 12 : hour}:${minute
+					.toString()
+					.padStart(2, "0")} ${ampm}`
+		);
 	return {
 		id: faker.database.mongodbObjectId(),
-		date: faker.date.past().toISOString(),
+		date: formattedTime,
 		sales: faker.number.int({ min: 100, max: 1000 }),
 		profit: faker.number.int({ min: 100, max: 1000 }),
 	};
@@ -279,3 +287,74 @@ export const couponsData: CouponT[] = Array.from({ length: 5 }, () => {
 		expire_date: faker.date.future().toISOString(),
 	};
 });
+
+//* --------------------- Vendors Data -----------------------
+export const vendorData: Vendors = {
+	id: "8d3902ed0efcb0fb1ef884c3",
+	owner: tempUser,
+	store_name: "Satan's Classic",
+	store_address: "Test Store Address",
+	monthly_sales: 2000000,
+};
+
+export const vendorSidebarItems: SidebarItem[] = [
+	{
+		name: "Dashboard",
+		path: "/vendor/dashboard",
+		icon: LayoutDashboard,
+	},
+	{
+		name: "Sales",
+		path: "/vendor/sales",
+		icon: ChartLine,
+	},
+	{
+		name: "Products",
+		path: "/vendor/products",
+		icon: Package,
+	},
+	{
+		name: "Orders",
+		path: "/vendor/orders",
+		icon: ShoppingCart,
+	},
+];
+
+export const vendorsOverviewData: DashboardOverview = {
+	totalNewUsers: {
+		id: "users",
+		title: "New Customers",
+		value: 300,
+		comparsion: {
+			type: "increase",
+			value: 3.5,
+		},
+	},
+	totalProducts: {
+		id: "products",
+		title: "Products Sold",
+		value: 1920,
+		comparsion: {
+			type: "decrease",
+			value: 1.3,
+		},
+	},
+	totalRevenue: {
+		id: "revenue",
+		title: "Revenue Generated",
+		value: 319200,
+		comparsion: {
+			type: "increase",
+			value: 2.5,
+		},
+	},
+	totalProfit: {
+		id: "profit",
+		title: "Profit Gained",
+		value: 39200,
+		comparsion: {
+			type: "increase",
+			value: 2.5,
+		},
+	},
+};

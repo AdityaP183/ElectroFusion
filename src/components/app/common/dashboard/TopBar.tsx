@@ -7,7 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { TooltipWrapper } from "@/components/ui/tooltip";
 import { useState } from "react";
 
-const TopBar = () => {
+const TopBar = ({ title = "" }: { title?: string }) => {
 	const [search, setSearch] = useState<string>("");
 	const isMobile = useIsMobile();
 
@@ -16,9 +16,7 @@ const TopBar = () => {
 			<div className="items-center hidden gap-2 welcome lg:flex">
 				<TooltipWrapper
 					trigger={
-						<SidebarTrigger
-							className="hover:bg-transparent"
-						/>
+						<SidebarTrigger className="hover:bg-transparent" />
 					}
 					content={
 						<div className="flex items-center gap-2 p-1">
@@ -37,10 +35,18 @@ const TopBar = () => {
 					side="right"
 				/>
 				<Separator className="h-6" orientation="vertical" />
-				<h1 className="text-2xl">
-					Good to see you,{" "}
-					<span className="font-medium">{tempUser.first_name}</span>
-				</h1>
+				{title ? (
+					<h1 className="text-2xl font-bold font-playfair">
+						{title}
+					</h1>
+				) : (
+					<h1 className="text-2xl">
+						Good to see you,{" "}
+						<span className="font-medium">
+							{tempUser.first_name}
+						</span>
+					</h1>
+				)}
 			</div>
 
 			<div className="flex items-center justify-between w-full gap-6 lg:w-auto lg:justify-normal">
@@ -58,7 +64,12 @@ const TopBar = () => {
 						<SidebarTrigger className="hover:bg-transparent" />
 					</>
 				)}
-				{!isMobile && <Searchbar searchValue={search} onSearchValueChange={setSearch} />}
+				{!isMobile && (
+					<Searchbar
+						searchValue={search}
+						onSearchValueChange={setSearch}
+					/>
+				)}
 			</div>
 		</div>
 	);

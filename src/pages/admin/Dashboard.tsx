@@ -17,7 +17,10 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { formatValueWithIndianNumericPrefix } from "@/lib/utils";
+import {
+	formatValueWithIndianNumericPrefix,
+	isValidDuration,
+} from "@/lib/utils";
 import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import {
 	AdminCategoryColumns,
@@ -27,10 +30,6 @@ import { TableWrapper } from "@/components/ui/table";
 
 const Dashboard = () => {
 	const [filter, setFilter] = useState<DashboardDuration>("half-day");
-
-	const isValidDuration = (value: string): value is DashboardDuration => {
-		return ["half-day", "week", "month", "year"].includes(value);
-	};
 
 	const filteredSalesData = useMemo(() => salesData.slice(0, 12), []);
 
@@ -67,8 +66,8 @@ const Dashboard = () => {
 	});
 
 	return (
-		<div className="">
-			<div className="sticky top-0 z-10 flex items-start py-2 bg-background top-filter">
+		<div>
+			<div className="sticky top-0 z-10 flex items-start py-2 bg-background">
 				<ToggleGroup
 					type="single"
 					value={filter}
@@ -98,7 +97,6 @@ const Dashboard = () => {
 			</div>
 
 			<div className="grid grid-cols-3 grid-rows-3 my-3 gap-x-3 gap-y-4 lg:grid-cols-4">
-
 				{/* User Separation Radial Chart */}
 				<Card className="flex flex-col w-full bg-transparent border shadow-md glass dark:bg-secondary/40 border-border">
 					<CardHeader className="px-6 pt-6 pb-0 text-center h-fit">

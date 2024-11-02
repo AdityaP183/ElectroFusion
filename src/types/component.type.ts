@@ -20,7 +20,8 @@ export type DashboardOverviewItem = {
 export type DashboardDuration = "half-day" | "week" | "month" | "year";
 
 export type DashboardOverview = {
-	totalUsers: DashboardOverviewItem;
+	totalUsers?: DashboardOverviewItem;
+	totalNewUsers?: DashboardOverviewItem;
 	totalRevenue: DashboardOverviewItem;
 	totalProducts: DashboardOverviewItem;
 	totalProfit: DashboardOverviewItem;

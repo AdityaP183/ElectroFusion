@@ -10,6 +10,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Colors from "./pages/Colors";
 import { toastOptions } from "./lib/utils";
+import VendorRoutes from "./layouts/routes/VendorRoutes";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +42,15 @@ const App = () => {
 								element={
 									<ProtectedRoute>
 										<AdminRoutes />
+									</ProtectedRoute>
+								}
+							/>
+
+							<Route
+								path="/vendor/*"
+								element={
+									<ProtectedRoute>
+										<VendorRoutes />
 									</ProtectedRoute>
 								}
 							/>

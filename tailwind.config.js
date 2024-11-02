@@ -8,6 +8,7 @@ export default {
 				sans: ['Roboto"', "sans-serif"],
 				exo: ["Exo 2", "sans-serif"],
 				ox: ["Oxanium", "sans-serif"],
+				playfair: ["Playfair Display", "sans-serif"],
 			},
 			borderRadius: {
 				lg: "var(--radius)",

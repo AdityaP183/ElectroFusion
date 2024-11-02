@@ -28,12 +28,12 @@ const OverviewBox = ({
 				<div
 					className={`flex items-center justify-center p-2 rounded-lg bg-opacity-40 backdrop-saturate-50 ${
 						id === "users"
-							? "bg-orange-800"
+							? "bg-orange-600"
 							: id === "products"
-							? "bg-blue-800"
+							? "bg-blue-600"
 							: id === "revenue"
-							? "bg-green-800"
-							: "bg-purple-800"
+							? "bg-green-600"
+							: "bg-purple-600"
 					}`}
 				>
 					{id === "users" ? (
@@ -47,7 +47,7 @@ const OverviewBox = ({
 					)}
 				</div>
 				<div className="flex items-center gap-2">
-					<div>
+					<div className="flex flex-col last:items-end">
 						<h4 className="text-sm opacity-80">{title}</h4>
 						<h2 className="text-3xl">
 							{formatValueWithIndianNumericPrefix(
@@ -60,8 +60,8 @@ const OverviewBox = ({
 						<h4
 							className={`${
 								comparsion.type === "increase"
-									? "text-green-600"
-									: "text-red-600"
+									? "text-green-500"
+									: "text-rose-500"
 							} text-xs flex items-center gap-1`}
 						>
 							{comparsion.type === "increase" ? (
@@ -71,7 +71,10 @@ const OverviewBox = ({
 							)}{" "}
 							{comparsion.value}%
 						</h4>
-						<h4 className="text-xs opacity-80">From last {duration === "half-day" ? "12 hours" : duration}</h4>
+						<h4 className="text-xs opacity-80">
+							From last{" "}
+							{duration === "half-day" ? "12 hours" : duration}
+						</h4>
 					</div>
 				</div>
 			</div>

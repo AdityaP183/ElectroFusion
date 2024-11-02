@@ -3,6 +3,7 @@ import { Separator } from "@/components/ui/separator";
 import { tempUser } from "@/lib/app-data";
 import { AdminProfile } from "@/pages/admin";
 import { useState } from "react";
+import Preferences from "./Preferences";
 
 const Settings = () => {
 	const [activeTab, setActiveTab] = useState<"profile" | "preferences">(
@@ -19,10 +20,6 @@ const Settings = () => {
 				</p>
 			</div>
 			<Separator className="my-4" />
-			{/* <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
-				<aside className="-mx-4 lg:w-1/5"></aside>
-				<div className="flex-1 lg:max-w-2xl"></div>
-			</div> */}
 			<div className="flex gap-6 px-5">
 				<div className="flex flex-col flex-[0.5] gap-3">
 					<Button
@@ -48,7 +45,7 @@ const Settings = () => {
 					{activeTab === "profile" ? (
 						<div>{role === "admin" && <AdminProfile />}</div>
 					) : (
-						activeTab === "preferences" && <div>Preferences</div>
+						activeTab === "preferences" && <Preferences />
 					)}
 				</div>
 			</div>

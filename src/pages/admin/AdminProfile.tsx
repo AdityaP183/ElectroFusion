@@ -3,7 +3,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { profileSchema } from "@/lib/schema";
 import { Button } from "@/components/ui/button";
-import toast from "react-hot-toast";
 import {
 	Form,
 	FormControl,
@@ -22,7 +21,6 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { motion } from "framer-motion";
 import { Pencil } from "lucide-react";
 
 const AdminProfile = () => {
@@ -47,14 +45,14 @@ const AdminProfile = () => {
 	};
 
 	return (
-		<Card className="w-[60%] border-none ml-10 py-0">
+		<Card className="py-0 ml-10">
 			<CardHeader>
 				<CardTitle className="text-xl">Profile</CardTitle>
 				<CardDescription>
 					This is how others will see you on the site.
 				</CardDescription>
 			</CardHeader>
-			<CardContent>
+			<CardContent className="w-[60%] mx-auto">
 				<Form {...form}>
 					<form
 						onSubmit={form.handleSubmit(onSubmit, (e) => {
@@ -197,6 +195,7 @@ const AdminProfile = () => {
 							<Button
 								type="submit"
 								disabled={!form.formState.isValid}
+								className="font-bold"
 							>
 								Update Profile
 							</Button>
