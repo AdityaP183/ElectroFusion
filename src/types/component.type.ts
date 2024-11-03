@@ -49,13 +49,15 @@ export type ChartConfig = {
 export type ChartWrapperProps =
 	| { data: UserCount; type: "radial" }
 	| { data: SalesType[]; type: "bar" }
-	| { data?: unknown; type: "line" };
+	| { data: SalesType[]; type: "area" }
+	| { data: Categories[]; type: "vertical-bar" };
 
 export type SalesType = {
 	id?: string;
 	date: string;
 	sales: number;
 	profit: number;
+	discount: number;
 };
 
 export type Orders = {
@@ -71,7 +73,7 @@ export type Orders = {
 export type Categories = {
 	id: string;
 	name: string;
-	itemsSold: number;
+	sold: number;
 };
 
 export type Products = {
@@ -81,6 +83,7 @@ export type Products = {
 	stock: number;
 	price: number;
 	image: string;
+	times_ordered: number;
 };
 
 export type UserRoles = "admin" | "vendor" | "customer" | undefined;
@@ -123,4 +126,13 @@ export type CouponT = {
 	category: string;
 	description: string;
 	expire_date: string;
+};
+
+export type CustomerReview = {
+	id: string;
+	productName: string;
+	customer_name: string;
+	review: string;
+	rating: number;
+	date: string;
 };

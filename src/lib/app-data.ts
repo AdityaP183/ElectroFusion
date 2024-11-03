@@ -1,6 +1,7 @@
 import {
 	Categories,
 	CouponT,
+	CustomerReview,
 	DashboardOverview,
 	Orders,
 	Products,
@@ -136,8 +137,9 @@ export const salesData = Array.from({ length: 24 }, () => {
 	return {
 		id: faker.database.mongodbObjectId(),
 		date: formattedTime,
-		sales: faker.number.int({ min: 100, max: 1000 }),
-		profit: faker.number.int({ min: 100, max: 1000 }),
+		sales: faker.number.int({ min: 1000, max: 2000 }),
+		profit: faker.number.int({ min: 800, max: 1000 }),
+		discount: faker.number.int({ min: 100, max: 500 }),
 	};
 });
 
@@ -159,23 +161,25 @@ export const ordersData: Orders[] = Array.from({ length: 20 }, () => {
 });
 
 const categoriesName = [
-	"Smartphones & Accessories",
-	"Computers & Laptops",
-	"Audio & Headphones",
-	"Wearable Technology",
-	"Cameras & Photography",
-	"TVs & Home Entertainment",
-	"Gaming Consoles & Accessories",
+	"Smartphones",
+	"Computers",
+	"Laptops",
+	"Headphones",
+	"Cameras",
+	"Home Entertainment",
+	"Gaming Consoles",
 	"Smart Home Devices",
-	"Computer Components & Storage",
-	"Home Appliances & Kitchen Gadgets",
+	"Computer Components",
+	"Storage Devices",
+	"Home Appliances",
+	" Kitchen Gadgets",
 ];
 
 export const categoriesData: Categories[] = Array.from({ length: 20 }, () => {
 	return {
 		id: faker.database.mongodbObjectId(),
 		name: faker.helpers.arrayElement(categoriesName),
-		itemsSold: Math.floor(Math.random() * 1300),
+		sold: Math.floor(Math.random() * 1300),
 	};
 });
 
@@ -210,6 +214,7 @@ export const productsData: Products[] = Array.from({ length: 20 }, () => {
 		category: faker.helpers.arrayElement(categoriesName),
 		stock: Math.floor(Math.random() * 100),
 		image: faker.helpers.arrayElement(productsImages),
+		times_ordered: Math.floor(Math.random() * 100),
 	};
 });
 
@@ -358,3 +363,17 @@ export const vendorsOverviewData: DashboardOverview = {
 		},
 	},
 };
+
+export const customerReviews: CustomerReview[] = Array.from(
+	{ length: 20 },
+	() => {
+		return {
+			id: faker.database.mongodbObjectId(),
+			productName: faker.commerce.productName(),
+			customer_name: faker.person.fullName(),
+			review: faker.lorem.sentence(),
+			rating: Math.floor(Math.random() * 5),
+			date: faker.date.past().toISOString(),
+		};
+	}
+);
