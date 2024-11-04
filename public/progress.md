@@ -1,48 +1,53 @@
 ## Admin Side Progress
 
+### Frontend
 - [x] Sidebar
 - [x] Dashboard
 - [x] Products
-- [ ] Products Actions
 - [x] Vendors
-- [ ] Vendors Actions
 - [x] Customer
-- [ ] Customer Actions
 - [x] Orders
 - [x] Sales
 - [x] Coupons
-- [ ] Coupons Actions (edit, delete)
-- [ ] Coupons Create
+
+### Backend and Database Actions
+- [ ] Products Actions `[read, update, delete]`
+- [ ] Sales Actions `[read]`
+- [ ] Vendors Actions `[read, update, delete]`
+- [ ] Customer Actions `[read, update, delete]`
+- [ ] Coupons Actions `[create, read, update, delete]`
 
 ## Vendor Side Progress
+
+### Frontend
 - [x] Sidebar
 - [x] Dashboard
-- [x] Products
-- [ ] Products Actions
-- [x] Vendors
-- [ ] Vendors Actions
-- [x] Customer
-- [ ] Customer Actions
-- [x] Orders
 - [x] Sales
-- [x] Coupons
-- [ ] Coupons Actions (edit, delete)
-- [ ] Coupons Create
+- [x] Products
+- [x] Orders
+
+### Backend and Database Actions
+- [ ] Products Actions `[create, read, update, delete]`
+- [ ] Orders Actions `[read, update, delete]`
+- [ ] Sales Actions `[read]`
 
 ## Customer Side Progress
+
+### Frontend
 - [x] Sidebar
 - [x] Dashboard
 - [x] Products
-- [ ] Products Actions
 - [x] Vendors
-- [ ] Vendors Actions
 - [x] Customer
-- [ ] Customer Actions
 - [x] Orders
 - [x] Sales
 - [x] Coupons
-- [ ] Coupons Actions (edit, delete)
-- [ ] Coupons Create
+
+### Backend and Database Actions
+- [ ] Products Actions
+- [ ] Vendors Actions
+- [ ] Customer Actions
+- [ ] Coupons Actions
 
 ## Admin Side Todo
 - [ ] import customization
