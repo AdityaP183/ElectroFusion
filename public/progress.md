@@ -1,6 +1,6 @@
 ## Admin Side Progress
 
-- [ ] Sidebar
+- [x] Sidebar
 - [x] Dashboard
 - [x] Products
 - [ ] Products Actions
@@ -10,7 +10,37 @@
 - [ ] Customer Actions
 - [x] Orders
 - [x] Sales
-- [ ] Coupons
+- [x] Coupons
+- [ ] Coupons Actions (edit, delete)
+- [ ] Coupons Create
+
+## Vendor Side Progress
+- [x] Sidebar
+- [x] Dashboard
+- [x] Products
+- [ ] Products Actions
+- [x] Vendors
+- [ ] Vendors Actions
+- [x] Customer
+- [ ] Customer Actions
+- [x] Orders
+- [x] Sales
+- [x] Coupons
+- [ ] Coupons Actions (edit, delete)
+- [ ] Coupons Create
+
+## Customer Side Progress
+- [x] Sidebar
+- [x] Dashboard
+- [x] Products
+- [ ] Products Actions
+- [x] Vendors
+- [ ] Vendors Actions
+- [x] Customer
+- [ ] Customer Actions
+- [x] Orders
+- [x] Sales
+- [x] Coupons
 - [ ] Coupons Actions (edit, delete)
 - [ ] Coupons Create
 
