@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { tempUser } from "@/lib/app-data";
-import { AdminProfile } from "@/pages/admin";
 import { useState } from "react";
 import Preferences from "./Preferences";
+import Profile from "./Profile";
 
 const Settings = () => {
 	const [activeTab, setActiveTab] = useState<"profile" | "preferences">(
@@ -42,10 +42,10 @@ const Settings = () => {
 					</Button>
 				</div>
 				<div className="ml-6 flex-[3]">
-					{activeTab === "profile" ? (
-						<div>{role === "admin" && <AdminProfile />}</div>
+					{tempUser && activeTab === "profile" ? (
+						<Profile />
 					) : (
-						activeTab === "preferences" && <Preferences />
+						<Preferences />
 					)}
 				</div>
 			</div>

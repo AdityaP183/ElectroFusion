@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/card";
 import { Pencil } from "lucide-react";
 
-const AdminProfile = () => {
+const Profile = () => {
 	const form = useForm<z.infer<typeof profileSchema>>({
 		resolver: zodResolver(profileSchema),
 		defaultValues: {
@@ -206,4 +206,4 @@ const AdminProfile = () => {
 		</Card>
 	);
 };
-export default AdminProfile;
+export default Profile;

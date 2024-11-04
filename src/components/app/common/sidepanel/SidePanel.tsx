@@ -183,9 +183,12 @@ const SidePanel = ({
 									)}
 									<DropdownMenuItem
 										onClick={() =>
-											navigate("/admin/settings", {
-												replace: true,
-											})
+											navigate(
+												`/${tempUser.role}/settings`,
+												{
+													replace: true,
+												}
+											)
 										}
 									>
 										<Cog />

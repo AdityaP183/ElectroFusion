@@ -355,7 +355,7 @@ export const AdminCustomersFullColumns: ColumnDef<User>[] = [
 	},
 ];
 
-export const AdminSalesFullColumns: ColumnDef<SalesType>[] = [
+export const SalesFullColumns: ColumnDef<SalesType>[] = [
 	{
 		accessorKey: "rowId",
 		header: "No.",
@@ -370,10 +370,6 @@ export const AdminSalesFullColumns: ColumnDef<SalesType>[] = [
 	{
 		accessorKey: "date",
 		header: "Date",
-		cell: ({ row }) => {
-			const date = new Date(row.getValue("date")).toLocaleString();
-			return date;
-		},
 	},
 	{
 		accessorKey: "sales",

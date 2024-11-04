@@ -1,3 +1,4 @@
+import Searchbar from "@/components/app/common/Searchbar";
 import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
@@ -12,9 +13,9 @@ import {
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { TableWrapper } from "@/components/ui/table";
-import { salesData } from "@/lib/app-data";
-import { SalesFullColumns } from "@/lib/tableData/AdminColumns";
-import { SalesType } from "@/types/component.type";
+import { productsData } from "@/lib/app-data";
+import { AdminProductsFullColumns } from "@/lib/tableData/AdminColumns";
+import { Products } from "@/types/component.type";
 import {
 	ColumnDef,
 	ColumnFiltersState,
@@ -26,33 +27,47 @@ import {
 import { ChevronDown, Filter } from "lucide-react";
 import { useMemo, useState } from "react";
 
-const Sales = () => {
+const Product = () => {
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
 		{}
 	);
+	const products = useMemo<Products[]>(() => productsData, []);
 
-	const data = useMemo<SalesType[]>(() => salesData, []);
-	const columns = useMemo<ColumnDef<SalesType>[]>(() => SalesFullColumns, []);
+	const columns = useMemo<ColumnDef<Products>[]>(
+		() => AdminProductsFullColumns,
+		[]
+	);
 
 	const table = useReactTable({
-		data,
-		columns,
+		data: products,
+		columns: columns,
 		onColumnFiltersChange: setColumnFilters,
-		onColumnVisibilityChange: setColumnVisibility,
 		getCoreRowModel: getCoreRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
+		onColumnVisibilityChange: setColumnVisibility,
 		state: {
 			columnFilters,
 			columnVisibility,
 		},
 	});
 
-	console.log("Rendering Sales...");
-
+	console.log("Rendering Products...");
 	return (
-		<div className="w-full p-1">
+		<div className="w-full p-1 mt-4">
 			<div className="flex items-center justify-between w-full my-4">
+				<Searchbar
+					searchValue={
+						(table
+							.getColumn("productName")
+							?.getFilterValue() as string) || ""
+					}
+					onSearchValueChange={(e) =>
+						table.getColumn("productName")?.setFilterValue(e)
+					}
+					mainStyle="max-w-[450px]"
+					placeholder="Search products by name"
+				/>
 				<div className="flex items-center gap-4">
 					<Popover>
 						<PopoverTrigger
@@ -105,7 +120,11 @@ const Sales = () => {
 				</div>
 			</div>
 			<div className="w-full h-full overflow-auto">
-				<TableWrapper table={table} columnsLength={columns.length} />
+				<TableWrapper
+					table={table}
+					columnsLength={products.length}
+					tableCellStyle="p-4 bg-red-600"
+				/>
 			</div>
 			<div className="flex items-center justify-end w-full gap-2 my-4">
 				<Button variant="outline">Prev</Button>
@@ -114,4 +133,4 @@ const Sales = () => {
 		</div>
 	);
 };
-export default Sales;
+export default Product;

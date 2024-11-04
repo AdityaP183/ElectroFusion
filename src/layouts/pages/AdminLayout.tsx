@@ -58,6 +58,7 @@ const AdminLayout = () => {
 							onClick={() => {
 								toast.success("Logged out successfully");
 							}}
+							className="font-extrabold"
 						>
 							Logout
 						</AlertDialogAction>

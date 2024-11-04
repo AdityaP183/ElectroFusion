@@ -15,6 +15,7 @@ import {
 	ChartLine,
 	LayoutDashboard,
 	Package,
+	PackagePlus,
 	ShoppingCart,
 	Store,
 	TicketPercent,
@@ -317,6 +318,11 @@ export const vendorSidebarItems: SidebarItem[] = [
 		name: "Products",
 		path: "/vendor/products",
 		icon: Package,
+	},
+	{
+		name: "Add Products",
+		path: "/vendor/products/add",
+		icon: PackagePlus,
 	},
 	{
 		name: "Orders",

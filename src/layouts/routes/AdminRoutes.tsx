@@ -6,7 +6,7 @@ import {
 	Customer,
 	Dashboard,
 	Order,
-	Products,
+	Product,
 	Sales,
 	Vendor,
 } from "@/pages/admin";
@@ -21,7 +21,7 @@ const AdminRoutes = () => {
 
 				<Route path="settings" element={<Settings />} />
 
-				<Route path="products" element={<Products />} />
+				<Route path="products" element={<Product />} />
 				<Route path="product/:id" element={<h1>Product Details</h1>} />
 
 				<Route path="vendors" element={<Vendor />} />
