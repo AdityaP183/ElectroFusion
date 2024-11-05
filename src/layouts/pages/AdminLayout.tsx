@@ -1,4 +1,3 @@
-import TopBar from "@/components/app/common/dashboard/TopBar";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Outlet } from "react-router-dom";
 import { sidebarItems } from "@/lib/app-data";
@@ -15,7 +14,7 @@ import {
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import SidePanel from "@/components/app/common/sidepanel/SidePanel";
+import { SidePanel, TopBar } from "@/components/app/common";
 
 const AdminLayout = () => {
 	const [isLoggingOut, setIsLoggingOut] = useState(false);

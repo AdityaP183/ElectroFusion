@@ -8,6 +8,9 @@ import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
+	SidebarMenuSub,
+	SidebarMenuSubButton,
+	SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import {
 	DropdownMenu,
@@ -19,17 +22,28 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ChevronsUpDown, Cog, Database, Home, LogOut } from "lucide-react";
-import { SidebarItem } from "@/types/component.type";
+import {
+	ChevronRight,
+	ChevronsUpDown,
+	Cog,
+	Database,
+	Home,
+	LogOut,
+} from "lucide-react";
+import { SidebarNestedItem } from "@/types/component.type";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { tempUser } from "@/lib/app-data";
+import {
+	Collapsible,
+	CollapsibleContent,
+	CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 const SidePanel = ({
 	sidebarItems,
-	sidebarContent = undefined,
 	setIsLoggingOut,
 }: {
-	sidebarItems: SidebarItem[];
+	sidebarItems: SidebarNestedItem[];
 	sidebarContent?: React.ReactNode | undefined;
 	setIsLoggingOut: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
@@ -58,31 +72,114 @@ const SidePanel = ({
 
 			{/*------- Sidebar Content --------*/}
 			<SidebarContent className="mt-4">
-				{sidebarContent ? (
-					sidebarContent
-				) : (
+				{sidebarItems && (
 					<SidebarGroup>
 						<SidebarGroupContent>
 							<SidebarMenu className="gap-3 group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:p-[0.5rem__0.5rem_0]">
-								{sidebarItems.map((item) => (
-									<SidebarMenuItem key={item.name}>
-										<SidebarMenuButton
-											asChild
-											className={`text-xl group-data-[collapsible=icon]:hover:bg-transparent active:bg-secondary [&>svg]:size-[18px] py-4  ${
-												pathname === item.path
-													? "bg-secondary hover:bg-secondary"
-													: "hover:bg-secondary/60"
-											}`}
-										>
-											<Link to={item.path}>
-												{item.icon && (
-													<item.icon className="w-7 h-7" />
+								{sidebarItems.map((item) => {
+									if (
+										item.children &&
+										item.children.length > 0
+									) {
+										return (
+											<Collapsible
+												key={item.name}
+												asChild
+												defaultOpen={pathname.includes(
+													item.name.toLowerCase()
 												)}
-												<span>{item.name}</span>
-											</Link>
-										</SidebarMenuButton>
-									</SidebarMenuItem>
-								))}
+												className="group/collapsible"
+											>
+												<SidebarMenuItem>
+													<CollapsibleTrigger asChild>
+														<SidebarMenuButton
+															tooltip={item.name}
+															className={`text-xl active:bg-secondary [&>svg]:size-[18px] ${
+																pathname ===
+																	item.path ||
+																item.children?.some(
+																	(child) =>
+																		pathname ===
+																		child.path
+																)
+																	? "group-data-[collapsible=icon]:bg-secondary hover:bg-secondary"
+																	: "hover:bg-secondary/60"
+															}`}
+															tooltipStyling="bg-secondary bg-opacity-80 text-primary"
+														>
+															{item.icon && (
+																<item.icon className="w-7 h-7" />
+															)}
+															<span>
+																{item.name}
+															</span>
+															<ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+														</SidebarMenuButton>
+													</CollapsibleTrigger>
+													<CollapsibleContent>
+														<SidebarMenuSub>
+															{item.children?.map(
+																(subItem) => (
+																	<SidebarMenuSubItem
+																		key={
+																			subItem.name
+																		}
+																	>
+																		<SidebarMenuSubButton
+																			asChild
+																			className={`${
+																				item.path ||
+																				subItem.path ===
+																					pathname
+																					? "bg-secondary hover:bg-secondary"
+																					: "hover:bg-secondary/60"
+																			}`}
+																		>
+																			<Link
+																				to={
+																					subItem.path ||
+																					"/"
+																				}
+																			>
+																				<span>
+																					{
+																						subItem.name
+																					}
+																				</span>
+																			</Link>
+																		</SidebarMenuSubButton>
+																	</SidebarMenuSubItem>
+																)
+															)}
+														</SidebarMenuSub>
+													</CollapsibleContent>
+												</SidebarMenuItem>
+											</Collapsible>
+										);
+									}
+
+									return (
+										<SidebarMenuItem key={item.name}>
+											<SidebarMenuButton
+												asChild
+												className={`text-xl active:bg-secondary [&>svg]:size-[18px] py-4  ${
+													pathname === item.path
+														? "bg-secondary hover:bg-secondary"
+														: "hover:bg-secondary/60"
+												}`}
+												tooltip={item.name}
+												tooltipStyling="bg-secondary bg-opacity-80 text-primary"
+											>
+												<Link to={item.path || "/"}>
+													{item.icon && (
+														<item.icon className="w-7 h-7" />
+													)}
+													<span>{item.name}</span>
+												</Link>
+											</SidebarMenuButton>
+										</SidebarMenuItem>
+									);
+								})}
 							</SidebarMenu>
 						</SidebarGroupContent>
 					</SidebarGroup>

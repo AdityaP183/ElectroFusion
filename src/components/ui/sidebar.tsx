@@ -555,6 +555,7 @@ const SidebarMenuButton = React.forwardRef<
 	React.ComponentProps<"button"> & {
 		asChild?: boolean;
 		isActive?: boolean;
+		tooltipStyling?: string;
 		tooltip?: string | React.ComponentProps<typeof TooltipContent>;
 	} & VariantProps<typeof sidebarMenuButtonVariants>
 >(
@@ -565,6 +566,7 @@ const SidebarMenuButton = React.forwardRef<
 			variant = "default",
 			size = "default",
 			tooltip,
+			tooltipStyling,
 			className,
 			...props
 		},
@@ -604,6 +606,7 @@ const SidebarMenuButton = React.forwardRef<
 					side="right"
 					align="center"
 					hidden={state !== "collapsed" || isMobile}
+					className={tooltipStyling}
 					{...tooltip}
 				/>
 			</Tooltip>

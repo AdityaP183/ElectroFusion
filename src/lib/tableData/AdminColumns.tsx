@@ -29,11 +29,11 @@ export const AdminCategoryColumns: ColumnDef<Categories>[] = [
 		header: "Name",
 	},
 	{
-		accessorKey: "itemsSold",
+		accessorKey: "sold",
 		header: "Items Sold",
 		cell: ({ row }) => {
 			const itemsSold = formatValueWithIndianNumericPrefix(
-				row.getValue("itemsSold"),
+				row.getValue("sold"),
 				"value"
 			);
 			return itemsSold;

@@ -6,6 +6,7 @@ import {
 	Orders,
 	Products,
 	SidebarItem,
+	SidebarNestedItem,
 	UserCount,
 	Vendors,
 } from "@/types/component.type";
@@ -16,6 +17,8 @@ import {
 	LayoutDashboard,
 	Package,
 	PackagePlus,
+	PackageSearch,
+	ShoppingBag,
 	ShoppingCart,
 	Store,
 	TicketPercent,
@@ -303,7 +306,7 @@ export const vendorData: Vendors = {
 	monthly_sales: 2000000,
 };
 
-export const vendorSidebarItems: SidebarItem[] = [
+export const vendorSidebarItems: SidebarNestedItem[] = [
 	{
 		name: "Dashboard",
 		path: "/vendor/dashboard",
@@ -316,18 +319,35 @@ export const vendorSidebarItems: SidebarItem[] = [
 	},
 	{
 		name: "Products",
-		path: "/vendor/products",
 		icon: Package,
-	},
-	{
-		name: "Add Products",
-		path: "/vendor/products/add",
-		icon: PackagePlus,
+		children: [
+			{
+				name: "All Products",
+				path: "/vendor/products",
+				icon: PackageSearch,
+			},
+			{
+				name: "Add Products",
+				path: "/vendor/products/add",
+				icon: PackagePlus,
+			},
+		],
 	},
 	{
 		name: "Orders",
-		path: "/vendor/orders",
 		icon: ShoppingCart,
+		children: [
+			{
+				name: "All Orders",
+				path: "/vendor/orders",
+				icon: ShoppingCart,
+			},
+			{
+				name: "Add Orders",
+				path: "/vendor/orders/add",
+				icon: ShoppingBag,
+			},
+		],
 	},
 ];
 
