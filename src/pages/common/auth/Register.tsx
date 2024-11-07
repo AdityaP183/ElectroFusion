@@ -1,4 +1,3 @@
-import { LazyLoadingImage } from "@/components/app/common";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -18,14 +17,29 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { registerSchema } from "@/lib/schema";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
-import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { ArrowRight } from "lucide-react";
+import { useEffect, useState } from "react";
+
+const registerHeroTexts = [
+	{
+		line1: "Seamless Shopping",
+		line2: "Personalized for You",
+	},
+	{
+		line1: "Your One-Stop",
+		line2: "Electronics Hub",
+	},
+	{
+		line1: "Discover New Tech",
+		line2: "Shop from Anywhere",
+	},
+];
 
 const Register = () => {
 	const form = useForm<z.infer<typeof registerSchema>>({
@@ -43,7 +57,19 @@ const Register = () => {
 		console.log(values);
 	}
 
-	console.log(form);
+	const [currentIndex, setCurrentIndex] = useState<number>(0);
+
+	useEffect(() => {
+		const interval = setInterval(() => {
+			setCurrentIndex(
+				(prevIndex) => (prevIndex + 1) % registerHeroTexts.length
+			);
+		}, 6000);
+
+		return () => clearInterval(interval);
+	}, []);
+
+	console.log("Rendering Register...");
 	return (
 		<div className="flex items-center justify-center w-full h-screen">
 			<motion.div
@@ -54,8 +80,9 @@ const Register = () => {
 			>
 				<Card className="flex w-full h-full gap-3 p-3">
 					<Card className="relative flex-1 w-full h-auto overflow-hidden">
-						<LazyLoadingImage imgUrl="./assets/register-bg.jpg" />
-						<div className="absolute flex items-center justify-between top-1 left-1 right-1">
+						<div className="absolute top-0 left-0 bottom-0 right-0 items-center px-5 py-24 bg-[radial-gradient(125%_125%_at_50%_0%,#000_40%,#63e_100%)]"></div>
+
+						<div className="absolute flex items-center justify-between top-2 left-2 right-2 z-[1]">
 							<div className="flex items-center gap-1 p-1 text-sm rounded-full top-1 left-1 bg-secondary/60 glass font-ox">
 								<Avatar shape="circle" className="w-7 h-7">
 									<AvatarImage src="./logo.svg" />
@@ -64,14 +91,73 @@ const Register = () => {
 							</div>
 							<Link
 								to="/"
-								className="flex items-center gap-1 p-1 transition-colors rounded-full right-1 bg-secondary/60 hover:bg-secondary/80 top-1"
+								className="flex items-center gap-1 px-2 py-1 text-sm transition-colors rounded-full right-1 bg-secondary/60 hover:bg-secondary/80 top-1"
 							>
 								Back to site
-								<ArrowRight />
+								<ArrowRight className="w-4 h-4" />
 							</Link>
 						</div>
+						<div className="absolute left-0 right-0 text-center bottom-10">
+							<AnimatePresence mode="wait">
+								<motion.div
+									key={currentIndex}
+									initial={{ opacity: 0 }}
+									animate={{ opacity: 1 }}
+									exit={{ opacity: 0 }}
+									transition={{ duration: 0.8 }}
+									className="flex flex-col w-full gap-3"
+								>
+									<div>
+										<h1 className="text-5xl font-semibold">
+											{
+												registerHeroTexts[currentIndex]
+													.line1
+											}
+										</h1>
+										<h1 className="mt-2 text-3xl font-semibold">
+											{
+												registerHeroTexts[currentIndex]
+													.line2
+											}
+										</h1>
+									</div>
+								</motion.div>
+							</AnimatePresence>
+
+							<div className="flex items-center justify-center gap-3 mt-20">
+								{registerHeroTexts.map((_, index) => (
+									<div
+										key={index}
+										className="relative w-10 h-2 overflow-hidden rounded-full bg-white/40"
+									>
+										<motion.div
+											key={`${currentIndex}-${index}`}
+											initial={{ width: 0 }}
+											animate={{
+												width:
+													index === currentIndex
+														? "100%"
+														: "100%",
+												opacity:
+													currentIndex >= index
+														? 1
+														: 0,
+											}}
+											transition={{
+												duration:
+													index === currentIndex
+														? 6
+														: 0,
+												ease: "linear",
+											}}
+											className="absolute top-0 left-0 h-2 bg-white rounded-full"
+										/>
+									</div>
+								))}
+							</div>
+						</div>
 					</Card>
-					<Card className="flex-[0.9] bg-transparent border-none shadow-none w-full">
+					<Card className="flex-1 w-full bg-transparent border-none shadow-none">
 						<CardHeader className="px-10">
 							<CardTitle className="text-4xl">
 								Create Account
@@ -192,10 +278,10 @@ const Register = () => {
 								Google
 							</Button>
 							<Button className="flex items-center w-full gap-3 text-lg font-bold">
-								{/* <Avatar className="w-6 h-6">
-									<AvatarImage src="./assets/google.svg" />
-								</Avatar> */}
-								Guest User
+								<Avatar className="w-7 h-7">
+									<AvatarImage src="./assets/github.svg" />
+								</Avatar>
+								Github
 							</Button>
 						</CardFooter>
 					</Card>
