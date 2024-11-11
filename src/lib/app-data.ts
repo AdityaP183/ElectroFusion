@@ -4,6 +4,7 @@ import {
 	CustomerReview,
 	DashboardOverview,
 	Orders,
+	ProductInfo,
 	Products,
 	SidebarItem,
 	SidebarNestedItem,
@@ -403,3 +404,23 @@ export const customerReviews: CustomerReview[] = Array.from(
 		};
 	}
 );
+
+export const productData: ProductInfo = {
+	id: faker.database.mongodbObjectId(),
+	productName:
+		"Samsung Galaxy S24 Ultra 5G AI Smartphone (Titanium Gray, 12GB, 256GB Storage)",
+	image: "./assets/phone.jpg",
+	rating: {
+		stars: Math.floor(Math.random() * 5),
+		count: Math.floor(Math.random() * 100),
+	},
+	isDiscounted: faker.datatype.boolean(),
+	originalPrice: Math.floor(Math.random() * 120000),
+	stock: Math.floor(Math.random() * 100),
+	category: ["Smartphones", "Android"],
+	description: faker.lorem.paragraphs(2),
+};
+
+productData.discountedPrice = productData.isDiscounted
+	? faker.number.int({ min: 5000, max: 30000 })
+	: undefined;

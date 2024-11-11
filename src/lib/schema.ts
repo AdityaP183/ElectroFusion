@@ -43,3 +43,18 @@ export const loginSchema = z.object({
 		.min(6, "Password must be at least 6 characters")
 		.max(50, "Password must be at most 50 characters"),
 });
+
+export const forgotPasswordSchema = z.object({
+	email: z.string().email(),
+});
+
+export const resetPasswordSchema = z.object({
+	password: z
+		.string()
+		.min(6, "Password must be at least 6 characters")
+		.max(50, "Password must be at most 50 characters"),
+	confirmPassword: z
+		.string()
+		.min(6, "Password must be at least 6 characters")
+		.max(50, "Password must be at most 50 characters"),
+});

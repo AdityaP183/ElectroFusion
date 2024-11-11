@@ -1,16 +1,23 @@
 import { ThemeProvider } from "next-themes";
 import ThemeDataProvider from "./context/theme/themeDataProvider";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import { AboutUs, ContactUs, Home, Login, Register } from "./pages/common";
-import ProductDetails from "./pages/common/ProductDetails";
+import {
+	AboutUs,
+	ContactUs,
+	ForgotPassword,
+	Home,
+	Login,
+	Register,
+	ResetPassword,
+} from "./pages/common";
 import AdminRoutes from "./layouts/routes/AdminRoutes";
 import ProtectedRoute from "./layouts/routes/ProtectedRoute";
 import { Toaster } from "react-hot-toast";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import Colors from "./pages/Colors";
 import { toastOptions } from "./lib/utils";
 import VendorRoutes from "./layouts/routes/VendorRoutes";
+import { ProductDetails } from "./pages/store";
 
 const queryClient = new QueryClient();
 
@@ -27,14 +34,25 @@ const App = () => {
 					<Router>
 						<Routes>
 							<Route path="/" element={<Home />} />
-							<Route path="/colors" element={<Colors />} />
 							<Route path="/register" element={<Register />} />
 							<Route path="/login" element={<Login />} />
+							<Route
+								path="/forgot-password"
+								element={<ForgotPassword />}
+							/>
+							<Route
+								path="/reset-password"
+								element={<ResetPassword />}
+							/>
 							<Route path="/contact" element={<ContactUs />} />
 							<Route path="/about" element={<AboutUs />} />
 							<Route
-								path="/product/:id"
-								element={<ProductDetails />}
+								path="/products/:id"
+								element={
+									<div className="mx-auto w-[80vw]">
+										<ProductDetails />
+									</div>
+								}
 							/>
 
 							<Route

@@ -140,3 +140,19 @@ export type CustomerReview = {
 	rating: number;
 	date: string;
 };
+
+export type ProductInfo = {
+	id: string;
+	productName: string;
+	rating: {
+		stars: number;
+		count: number;
+	};
+	isDiscounted: boolean;
+	originalPrice: number;
+	discountedPrice?: number;
+	stock: number;
+	category: string[];
+	description: string;
+	image: string;
+};

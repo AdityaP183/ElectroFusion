@@ -3,6 +3,8 @@
 // Exporting components from the 'auth' directory
 export { default as Login } from "./auth/Login";
 export { default as Register } from "./auth/Register";
+export { default as ForgotPassword } from "./auth/ForgotPassword";
+export { default as ResetPassword } from "./auth/ResetPassword";
 
 // Exporting components from the 'details' directory
 export { default as AboutUs } from "./details/AboutUs";
