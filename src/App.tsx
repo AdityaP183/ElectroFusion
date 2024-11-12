@@ -24,6 +24,7 @@ import { toastOptions } from "./lib/utils";
 import VendorRoutes from "./layouts/routes/VendorRoutes";
 import { ProductDetails } from "./pages/store";
 import Navbar from "./components/app/store/Navbar";
+import Footer from "./layouts/pages/Footer";
 
 const queryClient = new QueryClient();
 
@@ -64,6 +65,8 @@ const AppContent = () => {
 					}
 				/>
 			</Routes>
+
+			{!isRestrictedPath && <Footer />}
 		</>
 	);
 };
