@@ -120,7 +120,7 @@ export const AdminOrderFullColumns: ColumnDef<Orders>[] = [
 		accessorKey: "date",
 		header: "Ordered On",
 		cell: ({ row }) => {
-			const date = formatISODate(row.getValue("date"));
+			const date = formatISODate(row.getValue("date"), "datetime");
 			return date;
 		},
 		enableHiding: false,

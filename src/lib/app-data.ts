@@ -391,14 +391,27 @@ export const vendorsOverviewData: DashboardOverview = {
 	},
 };
 
+const customerAvatars = [
+	"https://avatar.iran.liara.run/public/75",
+	"https://avatar.iran.liara.run/public/69",
+	"https://avatar.iran.liara.run/public/91",
+	"https://avatar.iran.liara.run/public/87",
+	"https://avatar.iran.liara.run/public/56",
+	"https://avatar.iran.liara.run/public/39",
+	"https://avatar.iran.liara.run/public/43",
+	"https://avatar.iran.liara.run/public/8",
+	"https://avatar.iran.liara.run/public/20",
+	"https://avatar.iran.liara.run/public/32",
+];
+
 export const customerReviews: CustomerReview[] = Array.from(
 	{ length: 20 },
 	() => {
 		return {
 			id: faker.database.mongodbObjectId(),
-			productName: faker.commerce.productName(),
 			customer_name: faker.person.fullName(),
-			review: faker.lorem.sentence(),
+			avatar: faker.helpers.arrayElement(customerAvatars),
+			review: faker.lorem.paragraph({ min: 1, max: 3 }),
 			rating: Math.floor(Math.random() * 5),
 			date: faker.date.past().toISOString(),
 		};
@@ -409,7 +422,8 @@ export const productData: ProductInfo = {
 	id: faker.database.mongodbObjectId(),
 	productName:
 		"Samsung Galaxy S24 Ultra 5G AI Smartphone (Titanium Gray, 12GB, 256GB Storage)",
-	image: "./assets/phone.jpg",
+	image: "/assets/phone.jpg",
+	// image: "",
 	rating: {
 		stars: Math.floor(Math.random() * 5),
 		count: Math.floor(Math.random() * 100),
@@ -418,9 +432,9 @@ export const productData: ProductInfo = {
 	originalPrice: Math.floor(Math.random() * 120000),
 	stock: Math.floor(Math.random() * 100),
 	category: ["Smartphones", "Android"],
-	description: faker.lorem.paragraphs(2),
+	description: faker.lorem.paragraphs(5),
 };
 
-productData.discountedPrice = productData.isDiscounted
-	? faker.number.int({ min: 5000, max: 30000 })
+productData.discountedPercent = productData.isDiscounted
+	? faker.helpers.arrayElement([5, 10, 15, 20, 25, 40])
 	: undefined;

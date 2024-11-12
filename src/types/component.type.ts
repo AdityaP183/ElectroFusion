@@ -134,8 +134,8 @@ export type CouponT = {
 
 export type CustomerReview = {
 	id: string;
-	productName: string;
 	customer_name: string;
+	avatar?: string;
 	review: string;
 	rating: number;
 	date: string;
@@ -150,7 +150,7 @@ export type ProductInfo = {
 	};
 	isDiscounted: boolean;
 	originalPrice: number;
-	discountedPrice?: number;
+	discountedPercent?: number;
 	stock: number;
 	category: string[];
 	description: string;

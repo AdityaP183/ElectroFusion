@@ -56,7 +56,7 @@ export const VendorOrdersColumns: ColumnDef<Orders>[] = [
 		accessorKey: "date",
 		header: "Ordered On",
 		cell: ({ row }) => {
-			const date = formatISODate(row.getValue("date"));
+			const date = formatISODate(row.getValue("date"), "datetime");
 			return date;
 		},
 	},
@@ -92,7 +92,7 @@ export const VendorCustomerReviewsColumns: ColumnDef<CustomerReview>[] = [
 		accessorKey: "date",
 		header: "Reviews On",
 		cell: ({ row }) => {
-			const date = formatISODate(row.getValue("date"));
+			const date = formatISODate(row.getValue("date"), "datetime");
 			return date;
 		},
 	},
@@ -128,7 +128,7 @@ export const VendorOrderFullColumns: ColumnDef<Orders>[] = [
 		accessorKey: "date",
 		header: "Ordered On",
 		cell: ({ row }) => {
-			const date = formatISODate(row.getValue("date"));
+			const date = formatISODate(row.getValue("date"), "datetime");
 			return date;
 		},
 		enableHiding: false,

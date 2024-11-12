@@ -44,6 +44,15 @@ export const formatValueWithIndianNumericPrefix = (
 	}`;
 };
 
+export const formatDiscountPriceUsingPercent = (
+	discountPercent: number,
+	originalPrice: number
+) => {
+	const discountedPrice =
+		originalPrice - originalPrice * (discountPercent / 100);
+	return formatValueWithIndianNumericPrefix(discountedPrice, "price");
+};
+
 export const getChartConfig = (names: string[]): ChartConfig => {
 	// Check if the number of names exceeds 5
 	if (names.length > 5) {
@@ -73,7 +82,10 @@ export const getChartConfig = (names: string[]): ChartConfig => {
 	return chartConfig;
 };
 
-export function formatISODate(isoDate: Date | string) {
+export function formatISODate(
+	isoDate: Date | string,
+	type: "date" | "datetime" = "date"
+) {
 	const date = new Date(isoDate);
 
 	const day = date.getDate().toString().padStart(2, "0"); // Two digits
@@ -87,7 +99,13 @@ export function formatISODate(isoDate: Date | string) {
 	hours = hours % 12;
 	hours = hours ? hours : 12; // the hour '0' should be '12'
 
-	return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
+	return type === "date"
+		? date.toLocaleString("en-GB", {
+				day: "numeric",
+				month: "long",
+				year: "numeric",
+		  })
+		: `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
 }
 
 export const toastOptions = {
