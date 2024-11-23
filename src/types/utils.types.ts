@@ -1,6 +1,13 @@
 import React from "react";
 
-export type ThemeColors = "Zinc" | "Slate" | "Stone";
+export type ThemeColors =
+	| "Zinc"
+	| "Slate"
+	| "Stone"
+	| "Red"
+	| "Orange"
+	| "Blue"
+	| "Violet";
 
 export type ThemeColorsStateParams = {
 	themeColor: ThemeColors;

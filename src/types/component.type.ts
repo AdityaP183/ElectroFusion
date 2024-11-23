@@ -88,9 +88,17 @@ export type Products = {
 	price: number;
 	image: string;
 	times_ordered: number;
+	description?: string;
+	discountedPrice: number;
 };
 
 export type UserRoles = "admin" | "vendor" | "customer" | undefined;
+export type UserAddress = {
+	address: string;
+	city: string;
+	state: string;
+	postalCode: string;
+};
 
 export type User = {
 	id: string;
@@ -99,7 +107,7 @@ export type User = {
 	password: string;
 	first_name: string;
 	last_name: string;
-	address?: string;
+	address?: UserAddress;
 	phone_number?: string;
 	role: UserRoles;
 	avatar?: string;
@@ -155,4 +163,15 @@ export type ProductInfo = {
 	category: string[];
 	description: string;
 	image: string;
+};
+
+export type ProductCardType = {
+	width?: number | string;
+	height?: number | string;
+	borderRadius?: number | string;
+	image: string;
+	title: string;
+	description?: string;
+	price: number;
+	isWishlist?: boolean;
 };

@@ -19,12 +19,13 @@ import AdminRoutes from "./layouts/routes/AdminRoutes";
 import ProtectedRoute from "./layouts/routes/ProtectedRoute";
 import { Toaster } from "react-hot-toast";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { toastOptions } from "./lib/utils";
 import VendorRoutes from "./layouts/routes/VendorRoutes";
-import { ProductDetails } from "./pages/store";
+import { Cart, Checkout, ProductDetails, SearchProducts } from "./pages/store";
 import Navbar from "./components/app/store/Navbar";
 import Footer from "./layouts/pages/Footer";
+import StoreLayout from "./layouts/pages/StoreLayout";
+import CustomerRoutes from "./layouts/routes/CustomerRoutes";
 
 const queryClient = new QueryClient();
 
@@ -40,14 +41,57 @@ const AppContent = () => {
 			{!isRestrictedPath && <Navbar />}
 
 			<Routes>
-				<Route path="/" element={<Home />} />
+				<Route
+					path="/"
+					element={
+						<StoreLayout>
+							<Home />
+						</StoreLayout>
+					}
+				/>
 				<Route path="/register" element={<Register />} />
 				<Route path="/login" element={<Login />} />
 				<Route path="/forgot-password" element={<ForgotPassword />} />
 				<Route path="/reset-password" element={<ResetPassword />} />
 				<Route path="/contact" element={<ContactUs />} />
 				<Route path="/about" element={<AboutUs />} />
+				<Route
+					path="/search"
+					element={
+						<StoreLayout>
+							<SearchProducts />
+						</StoreLayout>
+					}
+				/>
+				<Route
+					path="/cart"
+					element={
+						<StoreLayout>
+							<Cart />
+						</StoreLayout>
+					}
+				/>
+				<Route
+					path="/checkout"
+					element={
+						<StoreLayout>
+							<Checkout />
+						</StoreLayout>
+					}
+				/>
 				<Route path="/products/:id" element={<ProductDetails />} />
+
+				<Route
+					path="/customer/*"
+					element={
+						<ProtectedRoute>
+							<StoreLayout>
+								<CustomerRoutes />
+							</StoreLayout>
+						</ProtectedRoute>
+					}
+				/>
+
 				<Route
 					path="/admin/*"
 					element={
@@ -66,7 +110,11 @@ const AppContent = () => {
 				/>
 			</Routes>
 
-			{!isRestrictedPath && <Footer />}
+			{!isRestrictedPath && (
+				<StoreLayout>
+					<Footer />
+				</StoreLayout>
+			)}
 		</>
 	);
 };

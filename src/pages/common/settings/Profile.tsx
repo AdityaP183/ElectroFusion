@@ -27,12 +27,11 @@ const Profile = () => {
 	const form = useForm<z.infer<typeof profileSchema>>({
 		resolver: zodResolver(profileSchema),
 		defaultValues: {
-			username: tempUser.username,
 			email: tempUser.email,
 			password: "",
 			first_name: tempUser.first_name,
 			last_name: tempUser.last_name,
-			address: tempUser.address || "",
+			address: tempUser.address?.address || "",
 			phone_number: tempUser.phone_number || "",
 			role: tempUser.role,
 			avatar: tempUser.avatar || "",
@@ -78,22 +77,6 @@ const Profile = () => {
 						</div>
 
 						<div className="flex-1 space-y-8">
-							<FormField
-								control={form.control}
-								name="username"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Username</FormLabel>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-										<FormDescription>
-											This is your public id.
-										</FormDescription>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
 							<FormField
 								control={form.control}
 								name="email"

@@ -129,3 +129,23 @@ export const toastOptions = {
 		},
 	},
 };
+
+export const generateRoundedPriceRanges = (maxValue: number) => {
+	const ranges = [];
+	const steps = [
+		100, 500, 1000, 5000, 10000, 50000, 100000, 150000, 200000, 250000,
+	];
+	let start = 0;
+
+	for (const step of steps) {
+		if (start >= maxValue) break;
+
+		let end = start + step;
+		if (end > maxValue) end = Math.ceil(maxValue / 10) * 10;
+		end = Math.round(end / 100) * 100;
+		ranges.push([start, end]);
+		start = end + 1;
+	}
+
+	return ranges;
+};

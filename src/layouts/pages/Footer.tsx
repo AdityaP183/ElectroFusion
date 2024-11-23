@@ -63,7 +63,7 @@ const footerLinks = [
 
 const Footer = () => {
 	return (
-		<footer className="px-[10%] flex flex-col gap-5">
+		<footer className="flex flex-col gap-5">
 			<div className="flex justify-between">
 				<div>
 					<div className="flex items-center gap-2 p-2">

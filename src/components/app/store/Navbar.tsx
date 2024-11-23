@@ -4,13 +4,14 @@ import {
 	NavigationMenuItem,
 	NavigationMenuList,
 } from "@/components/ui/navigation-menu";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { tempUser } from "@/lib/app-data";
-import { Bookmark, Cog, Search, ShoppingCart } from "lucide-react";
+import { Cog, Heart, Search, ShoppingCart } from "lucide-react";
 
 const Navbar = () => {
 	const [isFloating, setIsFloating] = useState<boolean>(false);
+	const { pathname } = useLocation();
 
 	useEffect(() => {
 		const handleScroll = () => {
@@ -55,28 +56,46 @@ const Navbar = () => {
 						<NavigationMenuItem>
 							<Link
 								to={`/${role}`}
-								className="px-2 py-1 text-sm font-bold rounded-md bg-primary text-primary-foreground"
+								className="px-2 py-1 text-sm font-bold rounded-md bg-primary"
 							>
 								Dashboard
 							</Link>
 						</NavigationMenuItem>
 					)}
-					<NavigationMenuItem>
-						<Link to={`/${role}/profile`}>
+					<NavigationMenuItem
+						className={`p-2 ${
+							pathname === `/${role}/settings`
+								? "bg-white/20 glass"
+								: ""
+						} rounded-xl`}
+					>
+						<Link to={`/${role}/settings`}>
 							<Cog />
 						</Link>
 					</NavigationMenuItem>
-					<NavigationMenuItem>
+					<NavigationMenuItem
+						className={`p-2 ${
+							pathname === `/search` ? "bg-white/20 glass" : ""
+						} rounded-xl`}
+					>
 						<Link to="/search">
 							<Search />
 						</Link>
 					</NavigationMenuItem>
-					<NavigationMenuItem>
+					<NavigationMenuItem
+						className={`p-2 ${
+							pathname === "/wishlist" ? "bg-white/20 glass" : ""
+						} rounded-xl`}
+					>
 						<Link to="/wishlist">
-							<Bookmark />
+							<Heart />
 						</Link>
 					</NavigationMenuItem>
-					<NavigationMenuItem>
+					<NavigationMenuItem
+						className={`p-2 rounded-xl ${
+							pathname === "/cart" ? "bg-white/20 glass" : ""
+						}`}
+					>
 						<Link to="/cart">
 							<ShoppingCart />
 						</Link>

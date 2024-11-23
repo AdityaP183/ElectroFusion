@@ -30,11 +30,19 @@ export const tempUser: User = {
 	id: "8d3902ed0efcb0fb1ef884c3",
 	username: "iambatman18",
 	email: "iambatman@google.com",
-	role: "vendor",
+	role: "customer",
 	password: "testuser",
 	first_name: "Bruce",
 	last_name: "Wayne",
 	avatar: "",
+	address: {
+		address: faker.location.streetAddress(false),
+		city: faker.location.city(),
+		state: faker.location.state(),
+		postalCode: faker.location.zipCode({
+			format: "######",
+		}),
+	},
 };
 
 export const sidebarItems: SidebarItem[] = [
@@ -215,11 +223,15 @@ export const productsData: Products[] = Array.from({ length: 20 }, () => {
 	return {
 		id: faker.database.mongodbObjectId(),
 		productName: faker.commerce.productName(),
-		price: parseFloat(faker.commerce.price()),
+		price: parseFloat(faker.commerce.price({ min: 1000, max: 100000 })),
 		category: faker.helpers.arrayElement(categoriesName),
 		stock: Math.floor(Math.random() * 100),
 		image: faker.helpers.arrayElement(productsImages),
 		times_ordered: Math.floor(Math.random() * 100),
+		description: faker.commerce.productDescription(),
+		discountedPrice: parseFloat(
+			faker.commerce.price({ min: 500, max: 1000 })
+		),
 	};
 });
 
@@ -438,3 +450,5 @@ export const productData: ProductInfo = {
 productData.discountedPercent = productData.isDiscounted
 	? faker.helpers.arrayElement([5, 10, 15, 20, 25, 40])
 	: undefined;
+
+export const cartOrders = () => productsData.slice(4, 7);

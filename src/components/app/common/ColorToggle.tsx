@@ -14,10 +14,10 @@ const availableThemeColors = [
 	{ name: "Zinc", light: "bg-zinc-900", dark: "bg-zinc-700" },
 	{ name: "Slate", light: "bg-slate-500", dark: "bg-slate-700" },
 	{ name: "Stone", light: "bg-stone-500", dark: "bg-stone-700" },
-	// { name: "Rose", light: "bg-rose-600", dark: "bg-rose-700" },
-	// { name: "Blue", light: "bg-blue-600", dark: "bg-blue-700" },
-	// { name: "Green", light: "bg-green-600", dark: "bg-green-500" },
-	// { name: "Orange", light: "bg-orange-500", dark: "bg-orange-700" },
+	{ name: "Red", light: "bg-red-600", dark: "bg-red-700" },
+	{ name: "Orange", light: "bg-orange-500", dark: "bg-orange-700" },
+	{ name: "Blue", light: "bg-blue-600", dark: "bg-blue-700" },
+	{ name: "Violet", light: "bg-violet-600", dark: "bg-violet-500" },
 ];
 
 const ColorToggle = () => {

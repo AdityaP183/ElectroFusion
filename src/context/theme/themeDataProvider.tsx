@@ -12,11 +12,11 @@ const ThemeDataProvider = ({ children }: ThemeProviderProps) => {
 	const getSavedThemeColor = () => {
 		try {
 			return (
-				(localStorage.getItem("themeColor") as ThemeColors) || "Zinc"
+				(localStorage.getItem("themeColor") as ThemeColors) || "Violet"
 			);
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
-			return "Zinc" as ThemeColors;
+			return "Violet" as ThemeColors;
 		}
 	};
 
