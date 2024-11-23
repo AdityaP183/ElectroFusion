@@ -30,7 +30,7 @@ export const tempUser: User = {
 	id: "8d3902ed0efcb0fb1ef884c3",
 	username: "iambatman18",
 	email: "iambatman@google.com",
-	role: "customer",
+	role: "vendor",
 	password: "testuser",
 	first_name: "Bruce",
 	last_name: "Wayne",

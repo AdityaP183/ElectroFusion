@@ -56,17 +56,17 @@ const Navbar = () => {
 						<NavigationMenuItem>
 							<Link
 								to={`/${role}`}
-								className="px-2 py-1 text-sm font-bold rounded-md bg-primary"
+								className="px-2 py-1 text-sm font-bold rounded-md bg-primary text-primary-foreground hover:bg-primary/90"
 							>
 								Dashboard
 							</Link>
 						</NavigationMenuItem>
 					)}
 					<NavigationMenuItem
-						className={`p-2 ${
+						className={`p-2 cursor-pointer ${
 							pathname === `/${role}/settings`
 								? "bg-white/20 glass"
-								: ""
+								: "hover:bg-secondary/60"
 						} rounded-xl`}
 					>
 						<Link to={`/${role}/settings`}>
@@ -74,8 +74,10 @@ const Navbar = () => {
 						</Link>
 					</NavigationMenuItem>
 					<NavigationMenuItem
-						className={`p-2 ${
-							pathname === `/search` ? "bg-white/20 glass" : ""
+						className={`p-2 cursor-pointer ${
+							pathname === `/search`
+								? "bg-white/20 glass"
+								: "hover:bg-secondary/60"
 						} rounded-xl`}
 					>
 						<Link to="/search">
@@ -83,8 +85,10 @@ const Navbar = () => {
 						</Link>
 					</NavigationMenuItem>
 					<NavigationMenuItem
-						className={`p-2 ${
-							pathname === "/wishlist" ? "bg-white/20 glass" : ""
+						className={`p-2 cursor-pointer ${
+							pathname === "/wishlist"
+								? "bg-white/20 glass"
+								: "hover:bg-secondary/60"
 						} rounded-xl`}
 					>
 						<Link to="/wishlist">
@@ -92,8 +96,10 @@ const Navbar = () => {
 						</Link>
 					</NavigationMenuItem>
 					<NavigationMenuItem
-						className={`p-2 rounded-xl ${
-							pathname === "/cart" ? "bg-white/20 glass" : ""
+						className={`p-2 rounded-xl cursor-pointer ${
+							pathname === "/cart"
+								? "bg-white/20 glass"
+								: "hover:bg-secondary/60"
 						}`}
 					>
 						<Link to="/cart">

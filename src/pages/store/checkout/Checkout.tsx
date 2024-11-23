@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
 import CheckoutTab1 from "./CheckoutTab1";
 import CheckoutTab2 from "./CheckoutTab2";
 import CheckoutTab3 from "./CheckoutTab3";
