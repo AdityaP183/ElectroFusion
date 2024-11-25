@@ -26,6 +26,7 @@ import Navbar from "./components/app/store/Navbar";
 import Footer from "./layouts/pages/Footer";
 import StoreLayout from "./layouts/pages/StoreLayout";
 import CustomerRoutes from "./layouts/routes/CustomerRoutes";
+import Landing from "./pages/common/Landing";
 
 const queryClient = new QueryClient();
 
@@ -43,6 +44,14 @@ const AppContent = () => {
 			<Routes>
 				<Route
 					path="/"
+					element={
+						<StoreLayout>
+							<Landing />
+						</StoreLayout>
+					}
+				/>
+				<Route
+					path="/home"
 					element={
 						<StoreLayout>
 							<Home />
