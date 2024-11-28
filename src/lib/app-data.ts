@@ -30,7 +30,7 @@ export const tempUser: User = {
 	id: "8d3902ed0efcb0fb1ef884c3",
 	username: "iambatman18",
 	email: "iambatman@google.com",
-	role: "vendor",
+	role: "admin",
 	password: "testuser",
 	first_name: "Bruce",
 	last_name: "Wayne",
@@ -316,7 +316,6 @@ export const vendorData: Vendors = {
 	owner: tempUser,
 	store_name: "Satan's Classic",
 	store_address: "Test Store Address",
-	monthly_sales: 2000000,
 };
 
 export const vendorSidebarItems: SidebarNestedItem[] = [

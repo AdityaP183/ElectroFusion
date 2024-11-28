@@ -69,7 +69,7 @@ const Login = () => {
 
 	console.log("Rendering Register...");
 	return (
-		<div className="flex items-center justify-center w-full h-screen">
+		<div className="flex items-center justify-center w-full my-16">
 			<motion.div
 				initial={{ opacity: 0, y: 20 }}
 				animate={{ opacity: 1, y: 0 }}
@@ -183,7 +183,7 @@ const Login = () => {
 						</CardFooter>
 					</Card>
 					<Card className="relative flex-1 w-full h-auto overflow-hidden">
-						<div className="absolute top-0 left-0 bottom-0 right-0 items-center px-5 py-24 bg-[radial-gradient(125%_125%_at_50%_0%,#000_40%,#63e_100%)]"></div>
+						<div className="absolute top-0 left-0 bottom-0 right-0 items-center px-5 py-24 bg-[radial-gradient(155%_130%_at_50%_0%,_#000_40%,_hsl(var(--primary))_100%)]"></div>
 						<div className="absolute flex items-center justify-between top-2 left-2 right-2 z-[1]">
 							<div className="flex items-center gap-1 p-1 text-sm rounded-full top-1 left-1 bg-secondary/60 glass font-ox">
 								<Avatar shape="circle" className="w-7 h-7">

@@ -50,7 +50,7 @@ const TooltipWrapper = ({
 					side={side}
 					sideOffset={sideOffset}
 					className={cn(
-						`bg-secondary bg-opacity-80 text-primary ${
+						`bg-secondary bg-opacity-80 text-primary-foreground ${
 							isHidden && "hidden"
 						}`,
 						className

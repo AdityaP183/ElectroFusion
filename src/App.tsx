@@ -42,19 +42,12 @@ const AppContent = () => {
 			{!isRestrictedPath && <Navbar />}
 
 			<Routes>
+				{/* Public Routes */}
 				<Route
 					path="/"
 					element={
 						<StoreLayout>
 							<Landing />
-						</StoreLayout>
-					}
-				/>
-				<Route
-					path="/home"
-					element={
-						<StoreLayout>
-							<Home />
 						</StoreLayout>
 					}
 				/>
@@ -64,6 +57,16 @@ const AppContent = () => {
 				<Route path="/reset-password" element={<ResetPassword />} />
 				<Route path="/contact" element={<ContactUs />} />
 				<Route path="/about" element={<AboutUs />} />
+
+				{/* Shared Routes for Authenticated Users */}
+				<Route
+					path="/home"
+					element={
+						<StoreLayout>
+							<Home />
+						</StoreLayout>
+					}
+				/>
 				<Route
 					path="/search"
 					element={
@@ -128,22 +131,27 @@ const AppContent = () => {
 	);
 };
 
+const Providers: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+	<ThemeProvider
+		defaultTheme="dark"
+		attribute="class"
+		enableSystem
+		disableTransitionOnChange
+	>
+		<ThemeDataProvider>
+			<QueryClientProvider client={queryClient}>
+				{children}
+				<Toaster toastOptions={toastOptions} />
+			</QueryClientProvider>
+		</ThemeDataProvider>
+	</ThemeProvider>
+);
+
 const App = () => (
 	<Router>
-		<ThemeProvider
-			defaultTheme="dark"
-			attribute="class"
-			enableSystem
-			disableTransitionOnChange
-		>
-			<ThemeDataProvider>
-				<QueryClientProvider client={queryClient}>
-					<AppContent />
-					<Toaster toastOptions={toastOptions} />
-					{/* <ReactQueryDevtools initialIsOpen={false} position="bottom" buttonPosition="bottom-left"/> */}
-				</QueryClientProvider>
-			</ThemeDataProvider>
-		</ThemeProvider>
+		<Providers>
+			<AppContent />
+		</Providers>
 	</Router>
 );
 

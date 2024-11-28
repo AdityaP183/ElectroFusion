@@ -34,10 +34,7 @@ const Dashboard = () => {
 	const filteredSalesData = useMemo(() => salesData.slice(0, 12), []);
 
 	const filteredCategoriesData = useMemo(
-		() =>
-			categoriesData
-				.sort((a, b) => b.itemsSold - a.itemsSold)
-				.slice(0, 8),
+		() => categoriesData.sort((a, b) => b.sold - a.sold).slice(0, 8),
 		[]
 	);
 

@@ -105,7 +105,7 @@ const SidePanel = ({
 																	? "group-data-[collapsible=icon]:bg-secondary hover:bg-secondary"
 																	: "hover:bg-secondary/60"
 															}`}
-															tooltipStyling="bg-secondary bg-opacity-80 text-primary"
+															tooltipStyling="bg-secondary bg-opacity-80 text-secondary-foreground z-10"
 														>
 															{item.icon && (
 																<item.icon className="w-7 h-7" />

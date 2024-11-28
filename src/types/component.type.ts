@@ -120,7 +120,6 @@ export type Vendors = {
 	store_description?: string;
 	store_logo?: string;
 	store_address?: string;
-	monthly_sales?: number;
 };
 
 export type TableWrapperProps<TData> = {

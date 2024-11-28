@@ -110,8 +110,8 @@ const Landing = () => {
 						/>
 					</div>
 				</div>
-				<div className="text-4xl font-bold text-center">
-					<p className="leading-none text-transparent whitespace-pre-wrap pointer-events-none bg-gradient-to-b from-cyan-600 to-indigo-600 bg-clip-text">
+				<div className="text-5xl font-bold text-center">
+					<p className="leading-none text-transparent whitespace-pre-wrap pointer-events-none bg-gradient-to-r from-cyan-400 to-indigo-600 bg-clip-text">
 						Experience Modern Shopping, Tailored for You.
 					</p>
 				</div>
