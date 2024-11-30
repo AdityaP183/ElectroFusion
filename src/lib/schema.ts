@@ -23,10 +23,6 @@ export const profileSchema = z.object({
 });
 
 export const registerSchema = z.object({
-	username: z
-		.string()
-		.min(5, "Username must be at least 5 characters")
-		.max(20, "Username must be at most 20 characters"),
 	firstName: z.string().min(2, "First name must be at least 2 characters"),
 	lastName: z.string().min(2, "Last name must be at least 2 characters"),
 	email: z.string().email(),

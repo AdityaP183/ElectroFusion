@@ -17,13 +17,18 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import useAuth from "@/context/store/useFetch";
+import { login } from "@/db/apiAuth";
 import { loginSchema } from "@/lib/schema";
+import { fusionStore } from "@/store/store";
+import { User } from "@/types/component.type";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Info, LoaderPinwheel } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
+import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
 
 const loginHeroTexts = [
@@ -42,17 +47,35 @@ const loginHeroTexts = [
 ];
 
 const Login = () => {
+	const navigate = useNavigate();
 	const form = useForm<z.infer<typeof loginSchema>>({
 		resolver: zodResolver(loginSchema),
 		defaultValues: {
 			email: "",
 			password: "",
 		},
-		mode: "onChange",
+		mode: "onSubmit",
 	});
 
-	function onFormSubmit(values: z.infer<typeof loginSchema>) {
-		console.log(values);
+	const formData = form.getValues();
+
+	const { data, loading, error, fn: loginUser } = useAuth(login, formData);
+	const { setUser } = fusionStore();
+
+	function onFormSubmit() {
+		loginUser();
+		if (!error && data?.user) {
+			const extractedUser: User = {
+				id: data.user.id,
+				email: data.user.email || "",
+				firstName: data.user.user_metadata?.firstName,
+				lastName: data.user.user_metadata?.lastName,
+				role: data.user.user_metadata?.role,
+				avatar: data.user.user_metadata?.avatar,
+				createdAt: data.user.created_at,
+			};
+			setUser(extractedUser);
+		}
 	}
 
 	const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -66,6 +89,13 @@ const Login = () => {
 
 		return () => clearInterval(interval);
 	}, []);
+
+	useEffect(() => {
+		if (error === null && data) {
+			navigate("/home", { replace: true });
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [error, loading]);
 
 	console.log("Rendering Register...");
 	return (
@@ -90,6 +120,11 @@ const Login = () => {
 								</Link>{" "}
 								now
 							</CardDescription>
+							{error && (
+								<div className="text-lg text-rose-600">
+									{error?.message}
+								</div>
+							)}
 						</CardHeader>
 						<CardContent className="px-10 mt-10">
 							<Form {...form}>
@@ -154,8 +189,13 @@ const Login = () => {
 										className="mt-6 font-extrabold"
 										type="submit"
 										variant="secondary"
+										disabled={loading}
 									>
-										Login
+										{loading ? (
+											<LoaderPinwheel className="mr-2 animate-spin" />
+										) : (
+											"Register"
+										)}
 									</Button>
 								</form>
 							</Form>
@@ -168,13 +208,38 @@ const Login = () => {
 								</span>
 								<div className="flex-1 border-t border-secondary" />
 							</div>
-							<Button className="flex items-center w-full gap-3 text-lg font-bold">
+							<Button
+								className="flex items-center w-full gap-3 text-lg font-bold"
+								onClick={() =>
+									toast(
+										<div className="flex items-center gap-3 text-sm text-yellow-500">
+											<Info />
+											Login using Google currently not
+											available
+										</div>,
+										{
+											style: { width: "fit-content" },
+										}
+									)
+								}
+							>
 								<Avatar className="w-6 h-6">
 									<AvatarImage src="./assets/google.svg" />
 								</Avatar>
 								Google
 							</Button>
-							<Button className="flex items-center w-full gap-3 text-lg font-bold">
+							<Button
+								className="flex items-center w-full gap-3 text-lg font-bold"
+								onClick={() =>
+									toast(
+										<div className="flex items-center gap-3 text-sm font-medium text-yellow-500">
+											<Info />
+											Login using Github currently not
+											available
+										</div>
+									)
+								}
+							>
 								<Avatar className="w-7 h-7">
 									<AvatarImage src="./assets/github.svg" />
 								</Avatar>
@@ -224,7 +289,7 @@ const Login = () => {
 								{loginHeroTexts.map((_, index) => (
 									<div
 										key={index}
-										className="relative w-10 h-2 overflow-hidden rounded-full bg-white/40"
+										className="relative w-10 h-2 overflow-hidden rounded-full bg-primary"
 									>
 										<motion.div
 											key={`${currentIndex}-${index}`}
@@ -246,7 +311,7 @@ const Login = () => {
 														: 0,
 												ease: "linear",
 											}}
-											className="absolute top-0 left-0 h-2 bg-white rounded-full"
+											className="absolute top-0 left-0 h-2 rounded-full bg-primary-foreground"
 										/>
 									</div>
 								))}

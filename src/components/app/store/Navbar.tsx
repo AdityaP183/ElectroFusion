@@ -8,10 +8,13 @@ import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { tempUser } from "@/lib/app-data";
 import { Cog, Heart, Search, ShoppingCart } from "lucide-react";
+import { fusionStore } from "@/store/store";
+import { Button } from "@/components/ui/button";
 
 const Navbar = () => {
 	const [isFloating, setIsFloating] = useState<boolean>(false);
 	const { pathname } = useLocation();
+	const { user } = fusionStore();
 
 	useEffect(() => {
 		const handleScroll = () => {
@@ -52,60 +55,80 @@ const Navbar = () => {
 					</Link>
 				</NavigationMenuList>
 				<NavigationMenuList className="flex items-center gap-3 mr-3">
-					{role !== "customer" && (
-						<NavigationMenuItem>
-							<Link
-								to={`/${role}`}
-								className="px-2 py-1 text-sm font-bold rounded-md bg-primary text-primary-foreground hover:bg-primary/90"
+					{user ? (
+						<>
+							{role !== "customer" && (
+								<NavigationMenuItem>
+									<Link
+										to={`/${role}`}
+										className="px-2 py-1 text-sm font-bold rounded-md bg-primary text-primary-foreground hover:bg-primary/90"
+									>
+										Dashboard
+									</Link>
+								</NavigationMenuItem>
+							)}
+							<NavigationMenuItem
+								className={`p-2 cursor-pointer ${
+									pathname === `/${role}/settings`
+										? "bg-white/20 glass"
+										: "hover:bg-secondary/60"
+								} rounded-xl`}
 							>
-								Dashboard
-							</Link>
-						</NavigationMenuItem>
+								<Link to={`/${role}/settings`}>
+									<Cog />
+								</Link>
+							</NavigationMenuItem>
+							<NavigationMenuItem
+								className={`p-2 cursor-pointer ${
+									pathname === `/search`
+										? "bg-white/20 glass"
+										: "hover:bg-secondary/60"
+								} rounded-xl`}
+							>
+								<Link to="/search">
+									<Search />
+								</Link>
+							</NavigationMenuItem>
+							<NavigationMenuItem
+								className={`p-2 cursor-pointer ${
+									pathname === "/wishlist"
+										? "bg-white/20 glass"
+										: "hover:bg-secondary/60"
+								} rounded-xl`}
+							>
+								<Link to="/wishlist">
+									<Heart />
+								</Link>
+							</NavigationMenuItem>
+							<NavigationMenuItem
+								className={`p-2 rounded-xl cursor-pointer ${
+									pathname === "/cart"
+										? "bg-white/20 glass"
+										: "hover:bg-secondary/60"
+								}`}
+							>
+								<Link to="/cart">
+									<ShoppingCart />
+								</Link>
+							</NavigationMenuItem>
+						</>
+					) : (
+						<>
+							<NavigationMenuItem>
+								<Button
+									variant={"outline"}
+									className="font-bold rounded-full"
+								>
+									Sign up
+								</Button>
+							</NavigationMenuItem>
+							<NavigationMenuItem>
+								<Button className="font-bold rounded-full">
+									Login
+								</Button>
+							</NavigationMenuItem>
+						</>
 					)}
-					<NavigationMenuItem
-						className={`p-2 cursor-pointer ${
-							pathname === `/${role}/settings`
-								? "bg-white/20 glass"
-								: "hover:bg-secondary/60"
-						} rounded-xl`}
-					>
-						<Link to={`/${role}/settings`}>
-							<Cog />
-						</Link>
-					</NavigationMenuItem>
-					<NavigationMenuItem
-						className={`p-2 cursor-pointer ${
-							pathname === `/search`
-								? "bg-white/20 glass"
-								: "hover:bg-secondary/60"
-						} rounded-xl`}
-					>
-						<Link to="/search">
-							<Search />
-						</Link>
-					</NavigationMenuItem>
-					<NavigationMenuItem
-						className={`p-2 cursor-pointer ${
-							pathname === "/wishlist"
-								? "bg-white/20 glass"
-								: "hover:bg-secondary/60"
-						} rounded-xl`}
-					>
-						<Link to="/wishlist">
-							<Heart />
-						</Link>
-					</NavigationMenuItem>
-					<NavigationMenuItem
-						className={`p-2 rounded-xl cursor-pointer ${
-							pathname === "/cart"
-								? "bg-white/20 glass"
-								: "hover:bg-secondary/60"
-						}`}
-					>
-						<Link to="/cart">
-							<ShoppingCart />
-						</Link>
-					</NavigationMenuItem>
 				</NavigationMenuList>
 			</NavigationMenu>
 		</header>

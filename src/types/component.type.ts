@@ -102,15 +102,13 @@ export type UserAddress = {
 
 export type User = {
 	id: string;
-	username: string;
 	email: string;
-	password: string;
-	first_name: string;
-	last_name: string;
+	firstName: string;
+	lastName: string;
 	address?: UserAddress;
-	phone_number?: string;
 	role: UserRoles;
 	avatar?: string;
+	createdAt?: string;
 };
 
 export type Vendors = {

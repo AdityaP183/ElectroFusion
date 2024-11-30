@@ -21,10 +21,14 @@ import { AnimatePresence, motion } from "framer-motion";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, LoaderPinwheel } from "lucide-react";
 import { useEffect, useState } from "react";
+import useFetch from "@/context/store/useFetch";
+import { register } from "@/db/apiAuth";
+import { fusionStore } from "@/store/store";
+import { User } from "@/types/component.type";
 
 const registerHeroTexts = [
 	{
@@ -42,6 +46,7 @@ const registerHeroTexts = [
 ];
 
 const Register = () => {
+	const navigate = useNavigate();
 	const form = useForm<z.infer<typeof registerSchema>>({
 		resolver: zodResolver(registerSchema),
 		defaultValues: {
@@ -53,8 +58,30 @@ const Register = () => {
 		mode: "onChange",
 	});
 
-	function onFormSubmit(values: z.infer<typeof registerSchema>) {
-		console.log(values);
+	const formData = form.getValues();
+
+	const {
+		data,
+		loading,
+		error,
+		fn: registerUser,
+	} = useFetch(register, { ...formData, role: "customer" });
+	const { setUser } = fusionStore();
+
+	function onFormSubmit() {
+		registerUser();
+		if (!error && data?.user) {
+			const extractedUser: User = {
+				id: data.user.id,
+				email: data.user.email || "",
+				firstName: data.user.user_metadata?.firstName,
+				lastName: data.user.user_metadata?.lastName,
+				role: data.user.user_metadata?.role,
+				avatar: data.user.user_metadata?.avatar,
+				createdAt: data.user.created_at,
+			};
+			setUser(extractedUser);
+		}
 	}
 
 	const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -69,6 +96,12 @@ const Register = () => {
 		return () => clearInterval(interval);
 	}, []);
 
+	useEffect(() => {
+		if (error === null && data) {
+			navigate("/home", { replace: true });
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [error, loading]);
 	console.log("Rendering Register...");
 	return (
 		<div className="flex items-center justify-center w-full my-16">
@@ -172,6 +205,11 @@ const Register = () => {
 								</Link>{" "}
 								now
 							</CardDescription>
+							{error && (
+								<div className="text-lg text-rose-600">
+									{error?.message}
+								</div>
+							)}
 						</CardHeader>
 						<CardContent className="px-10 mt-10">
 							<Form {...form}>
@@ -257,8 +295,13 @@ const Register = () => {
 										className="col-span-2 mt-6 font-extrabold"
 										type="submit"
 										variant="secondary"
+										disabled={loading}
 									>
-										Register
+										{loading ? (
+											<LoaderPinwheel className="mr-2 animate-spin" />
+										) : (
+											"Register"
+										)}
 									</Button>
 								</form>
 							</Form>
