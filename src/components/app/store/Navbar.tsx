@@ -4,17 +4,21 @@ import {
 	NavigationMenuItem,
 	NavigationMenuList,
 } from "@/components/ui/navigation-menu";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { tempUser } from "@/lib/app-data";
-import { Cog, Heart, Search, ShoppingCart } from "lucide-react";
+import { Cog, Heart, LogOut, Search, ShoppingCart } from "lucide-react";
 import { fusionStore } from "@/store/store";
 import { Button } from "@/components/ui/button";
+import useFetch from "@/context/store/useFetch";
+import { logout } from "@/db/apiAuth";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
 	const [isFloating, setIsFloating] = useState<boolean>(false);
 	const { pathname } = useLocation();
 	const { user } = fusionStore();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		const handleScroll = () => {
@@ -32,6 +36,20 @@ const Navbar = () => {
 	}, []);
 
 	const { role } = tempUser;
+	const { loading, error, fn: logoutUser } = useFetch(logout);
+
+	const handleUserLogout = async () => {
+		await logoutUser();
+
+		if (!error && !loading) {
+			toast.success("Successfully logged out");
+			navigate("/login");
+		}
+
+		if (error) {
+			toast.error(error.message);
+		}
+	};
 
 	return (
 		<header
@@ -43,7 +61,7 @@ const Navbar = () => {
 		>
 			<NavigationMenu className="flex items-center justify-between max-w-full px-2">
 				<NavigationMenuList className="flex items-center">
-					<Link to="/" className="mr-5">
+					<Link to="/home" className="mr-5">
 						<div className="flex items-center gap-2 p-2">
 							<Avatar shape="square" className="w-6 h-6">
 								<AvatarImage src="/logo.svg" />
@@ -71,7 +89,7 @@ const Navbar = () => {
 								className={`p-2 cursor-pointer ${
 									pathname === `/${role}/settings`
 										? "bg-white/20 glass"
-										: "hover:bg-secondary/60"
+										: "hover:bg-secondary-foreground/20"
 								} rounded-xl`}
 							>
 								<Link to={`/${role}/settings`}>
@@ -82,7 +100,7 @@ const Navbar = () => {
 								className={`p-2 cursor-pointer ${
 									pathname === `/search`
 										? "bg-white/20 glass"
-										: "hover:bg-secondary/60"
+										: "hover:bg-secondary-foreground/20"
 								} rounded-xl`}
 							>
 								<Link to="/search">
@@ -93,7 +111,7 @@ const Navbar = () => {
 								className={`p-2 cursor-pointer ${
 									pathname === "/wishlist"
 										? "bg-white/20 glass"
-										: "hover:bg-secondary/60"
+										: "hover:bg-secondary-foreground/20"
 								} rounded-xl`}
 							>
 								<Link to="/wishlist">
@@ -104,12 +122,18 @@ const Navbar = () => {
 								className={`p-2 rounded-xl cursor-pointer ${
 									pathname === "/cart"
 										? "bg-white/20 glass"
-										: "hover:bg-secondary/60"
+										: "hover:bg-secondary-foreground/20"
 								}`}
 							>
 								<Link to="/cart">
 									<ShoppingCart />
 								</Link>
+							</NavigationMenuItem>
+							<NavigationMenuItem
+								className="p-2 cursor-pointer rounded-xl hover:bg-secondary-foreground/20"
+								onClick={handleUserLogout}
+							>
+								<LogOut />
 							</NavigationMenuItem>
 						</>
 					) : (
@@ -118,12 +142,20 @@ const Navbar = () => {
 								<Button
 									variant={"outline"}
 									className="font-bold rounded-full"
+									onClick={() =>
+										navigate("/signup", { replace: true })
+									}
 								>
 									Sign up
 								</Button>
 							</NavigationMenuItem>
 							<NavigationMenuItem>
-								<Button className="font-bold rounded-full">
+								<Button
+									className="font-bold rounded-full"
+									onClick={() =>
+										navigate("/login", { replace: true })
+									}
+								>
 									Login
 								</Button>
 							</NavigationMenuItem>

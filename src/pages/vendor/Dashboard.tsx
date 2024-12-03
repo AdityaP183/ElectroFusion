@@ -97,7 +97,7 @@ const Dashboard = () => {
 	console.log("Rendering Vendor Dashboard...");
 
 	return (
-		<div>
+		<div className="mb-5">
 			<div className="sticky top-0 z-10 flex items-start py-2 bg-background">
 				<ToggleGroup
 					type="single"

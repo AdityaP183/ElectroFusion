@@ -122,7 +122,7 @@ const CartItem = ({ data }: { data: Products }) => {
 					</div>
 					<p className="text-xl font-bold">
 						{formatValueWithIndianNumericPrefix(
-							data.price,
+							data.originalPrice * selectedAmount,
 							"price"
 						)}
 					</p>

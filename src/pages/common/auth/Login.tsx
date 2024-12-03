@@ -194,7 +194,7 @@ const Login = () => {
 										{loading ? (
 											<LoaderPinwheel className="mr-2 animate-spin" />
 										) : (
-											"Register"
+											"Login"
 										)}
 									</Button>
 								</form>

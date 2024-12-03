@@ -5,6 +5,7 @@ import {
 	BrowserRouter as Router,
 	Routes,
 	useLocation,
+	useNavigate,
 } from "react-router-dom";
 import {
 	AboutUs,
@@ -27,15 +28,63 @@ import Footer from "./layouts/pages/Footer";
 import StoreLayout from "./layouts/pages/StoreLayout";
 import CustomerRoutes from "./layouts/routes/CustomerRoutes";
 import Landing from "./pages/common/Landing";
+import { useEffect } from "react";
+import useFetch from "./context/store/useFetch";
+import { getCurrentUser } from "./db/apiAuth";
+import { fusionStore } from "./store/store";
+import { User } from "./types/component.type";
 
 const queryClient = new QueryClient();
 
 const AppContent = () => {
 	const location = useLocation();
+	const navigate = useNavigate();
 
 	const isRestrictedPath =
 		location.pathname.startsWith("/vendor") ||
 		location.pathname.startsWith("/admin");
+
+	const {
+		data,
+		error,
+		loading,
+		fn: getLoggedUser,
+	} = useFetch(getCurrentUser);
+	const { user, setUser } = fusionStore();
+
+	useEffect(() => {
+		if (user && ["/login", "/register"].includes(location.pathname)) {
+			navigate("/home");
+			return;
+		}
+		if (loading || error || user) return;
+
+		const fetchUser = async () => {
+			await getLoggedUser();
+			if (data) {
+				const extractedUser: User = {
+					id: data.id,
+					email: data.email || "",
+					firstName: data.user_metadata?.firstName,
+					lastName: data.user_metadata?.lastName,
+					role: data.user_metadata?.role,
+					avatar: data.user_metadata?.avatar,
+					createdAt: data.created_at,
+				};
+				setUser(extractedUser);
+			}
+		};
+		fetchUser();
+	}, [
+		getLoggedUser,
+		loading,
+		error,
+		data,
+		setUser,
+		user,
+		navigate,
+		location.pathname,
+	]);
 
 	return (
 		<>

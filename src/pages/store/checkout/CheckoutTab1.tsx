@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/card";
 import { Tabs } from "./Checkout";
 import { Button } from "@/components/ui/button";
-import { cartOrders, tempUser } from "@/lib/app-data";
+import { productsData, tempUser } from "@/lib/app-data";
 import { useMemo } from "react";
 import CartItem from "@/components/app/store/CartItem";
 import { formatValueWithIndianNumericPrefix } from "@/lib/utils";
@@ -18,21 +18,9 @@ const CheckoutTab1 = ({
 	setActiveTab: (tabs: Tabs) => void;
 }) => {
 	const GST_RATE = import.meta.env.VITE_GST_RATE;
-	const ordersInCart = useMemo(() => cartOrders(), []);
-	const totalPrice = useMemo(
-		() =>
-			parseFloat(
-				ordersInCart
-					.reduce((acc, order) => acc + order.price, 0)
-					.toFixed(2)
-			),
-		[ordersInCart]
-	);
-	const totalDiscount = useMemo(
-		() =>
-			ordersInCart.reduce((acc, order) => acc + order.discountedPrice, 0),
-		[ordersInCart]
-	);
+	const ordersInCart = useMemo(() => productsData.slice(0, 4), []);
+	const totalPrice = 250000;
+	const totalDiscount = 3500;
 
 	return (
 		<Card className="w-full">

@@ -83,13 +83,18 @@ export type Categories = {
 export type Products = {
 	id: string;
 	productName: string;
-	category: string;
+	rating?: {
+		stars: number;
+		count: number;
+	};
+	isDiscounted?: boolean;
+	originalPrice: number;
+	discountedPercent?: number;
+	dicountedPrice: number;
 	stock: number;
-	price: number;
+	category: string;
+	description: string;
 	image: string;
-	times_ordered: number;
-	description?: string;
-	discountedPrice: number;
 };
 
 export type UserRoles = "admin" | "vendor" | "customer" | undefined;
@@ -156,6 +161,7 @@ export type ProductInfo = {
 	isDiscounted: boolean;
 	originalPrice: number;
 	discountedPercent?: number;
+	dicountedPrice?: number;
 	stock: number;
 	category: string[];
 	description: string;
@@ -171,4 +177,5 @@ export type ProductCardType = {
 	description?: string;
 	price: number;
 	isWishlist?: boolean;
+	className?: string;
 };

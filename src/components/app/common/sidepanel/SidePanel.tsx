@@ -206,15 +206,15 @@ const SidePanel = ({
 												tempUser.avatar ||
 												"https://shorturl.at/vIjhF"
 											}
-											alt={tempUser.username}
+											alt={tempUser.firstName}
 										/>
 										<AvatarFallback className="rounded-lg">
-											{tempUser.username[0]}
+											{tempUser.firstName[0]}
 										</AvatarFallback>
 									</Avatar>
 									<div className="grid flex-1 text-sm leading-tight text-left">
 										<span className="font-semibold truncate">
-											{tempUser.username}
+											{tempUser.firstName}
 										</span>
 										<span className="text-xs truncate">
 											{tempUser.email}
@@ -237,7 +237,7 @@ const SidePanel = ({
 													tempUser.avatar ||
 													"https://shorturl.at/vIjhF"
 												}
-												alt={tempUser.username}
+												alt={tempUser.firstName}
 											/>
 											<AvatarFallback className="rounded-lg">
 												CN
@@ -245,7 +245,9 @@ const SidePanel = ({
 										</Avatar>
 										<div className="grid flex-1 text-sm leading-tight text-left">
 											<span className="font-semibold truncate">
-												{tempUser.username}
+												{tempUser.firstName +
+													" " +
+													tempUser.lastName}
 											</span>
 											<span className="text-xs truncate">
 												{tempUser.email}

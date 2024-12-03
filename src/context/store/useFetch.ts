@@ -4,7 +4,7 @@ type UseFetch<TParams, TResponse> = (params: TParams) => Promise<TResponse>;
 
 const useFetch = <TParams, TResponse>(
 	cb: UseFetch<TParams, TResponse>,
-	params: TParams
+	params?: TParams
 ) => {
 	const [data, setData] = useState<TResponse | null>(null);
 	const [loading, setLoading] = useState<boolean>(false);
@@ -15,7 +15,7 @@ const useFetch = <TParams, TResponse>(
 		setError(null);
 
 		try {
-			const response = await cb(params);
+			const response = await cb(params as TParams);
 			setData(response);
 			setError(null);
 		} catch (error) {

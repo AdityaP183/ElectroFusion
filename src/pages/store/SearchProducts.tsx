@@ -10,7 +10,7 @@ const SearchProducts = () => {
 	const filteredProducts = useMemo(() => productsData, []);
 	const minMax = filteredProducts.reduce(
 		(acc, product) => {
-			const price = product.price;
+			const price = product.originalPrice;
 			if (price < acc.min) acc.min = price;
 			if (price > acc.max) acc.max = price;
 			return acc;
@@ -86,7 +86,7 @@ const SearchProducts = () => {
 						image={product.image}
 						title={product.productName}
 						description={product.description}
-						price={product.price}
+						price={product.originalPrice}
 					/>
 				))}
 			</div>

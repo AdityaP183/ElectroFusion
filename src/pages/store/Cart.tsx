@@ -8,7 +8,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { cartOrders } from "@/lib/app-data";
+import { productsData } from "@/lib/app-data";
 import { formatValueWithIndianNumericPrefix } from "@/lib/utils";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
@@ -16,21 +16,18 @@ import { useNavigate } from "react-router-dom";
 const Cart = () => {
 	const GST_RATE = import.meta.env.VITE_GST_RATE;
 	const navigate = useNavigate();
-	const ordersInCart = useMemo(() => cartOrders(), []);
+	const ordersInCart = useMemo(() => productsData.slice(0, 4), []);
 	const totalPrice = useMemo(
 		() =>
 			parseFloat(
 				ordersInCart
-					.reduce((acc, order) => acc + order.price, 0)
+					.reduce((acc, order) => acc + order.originalPrice, 0)
 					.toFixed(2)
 			),
 		[ordersInCart]
 	);
-	const totalDiscount = useMemo(
-		() =>
-			ordersInCart.reduce((acc, order) => acc + order.discountedPrice, 0),
-		[ordersInCart]
-	);
+	const totalDiscount = 3000;
+
 	console.log(ordersInCart);
 	return (
 		<div className="my-6">

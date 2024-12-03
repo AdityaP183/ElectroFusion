@@ -28,12 +28,10 @@ import {
 
 export const tempUser: User = {
 	id: "8d3902ed0efcb0fb1ef884c3",
-	username: "iambatman18",
 	email: "iambatman@google.com",
 	role: "admin",
-	password: "testuser",
-	first_name: "Bruce",
-	last_name: "Wayne",
+	firstName: "Bruce",
+	lastName: "Wayne",
 	avatar: "",
 	address: {
 		address: faker.location.streetAddress(false),
@@ -223,15 +221,21 @@ export const productsData: Products[] = Array.from({ length: 20 }, () => {
 	return {
 		id: faker.database.mongodbObjectId(),
 		productName: faker.commerce.productName(),
-		price: parseFloat(faker.commerce.price({ min: 1000, max: 100000 })),
+		originalPrice: parseFloat(
+			faker.commerce.price({ min: 1000, max: 100000 })
+		),
 		category: faker.helpers.arrayElement(categoriesName),
 		stock: Math.floor(Math.random() * 100),
-		image: faker.helpers.arrayElement(productsImages),
+		image: faker.helpers.arrayElement(productsImages) as string,
 		times_ordered: Math.floor(Math.random() * 100),
 		description: faker.commerce.productDescription(),
-		discountedPrice: parseFloat(
+		dicountedPrice: parseFloat(
 			faker.commerce.price({ min: 500, max: 1000 })
 		),
+		rating: {
+			stars: Math.floor(Math.random() * 5),
+			count: Math.floor(Math.random() * 100),
+		},
 	};
 });
 
@@ -355,8 +359,8 @@ export const vendorSidebarItems: SidebarNestedItem[] = [
 				icon: ShoppingCart,
 			},
 			{
-				name: "Add Orders",
-				path: "/vendor/orders/add",
+				name: "Manage Orders",
+				path: "/vendor/orders/manage",
 				icon: ShoppingBag,
 			},
 		],
@@ -449,8 +453,6 @@ export const productData: ProductInfo = {
 productData.discountedPercent = productData.isDiscounted
 	? faker.helpers.arrayElement([5, 10, 15, 20, 25, 40])
 	: undefined;
-
-export const cartOrders = () => productsData.slice(4, 7);
 
 export const reviews = [
 	{
