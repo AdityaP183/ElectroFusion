@@ -29,6 +29,7 @@ import useFetch from "@/context/store/useFetch";
 import { register } from "@/db/apiAuth";
 import { fusionStore } from "@/store/store";
 import { User } from "@/types/component.type";
+import toast from "react-hot-toast";
 
 const registerHeroTexts = [
 	{
@@ -68,19 +69,28 @@ const Register = () => {
 	} = useFetch(register, { ...formData, role: "customer" });
 	const { setUser } = fusionStore();
 
-	function onFormSubmit() {
-		registerUser();
-		if (!error && data?.user) {
-			const extractedUser: User = {
-				id: data.user.id,
-				email: data.user.email || "",
-				firstName: data.user.user_metadata?.firstName,
-				lastName: data.user.user_metadata?.lastName,
-				role: data.user.user_metadata?.role,
-				avatar: data.user.user_metadata?.avatar,
-				createdAt: data.user.created_at,
-			};
-			setUser(extractedUser);
+	async function onFormSubmit() {
+		await registerUser();
+
+		if (error) {
+			toast.error(error.message);
+		}
+
+		if (!loading && !error) {
+			toast.success("Successfully logged in");
+			if (data?.user) {
+				const extractedUser: User = {
+					id: data.user.id,
+					email: data.user.email || "",
+					firstName: data.user.user_metadata?.firstName,
+					lastName: data.user.user_metadata?.lastName,
+					role: data.user.user_metadata?.role,
+					avatar: data.user.user_metadata?.avatar,
+					createdAt: data.user.created_at,
+				};
+				setUser(extractedUser);
+			}
+			navigate("/home", { replace: true });
 		}
 	}
 

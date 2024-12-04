@@ -29,10 +29,9 @@ const Profile = () => {
 		defaultValues: {
 			email: tempUser.email,
 			password: "",
-			first_name: tempUser.first_name,
-			last_name: tempUser.last_name,
+			first_name: tempUser.firstName,
+			last_name: tempUser.lastName,
 			address: tempUser.address?.address || "",
-			phone_number: tempUser.phone_number || "",
 			role: tempUser.role,
 			avatar: tempUser.avatar || "",
 		},

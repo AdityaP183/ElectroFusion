@@ -20,8 +20,8 @@ const SearchProducts = () => {
 
 	const [search, setSearch] = useState("");
 	const priceRanges = generateRoundedPriceRanges(minMax.max);
-	const [priceRange, setPriceRange] = useState<number[]>(priceRanges[0]);
-	const [sort, setSort] = useState<"asc" | "desc">("asc");
+	const [, setPriceRange] = useState<number[]>(priceRanges[0]);
+	const [, setSort] = useState<"asc" | "desc">("asc");
 	return (
 		<div className="flex gap-3 mt-10">
 			<div className="w-[250px] flex-col gap-2">

@@ -3,10 +3,10 @@ import { create } from "zustand";
 
 type FusionStore = {
 	user: User | null;
-	setUser: (user: User) => void;
+	setUser: (user: User | null) => void;
 };
 
 export const fusionStore = create<FusionStore>()((set) => ({
 	user: null,
-	setUser: (user) => set({ user }),
+	setUser: (user: User | null) => set({ user }),
 }));

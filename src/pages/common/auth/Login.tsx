@@ -62,19 +62,28 @@ const Login = () => {
 	const { data, loading, error, fn: loginUser } = useAuth(login, formData);
 	const { setUser } = fusionStore();
 
-	function onFormSubmit() {
-		loginUser();
-		if (!error && data?.user) {
-			const extractedUser: User = {
-				id: data.user.id,
-				email: data.user.email || "",
-				firstName: data.user.user_metadata?.firstName,
-				lastName: data.user.user_metadata?.lastName,
-				role: data.user.user_metadata?.role,
-				avatar: data.user.user_metadata?.avatar,
-				createdAt: data.user.created_at,
-			};
-			setUser(extractedUser);
+	async function onFormSubmit() {
+		await loginUser();
+
+		if (error) {
+			toast.error(error.message);
+		}
+
+		if (!loading && !error) {
+			toast.success("Successfully logged in");
+			if (data?.user) {
+				const extractedUser: User = {
+					id: data.user.id,
+					email: data.user.email || "",
+					firstName: data.user.user_metadata?.firstName,
+					lastName: data.user.user_metadata?.lastName,
+					role: data.user.user_metadata?.role,
+					avatar: data.user.user_metadata?.avatar,
+					createdAt: data.user.created_at,
+				};
+				setUser(extractedUser);
+			}
+			navigate("/home", { replace: true });
 		}
 	}
 

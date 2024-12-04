@@ -1,4 +1,3 @@
-import { DB_PROJECT_URL } from "@/lib/configure";
 import { supabase } from "./config";
 import { UserRoles } from "@/types/component.type";
 

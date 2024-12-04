@@ -14,7 +14,6 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { TableWrapper } from "@/components/ui/table";
 import { ordersData } from "@/lib/app-data";
-import { AdminOrderFullColumns } from "@/lib/tableData/AdminColumns";
 import { VendorOrderFullColumns } from "@/lib/tableData/VendorColumns";
 import { Orders } from "@/types/component.type";
 import {

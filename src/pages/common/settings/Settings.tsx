@@ -9,7 +9,6 @@ const Settings = () => {
 	const [activeTab, setActiveTab] = useState<"profile" | "preferences">(
 		"profile"
 	);
-	const { role } = tempUser;
 
 	return (
 		<div className="w-full h-full py-3">

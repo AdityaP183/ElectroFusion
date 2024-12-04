@@ -289,7 +289,7 @@ export const AdminVendorsFullColumns: ColumnDef<Vendors>[] = [
 		cell: ({ row }) => {
 			const owner: User = row.getValue("owner");
 			return (
-				<div className="capitalize">{`${owner.first_name} ${owner.last_name}`}</div>
+				<div className="capitalize">{`${owner.firstName} ${owner.lastName}`}</div>
 			);
 		},
 		enableHiding: false,

@@ -1,4 +1,4 @@
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
 	NavigationMenu,
 	NavigationMenuItem,
@@ -17,7 +17,7 @@ import toast from "react-hot-toast";
 const Navbar = () => {
 	const [isFloating, setIsFloating] = useState<boolean>(false);
 	const { pathname } = useLocation();
-	const { user } = fusionStore();
+	const { user, setUser } = fusionStore();
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -43,6 +43,7 @@ const Navbar = () => {
 
 		if (!error && !loading) {
 			toast.success("Successfully logged out");
+			setUser(null);
 			navigate("/login");
 		}
 
@@ -135,6 +136,19 @@ const Navbar = () => {
 							>
 								<LogOut />
 							</NavigationMenuItem>
+							<NavigationMenuItem className="flex items-center gap-3 p-1 border rounded-full bg-secondary/50 border-border">
+								<Avatar className="w-8 h-8">
+									<AvatarImage
+										src={user.avatar}
+										alt={user.firstName}
+									/>
+									<AvatarFallback>
+										{user.firstName[0]}
+									</AvatarFallback>
+								</Avatar>
+
+								<p>{user.firstName + " " + user.lastName}</p>
+							</NavigationMenuItem>
 						</>
 					) : (
 						<>
@@ -143,10 +157,10 @@ const Navbar = () => {
 									variant={"outline"}
 									className="font-bold rounded-full"
 									onClick={() =>
-										navigate("/signup", { replace: true })
+										navigate("/register", { replace: true })
 									}
 								>
-									Sign up
+									Register
 								</Button>
 							</NavigationMenuItem>
 							<NavigationMenuItem>

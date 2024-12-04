@@ -38,13 +38,7 @@ import { useMemo, useState } from "react";
 const Dashboard = () => {
 	const [filter, setFilter] = useState<DashboardDuration>("half-day");
 
-	const filteredProductsData = useMemo(
-		() =>
-			productsData
-				.sort((a, b) => b.times_ordered - a.times_ordered)
-				.slice(0, 7),
-		[]
-	);
+	const filteredProductsData = useMemo(() => productsData.slice(0, 7), []);
 
 	const filteredOrdersData = useMemo(
 		() =>

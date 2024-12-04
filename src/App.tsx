@@ -53,10 +53,10 @@ const AppContent = () => {
 	const { user, setUser } = fusionStore();
 
 	useEffect(() => {
-		if (user && ["/login", "/register"].includes(location.pathname)) {
-			navigate("/home");
-			return;
-		}
+		// if (user && ["/login", "/register"].includes(location.pathname)) {
+		// 	navigate("/home");
+		// 	return;
+		// }
 		if (loading || error || user) return;
 
 		const fetchUser = async () => {

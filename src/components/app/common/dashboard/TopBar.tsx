@@ -43,7 +43,7 @@ const TopBar = ({ title = "" }: { title?: string }) => {
 					<h1 className="text-2xl">
 						Good to see you,{" "}
 						<span className="font-medium">
-							{tempUser.first_name}
+							{tempUser.firstName}
 						</span>
 					</h1>
 				)}
