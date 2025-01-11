@@ -1,50 +1,37 @@
-# React + TypeScript + Vite
+# ElectroFusion
+ElectroFusion is a multi-vendor e-commerce platform designed to provide a seamless online shopping experience for electronic products and gadgets.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Abstract
+Built using the MERN (MongoDB, Express, React, Node.js) stack, this platform enables vendors to list products and manage their sales while customers explore a wide range of electronics, from smartphones to home appliances. The architecture focuses on scalability and performance, ensuring a reliable and efficient shopping ecosystem.
 
-Currently, two official plugins are available:
+## Project Guide
+- **Sulagna Basak**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Team Members
+- **Sattwik Sinha Mahapatra**
+- **Sabnam Begum**
+- **Arina Dutta**
+- **Aditya Prasad**
 
-## Expanding the ESLint configuration
+## Project Details
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### Description
+- Advanced search and filter options
+- Product rating and reviews
+- A secure payment gateway
+- A user account management system (login, sign in, and register)
 
-- Configure the top-level `parserOptions` property like this:
+### Technologies Used
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+#### Frontend
+- **[React](https://reactjs.org/)**: A JavaScript library for building user interfaces.
+- **[TypeScript](https://www.typescriptlang.org/)**: A strongly typed programming language that builds on JavaScript.
+- **[Tailwind CSS](https://tailwindcss.com/)**: A utility-first CSS framework.
+- **[TanStack Table](https://tanstack.com/table/v8)**: A powerful table library for creating data tables with features like sorting, filtering, and pagination.
+- **[Shadcn UI](https://shadcn.dev/)**: A UI component library based on Tailwind CSS.
+- **[Chart.js](https://www.chartjs.org/)** / **[Recharts](https://recharts.org/)**: Libraries for rendering interactive and customizable charts and graphs.
+- **[Axios](https://axios-http.com/)**: A promise-based HTTP client for making API requests.
+- **[React Router](https://reactrouter.com/)**: A routing library for managing navigation within the app.
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+#### Backend
+- **[Supabase](https://supabase.io/)**: An open-source alternative to Firebase, providing backend services such as authentication, real-time databases, and file storage.
