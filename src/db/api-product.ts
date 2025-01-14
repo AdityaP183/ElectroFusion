@@ -33,12 +33,12 @@ async function createProduct({ data, imgName = "" }: CreateProductProps) {
 }
 
 async function getProducts(userId: string | undefined, count: number = 10) {
-    if(!userId) return [];
+	if (!userId) return [];
 
 	const { data, error } = await supabase
 		.from(dbTable.products)
 		.select("*")
-        .eq("createdBy", userId)
+		.eq("createdBy", userId)
 		.order("created_at", { ascending: false })
 		.limit(count);
 
@@ -55,21 +55,26 @@ async function getProduct(id: string) {
 
 	if (error) throw new Error(error.message);
 
-	return data;
+	if (data.length === 0) return {};
+	return data[0];
 }
 
-async function updateProduct(
-	id: string,
-	data: Partial<Pick<ProductSchema, keyof ProductSchema>>
-) {
-	const { data: product, error } = await supabase
+async function updateProduct({
+	id,
+	data,
+}: {
+	id: string | undefined;
+	data: Partial<Pick<ProductSchema, keyof ProductSchema>>;
+}) {
+	if (!id) throw new Error("Product ID is required.");
+	const { error } = await supabase
 		.from(dbTable.products)
 		.update(data)
 		.eq("id", id);
 
 	if (error) throw new Error(error.message);
 
-	return product;
+	return { success: true, message: "Product updated successfully" };
 }
 
 async function deleteProduct(id: string) {
@@ -83,4 +88,22 @@ async function deleteProduct(id: string) {
 	return { success: true, message: "Product deleted successfully" };
 }
 
-export { createProduct, getProducts, getProduct, updateProduct, deleteProduct };
+async function getProductsPublic() {
+	const { data, error } = await supabase
+		.from(dbTable.products)
+		.select("*")
+		.order("created_at", { ascending: false });
+
+	if (error) throw new Error(error.message);
+
+	return data;
+}
+
+export {
+	createProduct,
+	getProducts,
+	getProduct,
+	updateProduct,
+	deleteProduct,
+	getProductsPublic,
+};

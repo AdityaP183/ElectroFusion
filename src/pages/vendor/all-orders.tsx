@@ -10,50 +10,41 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { getProducts } from "@/db/api-product";
-import { Category } from "@/lib/app-data";
-import {
-	formatDiscountedPriceUsingPercent,
-	formatValueWithIndianNumericPrefix,
-} from "@/lib/utils";
+import { getOrders } from "@/db/api-orders";
+import { OrderStatus } from "@/lib/app-data";
+import { formatDate, formatValueWithIndianNumericPrefix } from "@/lib/utils";
 import fusionStore from "@/stores/userStore";
 import { useQuery } from "@tanstack/react-query";
-import { Pencil, Plus, RefreshCcw } from "lucide-react";
+import { Pen, RefreshCcw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-export default function AllProducts() {
+export default function AllOrders() {
 	const navigate = useNavigate();
 	const { user } = fusionStore();
 	const { data, isLoading, isError, error, refetch } = useQuery({
-		queryKey: ["products"],
-		queryFn: () => getProducts(user?.id),
+		queryKey: ["orders"],
+		queryFn: () => getOrders(user?.id),
 		staleTime: 1000 * 60 * 1,
 		refetchOnWindowFocus: false,
 	});
+
+	if (!isLoading && data) {
+		console.log(data);
+	}
 
 	if (!isLoading && isError) console.log(error);
 
 	return (
 		<div className="py-2">
 			<div className="flex items-center justify-between">
-				<h1 className="text-3xl font-bold">All Products</h1>
-				<div className="flex items-center gap-3">
-					<Button
-						onClick={() =>
-							navigate(
-								`/${user?.user_metadata.role}/products/add`
-							)
-						}
-					>
-						<Plus />
-						Add Product
-					</Button>
-					<Button size={"icon"} onClick={() => refetch()}>
-						<RefreshCcw
-							className={`${isLoading && "animate-spin"}`}
-						/>
-					</Button>
-				</div>
+				<h1 className="text-3xl font-bold">All Orders</h1>
+				<Button
+					size={"icon"}
+					className={`${isLoading && "animate-spin"}`}
+					onClick={() => refetch()}
+				>
+					<RefreshCcw />
+				</Button>
 			</div>
 			<div className="my-5">
 				{isLoading ? (
@@ -75,33 +66,28 @@ export default function AllProducts() {
 				) : (
 					<Table className="border border-secondary">
 						{data && data.length === 0 && (
-							<TableCaption className="">
-								No Products Found
-							</TableCaption>
+							<TableCaption>No Products Found</TableCaption>
 						)}
 						<TableHeader className="bg-secondary">
 							<TableRow>
 								<TableHead className="text-center">
-									ID
+									Order ID
 								</TableHead>
-								<TableHead className="">Product</TableHead>
+								<TableHead className="">Product ID</TableHead>
 								<TableHead className="text-center">
-									Stock
+									Customer ID
+								</TableHead>
+								<TableHead className="text-center">
+									Ordered On
 								</TableHead>
 								<TableHead className="text-center">
 									Price
 								</TableHead>
 								<TableHead className="text-center">
-									Is Discounted
-								</TableHead>
-								<TableHead className="text-center">
-									Discount (%)
-								</TableHead>
-								<TableHead className="text-center">
 									Discounted Price
 								</TableHead>
 								<TableHead className="text-center">
-									Categories
+									Status
 								</TableHead>
 								<TableHead className="text-center">
 									Actions
@@ -111,76 +97,59 @@ export default function AllProducts() {
 						<TableBody className="relative">
 							{data &&
 								data.length > 0 &&
-								data.map((product) => (
-									<TableRow key={product.id}>
+								data.map((order) => (
+									<TableRow key={order.id}>
 										<TableCell className="text-center">
-											{product.id}
+											{order.id}
 										</TableCell>
 										<TableCell>
-											{product.productName}
+											{order.product_id}
 										</TableCell>
 										<TableCell className="text-center">
-											{product.stock}
+											{order.customer_id}
 										</TableCell>
 										<TableCell className="text-center">
-											{formatValueWithIndianNumericPrefix(
-												product.originalPrice,
-												"price"
-											)}
-										</TableCell>
-										<TableCell className="flex justify-center">
-											{product.isDiscounted ? (
-												<Badge
-													variant="outline"
-													className="text-green-600 border-green-600 bg-green-600/10"
-												>
-													True
-												</Badge>
-											) : (
-												<Badge
-													variant="outline"
-													className="text-red-600 border-red-600 bg-red-600/10"
-												>
-													False
-												</Badge>
+											{formatDate(
+												order.ordered_on,
+												"datetime"
 											)}
 										</TableCell>
 										<TableCell className="text-center">
-											{product.discountPercent ?? "N/A"}
-										</TableCell>
-										<TableCell className="text-center">
-											{product.isDiscounted &&
-											product.discountPercent
-												? formatDiscountedPriceUsingPercent(
-														product.discountPercent,
-														product.originalPrice
+											{order.total_price
+												? formatValueWithIndianNumericPrefix(
+														order.total_price,
+														"price"
 												  )
 												: "N/A"}
 										</TableCell>
 										<TableCell className="text-center">
-											{product.categories.map(
-												(category: string) => (
-													<Badge
-														key={category}
-														category={
-															category as Category
-														}
-													>
-														{category}
-													</Badge>
-												)
-											)}
+											{order.discounted_price === 0
+												? "N/A"
+												: formatValueWithIndianNumericPrefix(
+														order.discounted_price,
+														"price"
+												  )}
 										</TableCell>
-										<TableCell>
+										<TableCell className="text-center">
+											<Badge
+												orderStatus={
+													order.status as OrderStatus
+												}
+												className="capitalize"
+											>
+												{order.status}
+											</Badge>
+										</TableCell>
+										<TableCell className="text-center">
 											<Button
 												size={"icon"}
 												onClick={() =>
 													navigate(
-														`/${user?.user_metadata.role}/products/edit/${product.id}`
+														`/vendor/orders/manage/${order.id}`
 													)
 												}
 											>
-												<Pencil />
+												<Pen />
 											</Button>
 										</TableCell>
 									</TableRow>

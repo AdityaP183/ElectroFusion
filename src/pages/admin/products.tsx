@@ -1,63 +1,45 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
 	Table,
 	TableBody,
-	TableCaption,
 	TableCell,
 	TableHead,
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { getProducts } from "@/db/api-product";
+import { getProductsPublic } from "@/db/api-product";
 import { Category } from "@/lib/app-data";
 import {
 	formatDiscountedPriceUsingPercent,
 	formatValueWithIndianNumericPrefix,
 } from "@/lib/utils";
-import fusionStore from "@/stores/userStore";
 import { useQuery } from "@tanstack/react-query";
-import { Pencil, Plus, RefreshCcw } from "lucide-react";
+import { Eye, RefreshCcw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-export default function AllProducts() {
+export default function Products() {
 	const navigate = useNavigate();
-	const { user } = fusionStore();
-	const { data, isLoading, isError, error, refetch } = useQuery({
+	const { data, isError, isLoading, error, refetch } = useQuery({
 		queryKey: ["products"],
-		queryFn: () => getProducts(user?.id),
+		queryFn: () => getProductsPublic(),
 		staleTime: 1000 * 60 * 1,
 		refetchOnWindowFocus: false,
 	});
 
-	if (!isLoading && isError) console.log(error);
-
 	return (
-		<div className="py-2">
-			<div className="flex items-center justify-between">
-				<h1 className="text-3xl font-bold">All Products</h1>
-				<div className="flex items-center gap-3">
-					<Button
-						onClick={() =>
-							navigate(
-								`/${user?.user_metadata.role}/products/add`
-							)
-						}
-					>
-						<Plus />
-						Add Product
-					</Button>
-					<Button size={"icon"} onClick={() => refetch()}>
-						<RefreshCcw
-							className={`${isLoading && "animate-spin"}`}
-						/>
-					</Button>
-				</div>
-			</div>
-			<div className="my-5">
+		<Card className="border-none">
+			<CardHeader className="flex flex-row items-center justify-between">
+				<CardTitle className="text-3xl">All Products</CardTitle>
+				<Button size={"icon"} onClick={() => refetch()}>
+					<RefreshCcw className={`${isLoading && "animate-spin"}`} />
+				</Button>
+			</CardHeader>
+			<CardContent>
 				{isLoading ? (
-					<Skeleton className="h-1/2" />
+					<Skeleton className="h-[300px]" />
 				) : isError ? (
 					<div className="text-xl text-center text-red-600">
 						<div className="text-xl text-center text-red-600">
@@ -73,18 +55,16 @@ export default function AllProducts() {
 						</div>
 					</div>
 				) : (
-					<Table className="border border-secondary">
-						{data && data.length === 0 && (
-							<TableCaption className="">
-								No Products Found
-							</TableCaption>
-						)}
-						<TableHeader className="bg-secondary">
+					<Table>
+						<TableHeader>
 							<TableRow>
 								<TableHead className="text-center">
 									ID
 								</TableHead>
 								<TableHead className="">Product</TableHead>
+								<TableHead className="text-center">
+									Vendor ID
+								</TableHead>
 								<TableHead className="text-center">
 									Stock
 								</TableHead>
@@ -117,7 +97,15 @@ export default function AllProducts() {
 											{product.id}
 										</TableCell>
 										<TableCell>
-											{product.productName}
+											{product.productName.length > 50
+												? product.productName.slice(
+														0,
+														50
+												  ) + "..."
+												: product.productName}
+										</TableCell>
+										<TableCell>
+											{product.createdBy}
 										</TableCell>
 										<TableCell className="text-center">
 											{product.stock}
@@ -171,16 +159,17 @@ export default function AllProducts() {
 												)
 											)}
 										</TableCell>
-										<TableCell>
+										<TableCell className="text-center">
 											<Button
 												size={"icon"}
+												className="bg-orange-700 hover:bg-orange-500"
 												onClick={() =>
 													navigate(
-														`/${user?.user_metadata.role}/products/edit/${product.id}`
+														`/admin/products/${product.id}`
 													)
 												}
 											>
-												<Pencil />
+												<Eye className="w-4 h-4" />
 											</Button>
 										</TableCell>
 									</TableRow>
@@ -188,7 +177,7 @@ export default function AllProducts() {
 						</TableBody>
 					</Table>
 				)}
-			</div>
-		</div>
+			</CardContent>
+		</Card>
 	);
 }

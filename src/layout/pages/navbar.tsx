@@ -6,14 +6,14 @@ import {
 	NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import fusionStore from "@/stores/userStore";
-import { Heart, LogOut, Search, ShoppingCart } from "lucide-react";
+import { Home, LogOut, Search, ShoppingCart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const navItems = {
 	user: [
+		{ title: "Home", icon: Home, path: "/store/" },
 		{ title: "Search", icon: Search, path: "/store/search" },
-		{ title: "Wishlist", icon: Heart, path: "/store/wishlist" },
 		{ title: "Cart", icon: ShoppingCart, path: "/store/cart" },
 		{ title: "Logout", icon: LogOut, path: "/logout" },
 	],

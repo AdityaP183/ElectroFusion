@@ -1,3 +1,7 @@
+import { LazyLoadingImage } from "@/components/app/common";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
 	Form,
 	FormControl,
@@ -7,47 +11,32 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { ImageUpload } from "@/components/app/common";
-import { productSchema } from "@/db/schemas";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
-import {
-	MultiSelector,
-	MultiSelectorContent,
-	MultiSelectorInput,
-	MultiSelectorItem,
-	MultiSelectorList,
-	MultiSelectorTrigger,
-} from "@/components/ui/multi-select";
-import fusionStore from "@/stores/userStore";
-import { categories } from "@/lib/app-data";
+import { getProduct, updateProduct } from "@/db/api-product";
+import { editProductSchema } from "@/db/schemas";
 import useFetch from "@/hooks/use-fetch";
-import { createProduct } from "@/db/api-product";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ArrowLeft } from "lucide-react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { z } from "zod";
 
-export default function AddProduct() {
+export default function EditProduct() {
+	const { id } = useParams();
 	const navigate = useNavigate();
-	const { user } = fusionStore();
-	const [file, setFile] = useState<{
-		imgFile: File;
-		img: string;
-		name: string;
-	} | null>(null);
-	const productForm = useForm<z.infer<typeof productSchema>>({
-		resolver: zodResolver(productSchema),
+
+	const {
+		data,
+		loading: fetchLoading,
+		error: fetchError,
+		fn: fetchProduct,
+	} = useFetch(getProduct, id);
+
+	const productForm = useForm<z.infer<typeof editProductSchema>>({
+		resolver: zodResolver(editProductSchema),
 		defaultValues: {
 			productName: "",
 			description: "",
@@ -55,53 +44,87 @@ export default function AddProduct() {
 			isDiscounted: false,
 			discountPercent: 0,
 			stock: 0,
-			categories: [],
 		},
 	});
 
-	const formData = {
-		data: {
-			...productForm.getValues(),
-			productImage: file?.imgFile,
-			createdBy: user?.id || "",
-		},
-		imgName: file?.name,
-	};
-	const { loading, error, fn } = useFetch(createProduct, formData);
+	useEffect(() => {
+		fetchProduct();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
-	const onFormSubmit = async () => {
-		await fn();
-
-		if (error) {
-			toast.error(error.message);
-			return;
-		}
-
-		if (!loading && !error) {
-			toast.success("Product added successfully");
-			navigate(`/${user?.user_metadata.role}/products`, {
-				replace: true,
+	useEffect(() => {
+		if (data) {
+			productForm.reset({
+				productName: data.productName || "",
+				description: data.description || "",
+				originalPrice: data.originalPrice || 0,
+				isDiscounted: data.isDiscounted || false,
+				discountPercent: data.discountPercent || 0,
+				stock: data.stock || 0,
 			});
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [data]);
+
+	const onFormSubmit = async () => {
+		const formData = productForm.getValues();
+
+		const changedFields = Object.keys(formData).reduce((acc, key) => {
+			const dataKey = key as keyof typeof formData;
+			if (formData[dataKey] !== data[dataKey]) {
+				acc[key] = formData[dataKey];
+			}
+			return acc;
+		}, {} as Record<string, unknown>);
+
+		if (Object.keys(changedFields).length === 0) return;
+
+		try {
+			const response = await updateProduct({ id, data: changedFields });
+			toast.success(response.message);
+			navigate("/vendor/products");
+		} catch (error) {
+			if (error instanceof Error) {
+				toast.error(error.message);
+			}
+			console.log(error);
+		}
 	};
 
-	return (
-		<Card className="w-full my-3 border-none">
-			<CardHeader>
-				<CardTitle className="text-3xl font-extrabold">
-					Add New Product
-				</CardTitle>
-				<CardDescription className="text-lg font-medium">
-					Easily list your products on ElectroFusion and reach a wide
-					customer base! Keep your inventory up-to-date and showcase
-					your offerings to millions of potential buyers. Manage your
-					listings seamlessly and grow your business with
-					ElectroFusion!
-				</CardDescription>
-			</CardHeader>
+	if (fetchLoading) return <Skeleton className="w-full h-full p-10" />;
 
+	if (fetchError)
+		return (
+			<div className="flex items-center justify-center w-full h-full text-xl text-red-500">
+				{fetchError.message}
+			</div>
+		);
+
+	if (!data)
+		return (
+			<div className="text-xl text-red-500">Product data not found</div>
+		);
+
+	return (
+		<Card className="border-none">
+			<CardHeader>
+				<Button
+					className="w-fit"
+					onClick={() => navigate("/vendor/products")}
+				>
+					<ArrowLeft />
+					Back to products
+				</Button>
+				<br />
+				<CardTitle className="text-3xl">Edit Product: {id}</CardTitle>
+			</CardHeader>
 			<CardContent className="flex justify-center gap-4">
-				<ImageUpload file={file} setFile={setFile} />
+				<div className="relative w-[350px] h-[350px] rounded-lg border-[3px] border-primary border-dashed p-2 group">
+					<LazyLoadingImage
+						imgUrl={data.productImage}
+						className="rounded-lg"
+					/>
+				</div>
 				<Form {...productForm}>
 					<form
 						onSubmit={productForm.handleSubmit(
@@ -134,6 +157,7 @@ export default function AddProduct() {
 									<FormControl>
 										<Textarea
 											{...field}
+											rows={6}
 											onChange={(e) =>
 												field.onChange(e.target.value)
 											}
@@ -231,39 +255,8 @@ export default function AddProduct() {
 								</FormItem>
 							)}
 						/>
-						<FormField
-							control={productForm.control}
-							name="categories"
-							render={({ field }) => (
-								<FormItem className="col-span-2">
-									<FormLabel>Product Categories</FormLabel>
-									<MultiSelector
-										onValuesChange={field.onChange}
-										values={field.value}
-									>
-										<MultiSelectorTrigger>
-											<MultiSelectorInput placeholder="Select your categories" />
-										</MultiSelectorTrigger>
-										<MultiSelectorContent>
-											<MultiSelectorList>
-												{categories.map((category) => (
-													<MultiSelectorItem
-														key={category}
-														value={category}
-													>
-														{category}
-													</MultiSelectorItem>
-												))}
-											</MultiSelectorList>
-										</MultiSelectorContent>
-									</MultiSelector>
-								</FormItem>
-							)}
-						/>
 
-						<Button type="submit" disabled={loading}>
-							{loading ? "Adding..." : "Add Product"}
-						</Button>
+						<Button type="submit">Update Product</Button>
 					</form>
 				</Form>
 			</CardContent>

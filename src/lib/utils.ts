@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import moment from "moment";
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -82,3 +83,30 @@ export const formatDiscountedPriceUsingPercent = (
 		originalPrice - originalPrice * (discountPercent / 100);
 	return formatValueWithIndianNumericPrefix(discountedPrice, "price");
 };
+
+export const formatDate = (
+	date: string | Date,
+	type: "date-short" | "date" | "datetime" | "time"
+) => {
+	let formatString;
+
+	switch (type) {
+		case "date-short":
+			formatString = "MMM D";
+			break;
+		case "date":
+			formatString = "DD-MM-YYYY";
+			break;
+		case "datetime":
+			formatString = "DD-MM-YYYY HH:mm:ss a";
+			break;
+		case "time":
+			formatString = "HH:mm:ss a";
+			break;
+		default:
+			formatString = "DD-MM-YYYY";
+	}
+
+	return moment(date).format(formatString);
+};
+

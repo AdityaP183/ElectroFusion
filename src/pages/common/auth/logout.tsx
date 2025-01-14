@@ -8,33 +8,36 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 export default function Logout() {
-    const navigate = useNavigate();
-    const {data, error, fn: logout} = useFetch(logoutUser);
-    const {setUser} = fusionStore();
+	const navigate = useNavigate();
+	const { data, error, fn: logout } = useFetch(logoutUser);
+	const { setUser } = fusionStore();
 
-    useEffect(() => {
+	useEffect(() => {
 		const performLogout = async () => {
 			// Call the logout function
 			await logout();
+			setUser(null); // Clear user state
 
-			// Handle success
-			if (data && data.success) {
-				setUser(null); // Clear user state
-				toast.success(data.message || "Logged out successfully!");
+			setTimeout(() => {
+				toast.success("Logged out successfully!");
 				navigate("/login", { replace: true }); // Redirect to login
-			}
-
-			// Handle error
-			if (error) {
-				toast.error(`Failed to logout: ${error.message}`);
-				navigate("/", { replace: true }); // Redirect to a safe fallback
-			}
+			}, 2000);
 		};
 
 		performLogout();
+
+		// Optional: Timeout cleanup for navigation delay
+		const performTimeout = setTimeout(() => {
+			if (!data && !error) {
+				toast.error("Logout timed out");
+				navigate("/", { replace: true }); // Fallback in case of timeout
+			}
+		}, 5000); // 5 seconds timeout
+
+		return () => clearTimeout(performTimeout);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-    
+
 	return (
 		<div className="min-h-[60vh] relative my-10 flex items-center justify-center">
 			<Skeleton className="absolute top-0 bottom-0 left-0 right-0" />

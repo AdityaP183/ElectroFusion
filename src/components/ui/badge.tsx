@@ -35,18 +35,39 @@ const categoryStyles = {
 	Televisions: { bgColor: "#B22222" },
 };
 
+const orderStatusStyles = {
+	pending: { bgColor: "#b45309" },
+	processing: { bgColor: "#ea580c" },
+	shipped: { bgColor: "#0891b2" },
+	delivered: { bgColor: "#16a34a" }, // Blue
+	cancelled: { bgColor: "#dc2626" }, // Red
+};
+
 export interface BadgeProps
 	extends React.HTMLAttributes<HTMLDivElement>,
 		VariantProps<typeof badgeVariants> {
 	category?: keyof typeof categoryStyles;
+	orderStatus?: keyof typeof orderStatusStyles;
 }
 
-function Badge({ className, variant, category, ...props }: BadgeProps) {
+function Badge({
+	className,
+	variant,
+	category,
+	orderStatus,
+	...props
+}: BadgeProps) {
 	const categoryStyle = category ? categoryStyles[category] : null;
+	const orderStatusStyle = orderStatus
+		? orderStatusStyles[orderStatus]
+		: null;
 
 	const dynamicStyles = categoryStyle
 		? { backgroundColor: categoryStyle.bgColor }
+		: orderStatusStyle
+		? { backgroundColor: orderStatusStyle.bgColor }
 		: {};
+
 	return (
 		<div
 			className={cn(badgeVariants({ variant }), className)}

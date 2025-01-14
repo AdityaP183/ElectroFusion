@@ -1,4 +1,10 @@
-import { ChartLine, LayoutDashboard, Package, PackagePlus, PackageSearch, ShoppingBag, ShoppingCart, Store, Users } from "lucide-react";
+import {
+	LayoutDashboard,
+	Package,
+	PackagePlus,
+	PackageSearch,
+	ShoppingCart,
+} from "lucide-react";
 import { SidebarNestedItem } from "./types/component-type";
 
 export const loginHeroTexts = [
@@ -155,15 +161,10 @@ export const reviewsData = [
 ];
 
 export const adminSidebarItems: SidebarNestedItem[] = [
-    {
+	{
 		name: "Dashboard",
 		path: "/admin/dashboard",
 		icon: LayoutDashboard,
-	},
-	{
-		name: "Sales",
-		path: "/admin/sales",
-		icon: ChartLine,
 	},
 	{
 		name: "Products",
@@ -175,28 +176,13 @@ export const adminSidebarItems: SidebarNestedItem[] = [
 		path: "/admin/orders",
 		icon: ShoppingCart,
 	},
-	{
-		name: "Vendors",
-		path: "/admin/vendors",
-		icon: Store,
-	},
-	{
-		name: "Customers",
-		path: "/admin/customers",
-		icon: Users,
-	},
-]
+];
 
 export const vendorSidebarItems: SidebarNestedItem[] = [
-    {
+	{
 		name: "Dashboard",
 		path: "/vendor/dashboard",
 		icon: LayoutDashboard,
-	},
-	{
-		name: "Sales",
-		path: "/vendor/sales",
-		icon: ChartLine,
 	},
 	{
 		name: "Products",
@@ -217,31 +203,91 @@ export const vendorSidebarItems: SidebarNestedItem[] = [
 	{
 		name: "Orders",
 		icon: ShoppingCart,
-		children: [
-			{
-				name: "All Orders",
-				path: "/vendor/orders",
-				icon: ShoppingCart,
-			},
-			{
-				name: "Manage Orders",
-				path: "/vendor/orders/manage",
-				icon: ShoppingBag,
-			},
-		],
+		path: "/vendor/orders",
 	},
-]
+];
 
 export const categories = [
-    "Smartphones",
-    "Laptops",
-    "Computers",
-    "Tablets",
-    "Smartwatches",
-    "Cameras",
-    "Headphones",
-    "Gaming Consoles",
-    "Televisions",
-] as const
+	"Smartphones",
+	"Laptops",
+	"Computers",
+	"Tablets",
+	"Smartwatches",
+	"Cameras",
+	"Headphones",
+	"Gaming Consoles",
+	"Televisions",
+] as const;
 
-export type Category = typeof categories[number];
+export type Category = (typeof categories)[number];
+
+export const orderStatus = [
+	"pending",
+	"processing",
+	"shipped",
+	"delivered",
+	"cancelled",
+] as const;
+
+export type OrderStatus = (typeof orderStatus)[number];
+
+export const orderSummaryHeaders = [
+	{
+		key: "created_at",
+		label: "Created At",
+	},
+	{
+		key: "product_id",
+		label: "Product ID",
+	},
+	{
+		key: "customer_id",
+		label: "Customer ID",
+	},
+	{
+		key: "ordered_on",
+		label: "Ordered On",
+	},
+	{
+		key: "total_price",
+		label: "Total Price",
+	},
+	{
+		key: "status",
+		label: "Status",
+	},
+	{
+		key: "discounted_price",
+		label: "Discounted Price",
+	},
+];
+
+export const homepageBannerData = [
+	{
+		id: 1,
+		dealType: "Today's Deal",
+		dealTitle: "Best Tablets Deals of the Day",
+		startingFrom: null,
+		discount: 38,
+		imageUrl:
+			"https://ecomall-be87.kxcdn.com/ecomall/wp-content/uploads/2023/11/slide1-ipad.png",
+	},
+	{
+		id: 2,
+		dealType: "Black Friday Deals",
+		dealTitle: "Lowest Price since release",
+		startingFrom: null,
+		discount: 55,
+		imageUrl:
+			"https://ecomall-be87.kxcdn.com/ecomall/wp-content/uploads/2023/11/slide1-iphone.png",
+	},
+	{
+		id: 3,
+		dealType: null,
+		dealTitle: "All New Arrivals of 2024",
+		startingFrom: 1599,
+		discount: null,
+		imageUrl:
+			"https://ecomall-be87.kxcdn.com/ecomall/wp-content/uploads/2023/11/slide1-watches.png",
+	},
+];
