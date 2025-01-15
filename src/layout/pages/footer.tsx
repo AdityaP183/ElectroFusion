@@ -1,7 +1,6 @@
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import fusionStore from "@/stores/userStore";
 import { Github } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -63,7 +62,6 @@ const footerLinks = [
 ];
 
 export default function Footer() {
-	const { user } = fusionStore();
 	return (
 		<footer className="flex flex-col gap-5">
 			<div className="flex justify-between">
@@ -84,29 +82,29 @@ export default function Footer() {
 				</div>
 				<div className="grid grid-cols-3 gap-4">
 					{footerLinks.map((linkItem) => {
-                        if(linkItem.title === "shop" )
-						return (
-							<div
-								key={linkItem.id}
-								className="flex flex-col items-start gap-5"
-							>
-								<h4 className="text-lg font-semibold">
-									{linkItem.title}
-								</h4>
-								{linkItem.links.map((linkItem_link) => (
-									<Button
-										key={linkItem_link.label}
-										asChild
-										variant="link"
-										className="px-0 text-muted-foreground hover:text-primary"
-									>
-										<Link to={linkItem_link.link}>
-											{linkItem_link.label}
-										</Link>
-									</Button>
-								))}
-							</div>
-						);
+						if (linkItem.title === "shop")
+							return (
+								<div
+									key={linkItem.id}
+									className="flex flex-col items-start gap-5"
+								>
+									<h4 className="text-lg font-semibold">
+										{linkItem.title}
+									</h4>
+									{linkItem.links.map((linkItem_link) => (
+										<Button
+											key={linkItem_link.label}
+											asChild
+											variant="link"
+											className="px-0 text-muted-foreground hover:text-primary"
+										>
+											<Link to={linkItem_link.link}>
+												{linkItem_link.label}
+											</Link>
+										</Button>
+									))}
+								</div>
+							);
 					})}
 				</div>
 			</div>

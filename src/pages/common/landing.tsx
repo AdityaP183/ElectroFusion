@@ -2,7 +2,6 @@ import { BentoCard } from "@/components/ui/bento-grid";
 import { Button } from "@/components/ui/button";
 import { Marquee, MarqueeCard } from "@/components/ui/marquee";
 import { reviewsData } from "@/lib/app-data";
-import fusionStore from "@/stores/userStore";
 import {
 	ArrowRight,
 	CreditCard,
@@ -71,9 +70,8 @@ const features = [
 
 export default function Landing() {
 	const navigate = useNavigate();
-    const marqueeFirstRow = useMemo(() => reviewsData.slice(0, 10), []);
+	const marqueeFirstRow = useMemo(() => reviewsData.slice(0, 10), []);
 	const marqueeSecondRow = useMemo(() => reviewsData.slice(10, 20), []);
-    // const { user } = fusionStore();
 
 	return (
 		<div>
@@ -89,7 +87,7 @@ export default function Landing() {
 								the Way You Shop
 							</h1>
 						</div>
-                        
+
 						<Button
 							className="group relative flex items-center justify-between h-12 text-lg rounded-full w-[180px]"
 							onClick={() => toast.error("Coming Soon")}
@@ -168,7 +166,10 @@ export default function Landing() {
 					</ul>
 
 					<div className="flex items-center justify-center flex-1">
-						<Button className="flex items-center justify-between h-12 text-lg rounded-full" onClick={() => navigate("/register?role=vendor")}>
+						<Button
+							className="flex items-center justify-between h-12 text-lg rounded-full"
+							onClick={() => navigate("/register?role=vendor")}
+						>
 							Continue
 							<ArrowRight className="w-5 h-5 ml-2" />
 						</Button>
@@ -176,7 +177,7 @@ export default function Landing() {
 				</div>
 			</div>
 
-            {/* Customer Reviews */}
+			{/* Customer Reviews */}
 			<div className="relative flex flex-col items-center justify-center w-full my-20 overflow-hidden rounded-lg">
 				<h1 className="mb-5 text-4xl font-bold">What Customers Say</h1>
 				<Marquee pauseOnHover className="[--duration:20s]">
