@@ -1,12 +1,18 @@
 import { Button } from "@/components/ui/button";
+import { addToCart } from "@/db/api-cart";
 import { ProductCardType } from "@/lib/types/product-types";
 import {
 	cn,
 	formatDiscountedPriceUsingPercent,
 	formatValueWithIndianNumericPrefix,
 } from "@/lib/utils";
+import fusionStore from "@/stores/userStore";
+import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const ProductCard = ({
+	id,
 	image,
 	title,
 	price,
@@ -14,10 +20,32 @@ const ProductCard = ({
 	discountedPercent = 0,
 	className,
 }: ProductCardType) => {
+	const navigate = useNavigate();
+	const { user } = fusionStore();
+	const { isPending, mutate } = useMutation({
+		mutationKey: ["add-product", title],
+		mutationFn: () => addToCart(user?.id, id, 1),
+		onSuccess: () => {
+			toast.success("Added to Cart");
+		},
+		onError: (error) => {
+			toast.error(error.message);
+		},
+	});
+
+	const handleBuyNow = async () => {
+		try {
+			await mutate();
+			navigate("/store/cart");
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	return (
 		<div
 			className={cn(
-				"relative flex flex-col w-full max-w-xs m-4 overflow-hidden border rounded-lg shadow-md border-border bg-secondary/50 glass",
+				"relative flex flex-col w-full h-fit max-w-xs m-4 overflow-hidden border rounded-lg shadow-md border-border bg-secondary/50 glass",
 				className
 			)}
 		>
@@ -73,10 +101,19 @@ const ProductCard = ({
 					</p>
 				</div>
 				<div className="flex items-center gap-2">
-					<Button variant={"outline"} className="flex-1 py-1">
+					<Button
+						variant={"outline"}
+						className="flex-1 py-1"
+						disabled={isPending}
+						onClick={() => mutate()}
+					>
 						Add to cart
 					</Button>
-					<Button className="flex-1 text-xl font-bold">
+					<Button
+						className="flex-1 text-xl font-bold"
+						disabled={isPending}
+						onClick={handleBuyNow}
+					>
 						Buy Now
 					</Button>
 				</div>

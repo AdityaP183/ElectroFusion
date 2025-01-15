@@ -20,13 +20,17 @@ import { Label } from "@/components/ui/label";
 import { updateUserSchema } from "@/db/schemas";
 import fusionStore from "@/stores/userStore";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoaderPinwheel } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 export default function Settings() {
 	const { user } = fusionStore();
+	const [file, setFile] = useState<{
+		imgFile: File;
+		img: string;
+		name: string;
+	} | null>(null);
 
 	const updateUserForm = useForm<z.infer<typeof updateUserSchema>>({
 		resolver: zodResolver(updateUserSchema),
@@ -36,17 +40,10 @@ export default function Settings() {
 		},
 		mode: "onTouched",
 	});
-	const [file, setFile] = useState<{
-		imgFile: File;
-		img: string;
-		name: string;
-	} | null>(null);
 
 	async function onFormSubmit(values: z.infer<typeof updateUserSchema>) {
 		console.log(values);
 	}
-
-	const loading = false;
 
 	return (
 		<Card className="border-none">
@@ -78,14 +75,11 @@ export default function Settings() {
 								name="firstName"
 								render={({ field }) => (
 									<FormItem className="col-span-2">
-										<FormLabel className="text-xl">
-											First Name
-										</FormLabel>
+										<FormLabel>First Name</FormLabel>
 										<FormControl>
 											<Input
 												type="firstName"
 												{...field}
-												className="text-lg"
 											/>
 										</FormControl>
 										<FormMessage />
@@ -97,42 +91,28 @@ export default function Settings() {
 								name="lastName"
 								render={({ field }) => (
 									<FormItem className="col-span-2">
-										<FormLabel className="text-xl">
-											Last Name
-										</FormLabel>
+										<FormLabel>Last Name</FormLabel>
 										<FormControl>
-											<Input
-												type="lastName"
-												{...field}
-												className="text-lg"
-											/>
+											<Input type="lastName" {...field} />
 										</FormControl>
 										<FormMessage />
 									</FormItem>
 								)}
 							/>
 							<div>
-								<Label className="text-lg" htmlFor="email">
-									Email
-								</Label>
+								<Label htmlFor="email">Email</Label>
 								<Input
 									id="email"
 									value={user?.email}
 									disabled
-									className="text-lg"
 								/>
 							</div>
 							<Button
 								className="mt-6 font-extrabold"
 								type="submit"
 								variant="secondary"
-								disabled={loading}
 							>
-								{loading ? (
-									<LoaderPinwheel className="mr-2 animate-spin" />
-								) : (
-									"Update"
-								)}
+								Update
 							</Button>
 						</form>
 					</Form>

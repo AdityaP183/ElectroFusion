@@ -18,6 +18,7 @@ async function getOrders(userId: string | undefined, count: number = 10) {
 		.from(dbTable.orders)
 		.select("*")
 		.eq("vendor_id", userId)
+		.order("ordered_on", { ascending: false })
 		.limit(count);
 
 	if (error) throw new Error(error.message);
@@ -81,4 +82,24 @@ async function updateOrder({
 	return { success: true, message: "Order updated successfully." };
 }
 
-export { getOrders, getOrder, updateOrder, getOrdersPublic };
+async function addOrder(
+	userId: string | undefined,
+	data: {
+		product_id: number;
+		customer_id: string | undefined;
+		ordered_on: string;
+		total_price: number;
+		discounted_price: number;
+		vendor_id: string;
+	}[]
+) {
+	if (!userId) throw new Error("User ID is required.");
+
+	const { error, status } = await supabase.from(dbTable.orders).insert(data);
+
+	if (error) throw new Error(error.message);
+
+	return status;
+}
+
+export { getOrders, getOrder, updateOrder, getOrdersPublic, addOrder };

@@ -1,15 +1,20 @@
+import { ProductCard } from "@/components/app/store";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import Rating from "@/components/ui/rating";
+import { Skeleton } from "@/components/ui/skeleton";
+import { getProductsPublic } from "@/db/api-product";
 import { categories, homepageBannerData } from "@/lib/app-data";
 import {
 	formatDiscountedPriceUsingPercent,
 	formatValueWithIndianNumericPrefix,
 } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import { MoveRight } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const textVariants = {
 	initial: { opacity: 0, y: 50 },
@@ -24,6 +29,7 @@ const imageVariants = {
 };
 
 export default function Home() {
+	const navigate = useNavigate();
 	const [currentSlide, setCurrentSlide] = useState(0);
 	const dealOfDay = {
 		id: "5bdd3daee2afdc94ef46aa9d",
@@ -39,6 +45,13 @@ export default function Home() {
 		discountedPercent: 25,
 		isDiscounted: true,
 	};
+
+	const { data, isLoading, isError, error } = useQuery({
+		queryKey: ["home-products"],
+		queryFn: () => getProductsPublic({ count: 5 }),
+		staleTime: 1000 * 60 * 1,
+		refetchOnWindowFocus: false,
+	});
 
 	useEffect(() => {
 		const interval = setInterval(() => {
@@ -90,7 +103,10 @@ export default function Home() {
 									off
 								</div>
 							)}
-							<Button className="w-[30%] py-6 font-bold rounded-full group">
+							<Button
+								className="w-[30%] py-6 font-bold rounded-full group"
+								onClick={() => navigate("/store/search")}
+							>
 								View Deals
 								<MoveRight className="ml-3 transition-all duration-300 group-hover:translate-x-1" />
 							</Button>
@@ -131,7 +147,7 @@ export default function Home() {
 			</div>
 
 			{/* Deal of the Day */}
-			<div className="flex gap-3 -translate-y-14">
+			<div className="flex gap-3">
 				<div className="flex-1 bg-secondary/50 w-full h-[350px] rounded-[var(--radius)] glass flex items-center justify-center flex-col border-4 border-primary">
 					<div className="p-2 space-y-3 text-center">
 						<h2 className="text-3xl font-bold">Deal of the Day</h2>
@@ -205,6 +221,47 @@ export default function Home() {
 				</Card>
 			</div>
 
+			{/* Hot Products */}
+			{isLoading ? (
+				<Skeleton className="w-full h-[400px]" />
+			) : isError ? (
+				<div className="text-xl text-center text-red-600">
+					<div className="text-xl text-center text-red-600">
+						<p>
+							Something went wrong while fetching orders. Please
+							try again.
+						</p>
+						<p>
+							{error instanceof Error
+								? error.message
+								: "Unknown error occurred"}
+						</p>
+					</div>
+				</div>
+			) : (
+				data && (
+					<div>
+						<h2 className="mb-5 text-3xl font-bold text-center">
+							Lastest Products
+						</h2>
+						<div className="grid grid-cols-5 gap-4">
+							{data.map((product) => (
+								<ProductCard
+									key={product.id}
+									id={product.id}
+									image={product.productImage}
+									title={product.productName}
+									description={product.description}
+									price={product.originalPrice}
+									isDiscounted={product.isDiscounted}
+									discountedPercent={product.discountPercent}
+								/>
+							))}
+						</div>
+					</div>
+				)
+			)}
+
 			{/* Category Section */}
 			<div>
 				<h2 className="mb-5 text-3xl font-bold text-center">
@@ -224,6 +281,9 @@ export default function Home() {
 								stiffness: 900,
 								damping: 10,
 							}}
+							onClick={() =>
+								navigate(`/store/search?category=${category}`)
+							}
 						>
 							<h2 className="text-2xl font-bold capitalize">
 								{category}

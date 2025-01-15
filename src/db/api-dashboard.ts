@@ -15,7 +15,7 @@ async function getVendorDashboard(
 			.from(dbTable.orders)
 			.select("*", { count: "exact" })
 			.eq("vendor_id", vendorId)
-			.order("ordered_on", { ascending: true });
+			.order("ordered_on", { ascending: false });
 
 		if (ordersError) throw new Error(ordersError.message);
 		dashboardData.totalOrders = ordersData?.length || 0;

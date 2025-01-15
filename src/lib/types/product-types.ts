@@ -11,6 +11,7 @@ export type ProductCardType = {
 	width?: number | string;
 	height?: number | string;
 	borderRadius?: number | string;
+	id: string;
 	image: string;
 	title: string;
 	description?: string;

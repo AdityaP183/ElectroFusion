@@ -88,14 +88,48 @@ async function deleteProduct(id: string) {
 	return { success: true, message: "Product deleted successfully" };
 }
 
-async function getProductsPublic() {
-	const { data, error } = await supabase
-		.from(dbTable.products)
-		.select("*")
-		.order("created_at", { ascending: false });
+async function getProductsPublic(
+	filters: {
+		search?: string;
+		categories?: string;
+		priceRange?: number[];
+		sort?: string;
+		rating?: number;
+		count?: number;
+	} = {}
+) {
+	const query = supabase.from(dbTable.products).select("*");
+
+	if (filters.search) {
+		query.ilike("productName", `%${filters.search}%`);
+	}
+
+	if (filters.categories) {
+		query.in("categories", [filters.categories]);
+	}
+
+	if (filters.priceRange) {
+		query
+			.gte("originalPrice", filters.priceRange[0])
+			.lte("originalPrice", filters.priceRange[1]);
+	}
+
+	if (filters.rating) {
+		query.gte("rating", filters.rating);
+	}
+
+	if (filters.sort) {
+		const ascending = filters.sort === "low";
+		query.order("originalPrice", { ascending });
+	}
+
+	if (filters.count && filters.count > 0) {
+		query.limit(filters.count);
+	}
+
+	const { data, error } = await query;
 
 	if (error) throw new Error(error.message);
-
 	return data;
 }
 
