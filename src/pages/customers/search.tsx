@@ -68,7 +68,7 @@ export default function Search() {
 	}, []);
 
 	return (
-		<div className="flex gap-3 mt-10">
+		<div className="flex gap-3 my-10">
 			<div className="w-[250px] flex-col gap-2">
 				<div className="flex items-center justify-between mb-4">
 					<h3 className="mb-2 text-xl font-medium">Filters</h3>

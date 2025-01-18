@@ -23,13 +23,13 @@ async function createProduct({ data, imgName = "" }: CreateProductProps) {
 	}
 
 	// Inserting Product
-	const { data: product, error } = await supabase
+	const { error, status } = await supabase
 		.from(dbTable.products)
 		.insert(productToInsert);
 
 	if (error) throw new Error(error.message);
 
-	return product;
+	return { status, message: "Product created successfully" };
 }
 
 async function getProducts(userId: string | undefined, count: number = 10) {

@@ -22,8 +22,6 @@ const Cart = () => {
 	const { data, isLoading, isError, error, refetch } = useQuery({
 		queryKey: ["cart"],
 		queryFn: () => getCartItems(user?.id as string),
-		staleTime: 1000 * 60 * 1,
-		refetchOnWindowFocus: false,
 	});
 
 	if (!isLoading && isError) {

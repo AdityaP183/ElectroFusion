@@ -9,7 +9,7 @@ const ProtectedRoute: React.FC<PropsWithChildren<{ requiredRole: string }>> = ({
 	const { user } = fusionStore();
 
 	if (!user || user.user_metadata.role !== requiredRole)
-		return <Navigate to="/not-found?type=unauthorized" replace />;
+		return <Navigate to="/not-found" replace />;
 	return children || <Outlet />;
 };
 

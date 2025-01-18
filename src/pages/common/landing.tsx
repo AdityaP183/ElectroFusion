@@ -10,7 +10,6 @@ import {
 	Truck,
 } from "lucide-react";
 import { useMemo } from "react";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 const features = [
@@ -90,7 +89,7 @@ export default function Landing() {
 
 						<Button
 							className="group relative flex items-center justify-between h-12 text-lg rounded-full w-[180px]"
-							onClick={() => toast.error("Coming Soon")}
+							onClick={() => navigate("/store")}
 						>
 							<span>Shop Now</span>
 							<div className="relative mr-1 overflow-hidden rounded-full bg-primary-foreground group-hover:bg-background h-9 w-9 group">

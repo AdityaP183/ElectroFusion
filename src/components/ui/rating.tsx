@@ -31,7 +31,7 @@ const Rating = ({ rating, counts }: { rating: number; counts?: number }) => {
 					/>
 				))}
 			</div>
-			{counts && (
+			{counts !== 0 && (
 				<>
 					<span className="w-1 h-1 mx-1.5 bg-gray-500 rounded-full dark:bg-gray-400"></span>
 					<p className="font-medium text-gray-900 dark:text-white">

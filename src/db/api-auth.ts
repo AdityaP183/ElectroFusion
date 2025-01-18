@@ -1,5 +1,6 @@
 import type { LoginType, RegisterType } from "@/lib/types/auth-types";
-import { supabase } from "./config";
+import { dbTable, supabase, supabaseUrl } from "./config";
+import { generateRandomString } from "@/lib/utils";
 
 async function registerUser(registerData: RegisterType) {
 	const avatar = "https://shorturl.at/vIjhF";
@@ -60,4 +61,47 @@ async function getAllUser() {
 	return data;
 }
 
-export { registerUser, loginUser, logoutUser, getCurrentUser, getAllUser };
+interface UpdateUserType {
+	firstName?: string;
+	lastName?: string;
+	avatar?: File | string;
+}
+
+interface UpdateUserProps {
+	data: UpdateUserType;
+	imgName?: string;
+}
+
+async function updateUser({ data, imgName = "" }: UpdateUserProps) {
+	const dataToUpdate: UpdateUserType = {};
+
+	if (data.firstName) dataToUpdate.firstName = data.firstName;
+	if (data.lastName) dataToUpdate.lastName = data.lastName;
+
+	if (data.avatar) {
+		const fileName = `${generateRandomString() + "_" + imgName}`;
+		const { data: updatedAvatar, error } = await supabase.storage
+			.from(dbTable.userAvatar)
+			.upload(fileName, data.avatar);
+
+		if (error) throw new Error(error.message);
+
+		dataToUpdate.avatar = `${supabaseUrl}/storage/v1/object/public/${updatedAvatar.fullPath}`;
+	}
+
+	const { data: updatedData, error } = await supabase.auth.updateUser({
+		data: dataToUpdate,
+	});
+
+	if (error) throw new Error(error.message);
+
+	return updatedData;
+}
+export {
+	registerUser,
+	loginUser,
+	logoutUser,
+	getCurrentUser,
+	getAllUser,
+	updateUser,
+};

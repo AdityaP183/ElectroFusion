@@ -92,11 +92,11 @@ const router = createBrowserRouter([
 					{ path: "/", element: <Landing /> },
 					{ path: "login", element: <Login /> },
 					{ path: "register", element: <Register /> },
-                    { path: "not-found", element: <NotFound /> },
-                    {
-                        path: "logout", 
-                        element: <Logout/>,
-                    }
+					{ path: "not-found", element: <NotFound /> },
+					{
+						path: "logout",
+						element: <Logout />,
+					},
 				],
 			},
 			{ path: "/forgot-password", element: <ForgotPassword /> },
@@ -105,7 +105,7 @@ const router = createBrowserRouter([
 				path: "/store/*",
 				element: (
 					<ProtectedRoute requiredRole="customer">
-						<CustomerRoutes/>
+						<CustomerRoutes />
 					</ProtectedRoute>
 				),
 			},

@@ -17,15 +17,18 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { updateUser } from "@/db/api-auth";
 import { updateUserSchema } from "@/db/schemas";
+import { User } from "@/lib/types/user-types";
 import fusionStore from "@/stores/userStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { z } from "zod";
 
 export default function Settings() {
-	const { user } = fusionStore();
+	const { user, setUser } = fusionStore();
 	const [file, setFile] = useState<{
 		imgFile: File;
 		img: string;
@@ -42,7 +45,32 @@ export default function Settings() {
 	});
 
 	async function onFormSubmit(values: z.infer<typeof updateUserSchema>) {
-		console.log(values);
+		const dataToUpdate = { ...values, avatar: file?.imgFile };
+		try {
+			const response = await updateUser({
+				data: dataToUpdate,
+			});
+
+			toast.success("Profile updated successfully.");
+			if (response.user) {
+				const extractedUser: User = {
+					id: response.user.id,
+					email: response.user.email || "",
+					user_metadata: {
+						firstName: response.user.user_metadata.firstName || "",
+						lastName: response.user.user_metadata.lastName || "",
+						role: response.user.user_metadata.role || "",
+						avatar: response.user.user_metadata.avatar || "",
+					},
+				};
+				setUser(extractedUser);
+			} else {
+				window.location.reload();
+			}
+		} catch (error) {
+			if (error instanceof Error) toast.error(error.message);
+			else toast.error("Something went wrong during update.");
+		}
 	}
 
 	return (

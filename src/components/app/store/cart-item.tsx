@@ -18,19 +18,14 @@ const CartItem = ({
 }: Partial<ProductSchema> & { refetch: () => void }) => {
 	const navigate = useNavigate();
 
-	const {
-		data,
-		loading,
-		error,
-		fn: removeItem,
-	} = useFetch(removeFromCart, id);
+	const { loading, error, fn: removeItem } = useFetch(removeFromCart, id);
 
 	const handleRemove = async () => {
 		await removeItem();
 
 		if (!loading && error) return toast.error(error.message);
 
-		if (!loading && data) {
+		if (!loading && !error) {
 			toast.success("Removed from cart");
 			refetch();
 		}

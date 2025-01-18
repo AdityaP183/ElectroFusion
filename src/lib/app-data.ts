@@ -3,7 +3,11 @@ import {
 	Package,
 	PackagePlus,
 	PackageSearch,
+	RotateCcw,
+	Shield,
 	ShoppingCart,
+	Truck,
+	Wallet,
 } from "lucide-react";
 import { SidebarNestedItem } from "./types/component-type";
 
@@ -290,4 +294,11 @@ export const homepageBannerData = [
 		imageUrl:
 			"https://ecomall-be87.kxcdn.com/ecomall/wp-content/uploads/2023/11/slide1-watches.png",
 	},
+];
+
+export const featuresOverview = [
+	{ title: "Free Delivery", icon: Truck },
+	{ title: "Easy Payments", icon: Wallet },
+	{ title: "7 days return", icon: RotateCcw },
+	{ title: "1 Year Warranty", icon: Shield },
 ];

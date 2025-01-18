@@ -9,7 +9,7 @@ import {
 import fusionStore from "@/stores/userStore";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const ProductCard = ({
 	id,
@@ -49,9 +49,9 @@ const ProductCard = ({
 				className
 			)}
 		>
-			<a
+			<Link
 				className="flex mx-3 mt-3 overflow-hidden text-center bg-white h-60 rounded-xl"
-				href="#"
+				to={`/store/product/${id}`}
 			>
 				<img
 					className="object-cover mx-auto"
@@ -63,16 +63,16 @@ const ProductCard = ({
 						{discountedPercent}% OFF
 					</span>
 				)}
-			</a>
+			</Link>
 			<div className="px-3 pb-3 mt-4">
-				<a href="#">
+				<Link to={`/store/product/${id}`}>
 					<h5
 						className="text-xl tracking-tight truncate text-secondary-foreground"
 						title={title}
 					>
 						{title}
 					</h5>
-				</a>
+				</Link>
 				<div className="relative flex items-center justify-between mt-2 mb-5">
 					<p className="flex items-center gap-1">
 						{isDiscounted ? (
