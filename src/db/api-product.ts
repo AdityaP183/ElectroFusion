@@ -32,7 +32,7 @@ async function createProduct({ data, imgName = "" }: CreateProductProps) {
 	return { status, message: "Product created successfully" };
 }
 
-async function getProducts(userId: string | undefined, count: number = 10) {
+async function getProducts(userId: string | undefined, count: number = 50) {
 	if (!userId) return [];
 
 	const { data, error } = await supabase
