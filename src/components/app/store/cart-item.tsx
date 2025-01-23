@@ -65,7 +65,7 @@ const CartItem = ({
 						<Button
 							variant={"link"}
 							className="p-0"
-							onClick={() => navigate(`/products/${id}`)}
+							onClick={() => navigate(`/store/products/${id}`)}
 						>
 							View Product
 						</Button>
