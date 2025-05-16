@@ -1,8 +1,12 @@
+import { SignedIn, UserButton } from "@clerk/nextjs";
+
 export default function Page() {
-  return (
-    <div>
-      <h1>Home</h1>
-      <p>Welcome to the Home page</p>
-    </div>
-  )
+	return (
+		<div className="flex justify-between items-center p-4 gap-4 h-16">
+			<SignedIn>
+				<UserButton />
+			</SignedIn>
+			Home Page
+		</div>
+	);
 }
