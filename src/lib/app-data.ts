@@ -1,3 +1,5 @@
+import { Award, Flame, TrendingUp } from "lucide-react";
+
 export const signInHeroTexts = [
 	{
 		title: "Welcome Back",
@@ -70,101 +72,20 @@ export const navbarLinks: {
 	},
 ];
 
-export const categories = [
+export const navBrowseLinks = [
 	{
-		_creationTime: 1747334235089.167,
-		_id: "j979qrvbfxpnp49fbyvzga22vx7fzx73",
-		children: [
-			{
-				_creationTime: 1747334348092.6125,
-				_id: "j97amm1gzfpw8xs9ejxdy207797fzy9x",
-				children: [],
-				name: "Android Phones",
-				parentId: "j979qrvbfxpnp49fbyvzga22vx7fzx73",
-				slug: "android-phones",
-			},
-			{
-				_creationTime: 1747334348092.6128,
-				_id: "j97dgea0dbzsrjvbw7cckhpqjh7fzv5v",
-				children: [],
-				name: "iPhone",
-				parentId: "j979qrvbfxpnp49fbyvzga22vx7fzx73",
-				slug: "iphone",
-			},
-			{
-				_creationTime: 1747334348092.613,
-				_id: "j973bnqzsy55mx08kpzbnd32e97fy0tt",
-				children: [],
-				name: "Refurbished Phones",
-				parentId: "j979qrvbfxpnp49fbyvzga22vx7fzx73",
-				slug: "refurbished-phones",
-			},
-		],
-		name: "Smart Phones",
-		slug: "smartphones",
+		title: "Latest Collections",
+		href: "/",
+		icon: Flame,
 	},
 	{
-		_creationTime: 1747337792240.2695,
-		_id: "j978n1pf99agpq5nekyn3fk46n7fzr2v",
-		children: [
-			{
-				_creationTime: 1747337792240.2698,
-				_id: "j97bdnxt93e3bc66y0abevqfp57fy34j",
-				children: [],
-				name: "Android Tablets",
-				parentId: "j978n1pf99agpq5nekyn3fk46n7fzr2v",
-				slug: "android-tablets",
-			},
-			{
-				_creationTime: 1747337792240.27,
-				_id: "j971k59ea68re50x1j7ecdyc597fym66",
-				children: [],
-				name: "iPads",
-				parentId: "j978n1pf99agpq5nekyn3fk46n7fzr2v",
-				slug: "ipads",
-			},
-			{
-				_creationTime: 1747337792240.2703,
-				_id: "j979nhydjkc30rrm0g9rdx3hc57fzma6",
-				children: [],
-				name: "Kindle",
-				parentId: "j978n1pf99agpq5nekyn3fk46n7fzr2v",
-				slug: "kindle",
-			},
-		],
-		name: "Tablets & eReaders",
-		slug: "tablets-and-ereaders",
+		title: "Trending",
+		href: "/",
+		icon: TrendingUp,
 	},
 	{
-		_creationTime: 1747337792240.2705,
-		_id: "j97a7mpq72ztfpzq4taj9hyaz57fymmm",
-		children: [
-			{
-				_creationTime: 1747337792240.2708,
-				_id: "j97621456y5rgn6qpgnc5q8van7fyydb",
-				children: [],
-				name: "Gaming Laptops",
-				parentId: "j97a7mpq72ztfpzq4taj9hyaz57fymmm",
-				slug: "gaming-laptops",
-			},
-			{
-				_creationTime: 1747337792240.271,
-				_id: "j97efxt4zytekq93y5e10e6vdx7fzjhe",
-				children: [],
-				name: "Business Laptops",
-				parentId: "j97a7mpq72ztfpzq4taj9hyaz57fymmm",
-				slug: "business-laptops",
-			},
-			{
-				_creationTime: 1747337792240.2712,
-				_id: "j97e6ytxtqrsdzz1zmz9xcbrmd7fzjc2",
-				children: [],
-				name: "Student Laptops",
-				parentId: "j97a7mpq72ztfpzq4taj9hyaz57fymmm",
-				slug: "student-laptops",
-			},
-		],
-		name: "Laptops & Computers",
-		slug: "laptops-and-computers",
+		title: "Best Sellers",
+		href: "/",
+		icon: Award,
 	},
 ];

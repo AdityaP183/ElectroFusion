@@ -17,6 +17,8 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Pill } from "@/components/ui/pill";
 import { useClerk, useUser } from "@clerk/nextjs";
+import { fetchQuery } from "convex/nextjs";
+import { useQuery } from "convex/react";
 import {
 	Headphones,
 	LogOut,
@@ -25,6 +27,8 @@ import {
 	Tags,
 	User,
 } from "lucide-react";
+import Link from "next/link";
+import { api } from "../../../../../convex/_generated/api";
 
 export default function NavbarUserSection({
 	isLoaded,
@@ -34,6 +38,7 @@ export default function NavbarUserSection({
 	isSignedIn: boolean | undefined;
 }) {
 	const { user } = useUser();
+	const dbUser = useQuery(api.users.getUser, { userId: user?.id || "" });
 
 	return (
 		<NavigationMenuList className="flex items-center gap-5 mr-3">
@@ -42,6 +47,21 @@ export default function NavbarUserSection({
 					<ShoppingCart className="size-6 stroke-3" />0
 				</Pill>
 			</NavigationMenuItem>
+			{isLoaded &&
+				isSignedIn &&
+				dbUser &&
+				(dbUser.role === "admin" || dbUser.role === "vendor") && (
+					<NavigationMenuItem>
+						<Link
+							href={`/dashboard/${user?.id}`}
+							className="cursor-pointer"
+						>
+							<Button className="bg-secondary/80 border-border border rounded-full text-foreground hover:bg-secondary/30 cursor-pointer">
+								Dashboard
+							</Button>
+						</Link>
+					</NavigationMenuItem>
+				)}
 			{isLoaded ? (
 				isSignedIn && (
 					<UserButton>
@@ -64,7 +84,7 @@ export default function NavbarUserSection({
 }
 
 function UserButton({ children }: { children: React.ReactNode }) {
-    const {signOut} = useClerk()
+	const { signOut } = useClerk();
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild className="rounded-full px-2">

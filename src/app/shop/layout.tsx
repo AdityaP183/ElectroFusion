@@ -1,3 +1,4 @@
+import Footer from "@/components/modules/footer";
 import Navbar from "@/features/shop/ui/navbar";
 
 export default function ShopLayout({
@@ -6,9 +7,10 @@ export default function ShopLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<main className="min-h-screen w-full">
+		<main className="min-h-screen w-full flex flex-col">
 			<Navbar />
-			<div className="mt-20">{children}</div>
+			<div className="flex-1 mt-20 min-h-screen">{children}</div>
+			<Footer />
 		</main>
 	);
 }

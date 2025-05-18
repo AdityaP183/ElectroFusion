@@ -10,7 +10,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import Logo from "@/components/modules/logo";
 import {
 	NavigationMenu,
 	NavigationMenuContent,
@@ -24,6 +24,8 @@ import { useQuery } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
 import NavbarCategories from "./navbar-categories";
 import NavbarUserSection from "./navbar-user-section";
+import { navBrowseLinks } from "@/lib/app-data";
+import Link from "next/link";
 
 export default function Navbar() {
 	const { isLoaded, isSignedIn } = useAuth();
@@ -83,14 +85,7 @@ function MainNavbar({
 					className="mr-5"
 					onClick={() => router.push("/")}
 				>
-					<div className="flex items-center gap-2 p-2 cursor-pointer">
-						<Avatar className="w-6 h-6">
-							<AvatarImage src="/logo.svg" />
-						</Avatar>
-						<span className="text-xl font-bold font-ox">
-							ElectroFusion
-						</span>
-					</div>
+					<Logo />
 				</NavigationMenuItem>
 			</NavigationMenuList>
 			<NavbarLinks />
@@ -117,15 +112,31 @@ function NavbarLinks() {
 					</NavigationMenuLink>
 				</NavigationMenuItem>
 				<NavigationMenuItem>
-					<NavigationMenuLink
+					<NavigationMenuTrigger
 						className={navigationMenuTriggerStyle({
 							className:
 								"bg-transparent border border-border rounded-full",
 						})}
-						href="/shop/browse"
 					>
 						Browse
-					</NavigationMenuLink>
+					</NavigationMenuTrigger>
+					<NavigationMenuContent>
+						<div className="flex flex-col gap-2 w-[250px] p-4 justify-center">
+							{navBrowseLinks.map((link) => {
+								const Icon = link.icon;
+								return (
+									<Link
+										key={link.title}
+										className="flex items-center gap-2 hover:bg-accent p-2 rounded-md"
+										href={link.href}
+									>
+										<Icon className="h-4 w-4" />
+										{link.title}
+									</Link>
+								);
+							})}
+						</div>
+					</NavigationMenuContent>
 				</NavigationMenuItem>
 				<NavigationMenuItem>
 					<NavigationMenuTrigger

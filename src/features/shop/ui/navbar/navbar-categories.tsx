@@ -25,7 +25,7 @@ export default function NavbarCategories({
 				<h2 className="font-semibold text-lg">All Categories</h2>
 				<Pill>
 					<Link
-						href="/shop/browse/all"
+						href="/shop/category/all"
 						className="text-xs text-primary hover:text-primary/80 hover:underline"
 					>
 						View All

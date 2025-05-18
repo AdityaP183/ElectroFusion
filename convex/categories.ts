@@ -1,7 +1,6 @@
-import { v } from "convex/values";
-import { query, mutation } from "./_generated/server";
-import { Doc, Id } from "./_generated/dataModel";
 import { CategoryWithChildren } from "../src/lib/app-types";
+import { Id } from "./_generated/dataModel";
+import { query } from "./_generated/server";
 
 export const getAllCategories = query({
 	args: {},
@@ -47,5 +46,15 @@ export const getCategoriesWithHierarchy = query({
 		});
 
 		return rootCategories;
+	},
+});
+
+export const getCategoriesWithoutParent = query({
+	args: {},
+	handler: async (ctx) => {
+		return await ctx.db
+			.query("categories")
+			.filter((q) => q.neq(q.field("parentId"), undefined))
+			.collect();
 	},
 });

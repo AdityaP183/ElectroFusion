@@ -21,7 +21,7 @@ export default function InfoStrip() {
 	const subcategory = params.subcategory || undefined;
 
 	return (
-		<div className="my-4">
+		<div className="mt-4 mb-6 space-y-2">
 			<Breadcrumb>
 				<BreadcrumbList>
 					<BreadcrumbItem>
@@ -53,7 +53,9 @@ export default function InfoStrip() {
 												"bg-primary/10 hover:bg-primary/30 text-foreground border-foreground/30"
 										)}
 									>
-										{category}
+										{category === "all"
+											? "All Categories"
+											: category}
 									</Badge>
 								</BreadcrumbLink>
 							</BreadcrumbItem>
@@ -85,6 +87,10 @@ export default function InfoStrip() {
 					)}
 				</BreadcrumbList>
 			</Breadcrumb>
+
+			<div>
+				<h1 className="text-2xl font-semibold">Browse By Categories</h1>
+			</div>
 		</div>
 	);
 }
