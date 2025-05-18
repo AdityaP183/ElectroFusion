@@ -1,33 +1,44 @@
+"use client";
+
 import MultipleSelector, { Option } from "@/components/ui/multi-selector";
+import { useQuery } from "convex/react";
+import { api } from "../../../../../convex/_generated/api";
+import { useState } from "react";
 
-export default async function CategorySelector() {
-	const OPTIONS: Option[] = [
-		{ label: "nextjs", value: "nextjs" },
-		{ label: "React", value: "react" },
-		{ label: "Remix", value: "remix" },
-		{ label: "Vite", value: "vite" },
-		{ label: "Nuxt", value: "nuxt" },
-		{ label: "Vue", value: "vue" },
-		{ label: "Svelte", value: "svelte" },
-		{ label: "Angular", value: "angular" },
-		{ label: "Ember", value: "ember", disable: true },
-		{ label: "Gatsby", value: "gatsby", disable: true },
-		{ label: "Astro", value: "astro" },
-	];
+export default function CategorySelector() {
+	const [values, setValues] = useState<Option[]>([]);
+	const categories = useQuery(api.categories.getCategoriesWithHierarchy);
 
+	const parsedCategories =
+		categories &&
+		categories.flatMap((parent) =>
+			parent.children.map((child) => ({
+				label: child.name,
+				value: child.slug,
+				group: parent.name,
+			}))
+		);
+	console.log(values);
 	return (
 		<div className="w-full px-2">
-            <h2 className="font-semibold mb-2">Select Categories</h2>
-			<MultipleSelector
-				defaultOptions={OPTIONS}
-				placeholder="Select frameworks you like..."
-				emptyIndicator={
-					<p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
-						no results found.
-					</p>
-				}
-                badgeClassName="bg-accent text-foreground"
-			/>
+			<h2 className="font-semibold mb-2">Select Categories</h2>
+			{categories === undefined || parsedCategories === undefined ? (
+				<div className="h-[42px] w-[280px] border-1 bg-accent animate-pulse border-border rounded-md" />
+			) : (
+				<MultipleSelector
+					value={values}
+					onChange={(value) => setValues(value)}
+					defaultOptions={parsedCategories}
+					placeholder="Select frameworks you like..."
+					emptyIndicator={
+						<p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
+							no results found.
+						</p>
+					}
+					badgeClassName="bg-accent text-foreground"
+					groupBy="group"
+				/>
+			)}
 		</div>
 	);
 }

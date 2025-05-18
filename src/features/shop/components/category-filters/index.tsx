@@ -7,11 +7,11 @@ import CategorySelector from "./category-selector";
 import PriceRange from "./price-range";
 import Searchfilter from "./search-filter";
 
-export default function CategoryFilters({
-	isCategory,
-}: {
+interface Props {
 	isCategory: boolean;
-}) {
+}
+
+export default function CategoryFilters({ isCategory }: Props) {
 	const [search, setSearch] = useQueryState("query", {
 		defaultValue: "",
 		shallow: false,

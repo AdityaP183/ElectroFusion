@@ -75,17 +75,17 @@ export const navbarLinks: {
 export const navBrowseLinks = [
 	{
 		title: "Latest Collections",
-		href: "/",
+		slug: "latest-collections",
 		icon: Flame,
 	},
 	{
 		title: "Trending",
-		href: "/",
+		slug: "trending",
 		icon: TrendingUp,
 	},
 	{
 		title: "Best Sellers",
-		href: "/",
+		slug: "best-sellers",
 		icon: Award,
 	},
 ];

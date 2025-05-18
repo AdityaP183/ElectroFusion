@@ -128,7 +128,7 @@ function NavbarLinks() {
 									<Link
 										key={link.title}
 										className="flex items-center gap-2 hover:bg-accent p-2 rounded-md"
-										href={link.href}
+										href={`/shop/browse?type=${link.slug}`}
 									>
 										<Icon className="h-4 w-4" />
 										{link.title}

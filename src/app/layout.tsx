@@ -31,6 +31,7 @@ export default function RootLayout({
 			<link rel="shortcut icon" href="/logo.svg" type="image/x-icon" />
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+				suppressHydrationWarning
 			>
 				<ClerkProvider dynamic appearance={{ baseTheme: dark }}>
 					<Providers>{children}</Providers>

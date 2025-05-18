@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Pill } from "@/components/ui/pill";
 import { useClerk, useUser } from "@clerk/nextjs";
-import { fetchQuery } from "convex/nextjs";
 import { useQuery } from "convex/react";
 import {
 	Headphones,
