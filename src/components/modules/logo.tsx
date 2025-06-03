@@ -24,7 +24,7 @@ export default function Logo({
 			<Avatar className={cn("w-6 h-6", avatarStyle)}>
 				<AvatarImage src={avatarStyle ? avatarUrl : "/logo.svg"} />
 			</Avatar>
-			<span className={cn("text-xl font-bold", textStyle)}>
+			<span className={cn("text-xl font-bold mb-0.5", textStyle)}>
 				ElectroFusion
 			</span>
 		</div>

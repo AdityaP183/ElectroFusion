@@ -238,12 +238,6 @@ function ForgotPassword({ isGlobalLoading }: { isGlobalLoading: boolean }) {
 	);
 }
 
-// function ResetPasswordEmailVerification({isGlobalLoading}: {isGlobalLoading: boolean}) {
-//     return <SignIn.Step name="email-code-verification">
-//         <Card className="w-full border-none shadow-none h-[600px] justify-center"></Card>
-//     </SignIn.Step>
-// }
-
 function ResetPassword({ isGlobalLoading }: { isGlobalLoading: boolean }) {
 	return (
 		<SignIn.Step name="reset-password">

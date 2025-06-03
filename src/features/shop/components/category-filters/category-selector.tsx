@@ -3,10 +3,19 @@
 import MultipleSelector, { Option } from "@/components/ui/multi-selector";
 import { useQuery } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
-import { useState } from "react";
+import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
 
-export default function CategorySelector() {
-	const [values, setValues] = useState<Option[]>([]);
+interface Props {
+	categoryValues?: string[] | null;
+	setCategoryValues: (values: string[] | null) => void;
+}
+
+export default function CategorySelector({
+	categoryValues,
+	setCategoryValues,
+}: Props) {
+	// Store only string values in URL params
+
 	const categories = useQuery(api.categories.getCategoriesWithHierarchy);
 
 	const parsedCategories =
@@ -18,7 +27,30 @@ export default function CategorySelector() {
 				group: parent.name,
 			}))
 		);
-	console.log(values);
+
+	// Convert string array from URL to Option[] for the component
+	const selectedOptions: Option[] = (categoryValues || []).map((value) => {
+		// Find the matching option from parsedCategories
+		const matchingOption = parsedCategories?.find(
+			(option) => option.value === value
+		);
+		// Return the full Option object if found, or create a minimal one if not
+		return matchingOption || { label: value, value };
+	});
+
+	// Handle change from the MultiSelector and update URL with just the values
+	const handleChange = (newSelection: Option | Option[]) => {
+		const options = Array.isArray(newSelection)
+			? newSelection
+			: [newSelection];
+
+		// Extract just the value properties for the URL
+		const newValues = options.map((option) => option.value);
+
+		// If empty array, pass null to remove the parameter completely from the URL
+		setCategoryValues(newValues.length > 0 ? newValues : null);
+	};
+
 	return (
 		<div className="w-full px-2">
 			<h2 className="font-semibold mb-2">Select Categories</h2>
@@ -26,8 +58,8 @@ export default function CategorySelector() {
 				<div className="h-[42px] w-[280px] border-1 bg-accent animate-pulse border-border rounded-md" />
 			) : (
 				<MultipleSelector
-					value={values}
-					onChange={(value) => setValues(value)}
+					value={selectedOptions}
+					onChange={handleChange}
 					defaultOptions={parsedCategories}
 					placeholder="Select frameworks you like..."
 					emptyIndicator={

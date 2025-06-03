@@ -2,7 +2,7 @@
 
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { useQueryState } from "nuqs";
+import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
 import CategorySelector from "./category-selector";
 import PriceRange from "./price-range";
 import Searchfilter from "./search-filter";
@@ -24,6 +24,12 @@ export default function CategoryFilters({ isCategory }: Props) {
 		defaultValue: "",
 		shallow: false,
 	});
+	const [categoryValues, setCategoryValues] = useQueryState(
+		"categories",
+		parseAsArrayOf(parseAsString).withOptions({
+			clearOnDefault: true,
+		})
+	);
 
 	return (
 		<Card className="flex gap-3 py-2 rounded-md w-[300px]">
@@ -38,7 +44,10 @@ export default function CategoryFilters({ isCategory }: Props) {
 			{!isCategory && (
 				<>
 					<Separator />
-					<CategorySelector />
+					<CategorySelector
+						categoryValues={categoryValues}
+						setCategoryValues={setCategoryValues}
+					/>
 				</>
 			)}
 			{/* Seller */}

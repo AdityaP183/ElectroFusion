@@ -32,20 +32,20 @@ export default function Navbar() {
 	const { scrollYProgress } = useScroll();
 	const [visible, setVisible] = useState(true);
 
-	useMotionValueEvent(scrollYProgress, "change", (current) => {
-		if (typeof current === "number" && scrollYProgress) {
-			const previous = scrollYProgress.getPrevious();
+	// useMotionValueEvent(scrollYProgress, "change", (current) => {
+	// 	if (typeof current === "number" && scrollYProgress) {
+	// 		const previous = scrollYProgress.getPrevious();
 
-			if (typeof previous === "number") {
-				const direction = current - previous;
-				if (scrollYProgress.get() < 0.05) {
-					setVisible(true);
-				} else {
-					setVisible(direction < 0);
-				}
-			}
-		}
-	});
+	// 		if (typeof previous === "number") {
+	// 			const direction = current - previous;
+	// 			if (scrollYProgress.get() < 0.05) {
+	// 				setVisible(true);
+	// 			} else {
+	// 				setVisible(direction < 0);
+	// 			}
+	// 		}
+	// 	}
+	// });
 
 	return (
 		<AnimatePresence>

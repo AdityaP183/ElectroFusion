@@ -1,4 +1,16 @@
-import { Award, Flame, TrendingUp } from "lucide-react";
+import {
+	ClipboardList,
+	Cog,
+	LayoutDashboard,
+	Lightbulb,
+	Package,
+	LucideIcon,
+	Tags,
+	Flame,
+	TrendingUp,
+	Award,
+	Users,
+} from "lucide-react";
 
 export const signInHeroTexts = [
 	{
@@ -89,3 +101,182 @@ export const navBrowseLinks = [
 		icon: Award,
 	},
 ];
+
+export interface SidebarItemBase {
+	id: string;
+	title: string;
+	icon?: LucideIcon;
+}
+
+export interface SidebarLink extends SidebarItemBase {
+	href: string;
+	items?: SidebarSubLink[];
+}
+
+export interface SidebarSubLink {
+	id: string;
+	title: string;
+	href: string;
+}
+
+export const sidebarData = {
+	admin: {
+		navMain: [
+			{
+				id: "dashboard",
+				title: "Dashboard",
+				href: "/",
+				icon: LayoutDashboard,
+			},
+			{
+				id: "vendors",
+				title: "Vendors",
+				href: "/",
+				icon: Users,
+				items: [
+					{
+						id: "all-vendors",
+						title: "All Vendors",
+						href: "/",
+					},
+					{
+						id: "new-vendor",
+						title: "Vendor Applications",
+						href: "/",
+					},
+				],
+			},
+		],
+		others: [
+			{
+				id: "settings",
+				title: "Settings",
+				href: "/settings",
+				icon: Cog,
+			},
+			{
+				id: "actions",
+				title: "Actions",
+				href: "/actions",
+				icon: Lightbulb,
+				items: [
+					{
+						id: "applications",
+						title: "Applications",
+						href: "/actions/applications",
+					},
+					{
+						id: "announcements",
+						title: "Announcements",
+						href: "/actions/announcements",
+					},
+					{
+						id: "report-query",
+						title: "Report Query",
+						href: "/actions/report-query",
+					},
+				],
+			},
+		],
+	},
+	vendor: {
+		navMain: [
+			{
+				id: "dashboard",
+				title: "Dashboard",
+				href: "/",
+				icon: LayoutDashboard,
+			},
+			{
+				id: "products",
+				title: "Products",
+				href: "/dashboard/products",
+				icon: Package,
+				items: [
+					{
+						id: "all-products",
+						title: "All Products",
+						href: "/products/all",
+					},
+					{
+						id: "new-product",
+						title: "Add Product",
+						href: "/products/new",
+					},
+				],
+			},
+			{
+				id: "categories",
+				title: "Categories",
+				href: "/categories",
+				icon: Tags,
+				items: [
+					{
+						id: "all-categories",
+						title: "All Categories",
+						href: "/categories/all",
+					},
+					{
+						id: "new-category",
+						title: "Add Category",
+						href: "/categories/new",
+					},
+				],
+			},
+			{
+				id: "orders",
+				title: "Orders",
+				href: "/orders",
+				icon: ClipboardList,
+				items: [
+					{
+						id: "all-orders",
+						title: "All Orders",
+						href: "/orders/all",
+					},
+					{
+						id: "pending-orders",
+						title: "Pending",
+						href: "/orders/pending",
+					},
+					{
+						id: "completed-orders",
+						title: "Completed",
+						href: "/orders/completed",
+					},
+				],
+			},
+		],
+		others: [
+			{
+				id: "settings",
+				title: "Settings",
+				href: "/settings",
+				icon: Cog,
+			},
+			{
+				id: "actions",
+				title: "Actions",
+				href: "/actions",
+				icon: Lightbulb,
+				items: [
+					{
+						id: "applications",
+						title: "Applications",
+						href: "/actions/applications",
+					},
+					{
+						id: "announcements",
+						title: "Announcements",
+						href: "/actions/announcements",
+					},
+					{
+						id: "report-query",
+						title: "Report Query",
+						href: "/actions/report-query",
+					},
+				],
+			},
+		],
+	},
+};
