@@ -146,6 +146,24 @@ export const sidebarData = {
 					},
 				],
 			},
+			{
+				id: "categories",
+				title: "Categories",
+				href: "/categories",
+				icon: Tags,
+				items: [
+					{
+						id: "all-categories",
+						title: "All Categories",
+						href: "/categories/all",
+					},
+					{
+						id: "new-category",
+						title: "Add Category",
+						href: "/categories/new",
+					},
+				],
+			},
 		],
 		others: [
 			{
@@ -202,24 +220,6 @@ export const sidebarData = {
 						id: "new-product",
 						title: "Add Product",
 						href: "/products/new",
-					},
-				],
-			},
-			{
-				id: "categories",
-				title: "Categories",
-				href: "/categories",
-				icon: Tags,
-				items: [
-					{
-						id: "all-categories",
-						title: "All Categories",
-						href: "/categories/all",
-					},
-					{
-						id: "new-category",
-						title: "Add Category",
-						href: "/categories/new",
 					},
 				],
 			},

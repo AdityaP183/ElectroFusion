@@ -1,6 +1,6 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
+import { useClerk, useUser } from "@clerk/nextjs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
 	DropdownMenu,
@@ -41,6 +41,7 @@ interface Props {
 
 export default function AppSidebarUserControls({ dbUser }: Props) {
 	const { isLoaded, isSignedIn } = useUser();
+	const { signOut } = useClerk();
 	const { isMobile } = useSidebar();
 
 	if (!isLoaded || !isSignedIn) return null;
@@ -126,7 +127,7 @@ export default function AppSidebarUserControls({ dbUser }: Props) {
 							</DropdownMenuItem>
 						</DropdownMenuGroup>
 						<DropdownMenuSeparator />
-						<DropdownMenuItem>
+						<DropdownMenuItem onClick={() => signOut()}>
 							<LogOut />
 							Log out
 						</DropdownMenuItem>
