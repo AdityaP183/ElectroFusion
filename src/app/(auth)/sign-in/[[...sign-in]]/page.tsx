@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import AuthHeroCard from "@/features/auth/components/auth-hero-card";
 import { signInHeroTexts } from "@/lib/app-data";
+import { cn } from "@/lib/utils";
 import * as Clerk from "@clerk/elements/common";
 import * as SignIn from "@clerk/elements/sign-in";
 import { ArrowLeft } from "lucide-react";
@@ -35,7 +36,7 @@ export default function Page() {
 							{(isGlobalLoading) => (
 								<>
 									<Start isGlobalLoading={isGlobalLoading} />
-									<Verification
+									<Verifications
 										isGlobalLoading={isGlobalLoading}
 									/>
 									<ForgotPassword
@@ -155,52 +156,11 @@ function Start({ isGlobalLoading }: { isGlobalLoading: boolean }) {
 	);
 }
 
-function Verification({ isGlobalLoading }: { isGlobalLoading: boolean }) {
+function Verifications({ isGlobalLoading }: { isGlobalLoading: boolean }) {
 	return (
 		<SignIn.Step name="verifications">
-			<SignIn.Strategy name="password">
-				<Card className="w-full border-none shadow-none h-[600px] justify-center">
-					<CardHeader>
-						<CardTitle>Enter Password</CardTitle>
-						<CardDescription>
-							Welcome back <SignIn.SafeIdentifier />
-						</CardDescription>
-					</CardHeader>
-					<CardContent className="grid gap-y-4">
-						<Clerk.Field name="password" className="space-y-2">
-							<Clerk.Label asChild>
-								<Label>Password</Label>
-							</Clerk.Label>
-							<Clerk.Input type="password" asChild>
-								<Input />
-							</Clerk.Input>
-							<Clerk.FieldError className="block text-sm text-destructive" />
-						</Clerk.Field>
-					</CardContent>
-					<CardFooter>
-						<div className="grid w-full gap-y-4">
-							<SignIn.Action submit asChild>
-								<Button disabled={isGlobalLoading}>
-									<Clerk.Loading>
-										{(isLoading) => {
-											return isLoading ? (
-												<Icons.spinner className="size-4 animate-spin" />
-											) : (
-												"Continue"
-											);
-										}}
-									</Clerk.Loading>
-								</Button>
-							</SignIn.Action>
-							<SignIn.Action navigate="forgot-password" asChild>
-								<Button type="button" size="sm" variant="link">
-									forgot password?
-								</Button>
-							</SignIn.Action>
-						</div>
-					</CardFooter>
-				</Card>
-			</SignIn.Strategy>
+			<PasswordVerification isGlobalLoading={isGlobalLoading} />
+			<ResetPasswordCode isGlobalLoading={isGlobalLoading} />
 		</SignIn.Step>
 	);
 }
@@ -220,8 +180,16 @@ function ForgotPassword({ isGlobalLoading }: { isGlobalLoading: boolean }) {
 						name="reset_password_email_code"
 						asChild
 					>
-						<Button type="button">
-							Reset your password via Email
+						<Button type="button" disabled={isGlobalLoading}>
+							<Clerk.Loading>
+								{(isLoading) => {
+									return isLoading ? (
+										<Icons.spinner className="size-4 animate-spin" />
+									) : (
+										"Reset your password via Email"
+									);
+								}}
+							</Clerk.Loading>
 						</Button>
 					</SignIn.SupportedStrategy>
 				</CardContent>
@@ -238,48 +206,201 @@ function ForgotPassword({ isGlobalLoading }: { isGlobalLoading: boolean }) {
 	);
 }
 
+function PasswordVerification({
+	isGlobalLoading,
+}: {
+	isGlobalLoading: boolean;
+}) {
+	return (
+		<SignIn.Strategy name="password">
+			<Card className="w-full border-none shadow-none h-[600px] justify-center">
+				<CardHeader>
+					<CardTitle>Enter Password</CardTitle>
+					<CardDescription>
+						Welcome back <SignIn.SafeIdentifier />
+					</CardDescription>
+				</CardHeader>
+				<CardContent className="grid gap-y-4">
+					<Clerk.Field name="password" className="space-y-2">
+						<Clerk.Label asChild>
+							<Label>Password</Label>
+						</Clerk.Label>
+						<Clerk.Input type="password" asChild>
+							<Input />
+						</Clerk.Input>
+						<Clerk.FieldError className="block text-sm text-destructive" />
+					</Clerk.Field>
+				</CardContent>
+				<CardFooter>
+					<div className="grid w-full gap-y-4">
+						<SignIn.Action submit asChild>
+							<Button disabled={isGlobalLoading}>
+								<Clerk.Loading>
+									{(isLoading) => {
+										return isLoading ? (
+											<Icons.spinner className="size-4 animate-spin" />
+										) : (
+											"Continue"
+										);
+									}}
+								</Clerk.Loading>
+							</Button>
+						</SignIn.Action>
+						<SignIn.Action navigate="forgot-password" asChild>
+							<Button type="button" size="sm" variant="link">
+								forgot password?
+							</Button>
+						</SignIn.Action>
+					</div>
+				</CardFooter>
+			</Card>
+		</SignIn.Strategy>
+	);
+}
+
+function ResetPasswordCode({ isGlobalLoading }: { isGlobalLoading: boolean }) {
+	return (
+		<SignIn.Strategy name="reset_password_email_code">
+			<Card className="w-full border-none shadow-none h-[600px] justify-center">
+				<CardHeader>
+					<CardTitle className="text-2xl font-bold">
+						Enter the Verification Code
+					</CardTitle>
+					<CardDescription>
+						Use the verification code sent to your email address
+					</CardDescription>
+				</CardHeader>
+				<CardContent className="grid gap-y-4">
+					<div className="grid items-center justify-center gap-y-2">
+						<Clerk.Field name="code" className="space-y-2">
+							<Clerk.Label className="sr-only">
+								Email address
+							</Clerk.Label>
+							<div className="flex justify-center text-center">
+								<Clerk.Input
+									type="otp"
+									className="flex justify-center has-[:disabled]:opacity-50"
+									autoSubmit
+									render={({ value, status }) => {
+										return (
+											<div
+												data-status={status}
+												className={cn(
+													"relative flex size-10 items-center justify-center border-y border-r border-input text-sm transition-all first:rounded-l-md first:border-l last:rounded-r-md",
+													{
+														"z-10 ring-2 ring-ring ring-offset-background":
+															status ===
+																"cursor" ||
+															status ===
+																"selected",
+													}
+												)}
+											>
+												{value}
+												{status === "cursor" && (
+													<div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+														<div className="animate-caret-blink h-4 w-px bg-foreground duration-1000" />
+													</div>
+												)}
+											</div>
+										);
+									}}
+								/>
+							</div>
+							<Clerk.FieldError className="block text-center text-sm text-destructive" />
+						</Clerk.Field>
+						<SignIn.Action
+							asChild
+							resend
+							className="text-muted-foreground"
+							fallback={({ resendableAfter }) => (
+								<Button variant="link" size="sm" disabled>
+									Didn&apos;t receive a code? Resend (
+									<span className="tabular-nums">
+										{resendableAfter}
+									</span>
+									)
+								</Button>
+							)}
+						>
+							<Button type="button" variant="link" size="sm">
+								Didn&apos;t receive a code? Resend
+							</Button>
+						</SignIn.Action>
+					</div>
+				</CardContent>
+				<CardFooter>
+					<div className="grid w-full gap-y-4">
+						<SignIn.Action submit asChild>
+							<Button disabled={isGlobalLoading}>
+								<Clerk.Loading>
+									{(isLoading) => {
+										return isLoading ? (
+											<Icons.spinner className="size-4 animate-spin" />
+										) : (
+											"Continue"
+										);
+									}}
+								</Clerk.Loading>
+							</Button>
+						</SignIn.Action>
+					</div>
+				</CardFooter>
+			</Card>
+		</SignIn.Strategy>
+	);
+}
+
 function ResetPassword({ isGlobalLoading }: { isGlobalLoading: boolean }) {
 	return (
 		<SignIn.Step name="reset-password">
-			<SignIn.Strategy name="reset_password_email_code">
-				<Card className="w-full border-none shadow-none h-[600px] justify-center">
-					<CardHeader>
-						<CardTitle>Reset Password</CardTitle>
-						<CardDescription>
-							Enter your new password and then confirm it.
-						</CardDescription>
-					</CardHeader>
-					<CardContent className="grid gap-y-4">
-						<Clerk.Field name="password">
-							<Clerk.Label>New password</Clerk.Label>
-							<Clerk.Input />
-							<Clerk.FieldError />
-						</Clerk.Field>
-						<Clerk.Field name="confirmPassword">
-							<Clerk.Label>Confirm password</Clerk.Label>
-							<Clerk.Input />
-							<Clerk.FieldError />
-						</Clerk.Field>
-					</CardContent>
-					<CardFooter>
-						<div className="grid w-full gap-y-4">
-							<SignIn.Action submit asChild>
-								<Button disabled={isGlobalLoading}>
-									<Clerk.Loading>
-										{(isLoading) => {
-											return isLoading ? (
-												<Icons.spinner className="size-4 animate-spin" />
-											) : (
-												"Update Password"
-											);
-										}}
-									</Clerk.Loading>
-								</Button>
-							</SignIn.Action>
-						</div>
-					</CardFooter>
-				</Card>
-			</SignIn.Strategy>
+			{/* <SignIn.Strategy name="password"> */}
+			<Card className="w-full border-none shadow-none h-[600px] justify-center">
+				<CardHeader>
+					<CardTitle>Reset Password</CardTitle>
+					<CardDescription>
+						Enter your new password and then confirm it.
+					</CardDescription>
+				</CardHeader>
+				<CardContent className="grid gap-y-4">
+					<Clerk.Field name="password" className="space-y-2">
+						<Clerk.Label asChild>
+							<Label>New password</Label>
+						</Clerk.Label>
+						<Clerk.Input type="password" required asChild>
+							<Input placeholder="Enter new password" />
+						</Clerk.Input>
+						<Clerk.FieldError />
+					</Clerk.Field>
+					<Clerk.Field name="confirmPassword" className="space-y-2">
+						<Clerk.Label asChild>
+							<Label>Confirm password</Label>
+						</Clerk.Label>
+						<Clerk.Input type="password" required asChild>
+							<Input placeholder="Confirm password" />
+						</Clerk.Input>
+						<Clerk.FieldError />
+					</Clerk.Field>
+				</CardContent>
+				<CardFooter>
+					<div className="grid w-full gap-y-4">
+						<SignIn.Action submit asChild>
+							<Button disabled={isGlobalLoading}>
+								<Clerk.Loading>
+									{(isLoading) => {
+										return isLoading ? (
+											<Icons.spinner className="size-4 animate-spin" />
+										) : (
+											"Update Password"
+										);
+									}}
+								</Clerk.Loading>
+							</Button>
+						</SignIn.Action>
+					</div>
+				</CardFooter>
+			</Card>
+			{/* </SignIn.Strategy> */}
 		</SignIn.Step>
 	);
 }

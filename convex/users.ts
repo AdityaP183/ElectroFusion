@@ -42,7 +42,36 @@ async function userByClerkUserId(ctx: QueryCtx, clerkUserId: string) {
 		.unique();
 }
 
-export const createOrUpdateUser = internalMutation({
+// export const createOrUpdateUser = internalMutation({
+// 	args: { data: v.any() as Validator<UserJSON> },
+// 	handler: async (ctx, { data }) => {
+// 		const user = await userByClerkUserId(ctx, data.id);
+
+// 		if (user === null) {
+// 			const userAttributes = {
+// 				email: data.email_addresses[0].email_address,
+// 				clerkId: data.id,
+// 				firstName: data.first_name ?? "",
+// 				lastName: data.last_name ?? "",
+// 				imageUrl: data.image_url ?? undefined,
+// 				role: "customer" as Role,
+// 			};
+// 			await ctx.db.insert("users", userAttributes);
+// 		} else {
+// 			console.log("Updating user", user);
+// 			const updateAttributes = {
+// 				email: data.email_addresses[0].email_address,
+// 				firstName: data.first_name ?? "",
+// 				lastName: data.last_name ?? "",
+// 				imageUrl: data.image_url ?? undefined,
+// 			};
+// 			console.log("updateAttributes", updateAttributes);
+// 			await ctx.db.patch(user._id, updateAttributes);
+// 		}
+// 	},
+// });
+
+export const createUser = internalMutation({
 	args: { data: v.any() as Validator<UserJSON> },
 	handler: async (ctx, { data }) => {
 		const userAttributes = {
@@ -54,13 +83,31 @@ export const createOrUpdateUser = internalMutation({
 			role: "customer" as Role,
 		};
 
-		const user = await userByClerkUserId(ctx, data.id);
+		await ctx.db.insert("users", userAttributes);
+		console.log("User created successfully with role: customer");
+	},
+});
 
-		if (user === null) {
-			await ctx.db.insert("users", userAttributes);
-		} else {
-			await ctx.db.patch(user._id, userAttributes);
+// Separate function for UPDATING users
+export const updateUser = internalMutation({
+	args: { data: v.any() as Validator<UserJSON> },
+	handler: async (ctx, { data }) => {
+		const user = await userByClerkUserId(ctx, data.id);
+		if (!user) {
+			throw new Error(`User not found for Clerk ID: ${data.id}`);
 		}
+
+		const updateAttributes = {
+			email: data.email_addresses[0].email_address,
+			firstName: data.first_name ?? "",
+			lastName: data.last_name ?? "",
+			imageUrl: data.image_url ?? undefined,
+            role: user.role,
+            vendorDetails: user.vendorDetails
+		};
+
+		await ctx.db.patch(user._id, updateAttributes);
+		console.log("User updated successfully", user.role);
 	},
 });
 

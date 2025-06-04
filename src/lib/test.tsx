@@ -59,11 +59,39 @@ function EmailPasswordStep({ isLoading }: { isLoading: boolean }) {
 		<SignIn.Step name="start">
 			<div className="space-y-6">
 				<div className="text-center space-y-2">
-					<h1 className="text-2xl font-bold tracking-tight">Welcome Back</h1>
+					<h1 className="text-2xl font-bold tracking-tight">
+						Welcome Back
+					</h1>
 					<p className="text-muted-foreground">
 						Sign in to your account to continue
 					</p>
 				</div>
+
+				{/* Account Not Found Error Handling */}
+				<Clerk.GlobalError className="text-sm text-destructive bg-destructive/10 p-3 rounded-md border border-destructive/20">
+					{(error) => {
+						if (error.code === "form_identifier_not_found") {
+							return (
+								<div className="space-y-2">
+									<p className="font-medium">
+										Account not found
+									</p>
+									<p className="text-xs">
+										No account exists with this email
+										address.{" "}
+										<Clerk.Link
+											navigate="sign-up"
+											className="underline hover:no-underline font-medium"
+										>
+											Create an account instead
+										</Clerk.Link>
+									</p>
+								</div>
+							);
+						}
+						return error.longMessage || error.message;
+					}}
+				</Clerk.GlobalError>
 
 				{/* Social Login Buttons */}
 				<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -125,6 +153,10 @@ function EmailPasswordStep({ isLoading }: { isLoading: boolean }) {
 						</Clerk.Link>
 					</Button>
 				</div>
+
+				{/* Alternative: Auto-redirect to sign-up */}
+				{/* You can also handle this programmatically */}
+				<SignUpPrompt />
 			</div>
 		</SignIn.Step>
 	);
@@ -137,9 +169,12 @@ function PasswordVerificationStep({ isLoading }: { isLoading: boolean }) {
 			<SignIn.Strategy name="password">
 				<div className="space-y-6">
 					<div className="text-center space-y-2">
-						<h1 className="text-2xl font-bold tracking-tight">Enter Password</h1>
+						<h1 className="text-2xl font-bold tracking-tight">
+							Enter Password
+						</h1>
 						<p className="text-muted-foreground">
-							Welcome back <SignIn.SafeIdentifier className="font-medium" />
+							Welcome back{" "}
+							<SignIn.SafeIdentifier className="font-medium" />
 						</p>
 					</div>
 
@@ -149,7 +184,10 @@ function PasswordVerificationStep({ isLoading }: { isLoading: boolean }) {
 								<Label htmlFor="password">Password</Label>
 							</Clerk.Label>
 							<Clerk.Input type="password" asChild>
-								<Input id="password" placeholder="Enter your password" />
+								<Input
+									id="password"
+									placeholder="Enter your password"
+								/>
 							</Clerk.Input>
 							<Clerk.FieldError className="text-sm text-destructive" />
 						</Clerk.Field>
@@ -187,21 +225,28 @@ function ForgotPasswordStep({ isLoading }: { isLoading: boolean }) {
 		<SignIn.Step name="forgot-password">
 			<div className="space-y-6">
 				<div className="text-center space-y-2">
-					<h1 className="text-2xl font-bold tracking-tight">Reset Password</h1>
+					<h1 className="text-2xl font-bold tracking-tight">
+						Reset Password
+					</h1>
 					<p className="text-muted-foreground">
 						We'll send you a reset link to your email address
 					</p>
 				</div>
 
 				<div className="space-y-4">
-					<SignIn.SupportedStrategy name="reset_password_email_code" asChild>
-						<Button className="w-full">
-							Send Reset Email
-						</Button>
+					<SignIn.SupportedStrategy
+						name="reset_password_email_code"
+						asChild
+					>
+						<Button className="w-full">Send Reset Email</Button>
 					</SignIn.SupportedStrategy>
 
 					<SignIn.Action navigate="start" asChild>
-						<Button type="button" variant="outline" className="w-full">
+						<Button
+							type="button"
+							variant="outline"
+							className="w-full"
+						>
 							<ArrowLeft className="w-4 h-4 mr-2" />
 							Back to Sign In
 						</Button>
@@ -219,7 +264,9 @@ function ResetPasswordStep({ isLoading }: { isLoading: boolean }) {
 			<SignIn.Strategy name="reset_password_email_code">
 				<div className="space-y-6">
 					<div className="text-center space-y-2">
-						<h1 className="text-2xl font-bold tracking-tight">Create New Password</h1>
+						<h1 className="text-2xl font-bold tracking-tight">
+							Create New Password
+						</h1>
 						<p className="text-muted-foreground">
 							Enter your new password below
 						</p>
@@ -228,20 +275,33 @@ function ResetPasswordStep({ isLoading }: { isLoading: boolean }) {
 					<div className="space-y-4">
 						<Clerk.Field name="password" className="space-y-2">
 							<Clerk.Label asChild>
-								<Label htmlFor="new-password">New password</Label>
+								<Label htmlFor="new-password">
+									New password
+								</Label>
 							</Clerk.Label>
 							<Clerk.Input type="password" asChild>
-								<Input id="new-password" placeholder="Enter new password" />
+								<Input
+									id="new-password"
+									placeholder="Enter new password"
+								/>
 							</Clerk.Input>
 							<Clerk.FieldError className="text-sm text-destructive" />
 						</Clerk.Field>
 
-						<Clerk.Field name="confirmPassword" className="space-y-2">
+						<Clerk.Field
+							name="confirmPassword"
+							className="space-y-2"
+						>
 							<Clerk.Label asChild>
-								<Label htmlFor="confirm-password">Confirm password</Label>
+								<Label htmlFor="confirm-password">
+									Confirm password
+								</Label>
 							</Clerk.Label>
 							<Clerk.Input type="password" asChild>
-								<Input id="confirm-password" placeholder="Confirm new password" />
+								<Input
+									id="confirm-password"
+									placeholder="Confirm new password"
+								/>
 							</Clerk.Input>
 							<Clerk.FieldError className="text-sm text-destructive" />
 						</Clerk.Field>
@@ -270,7 +330,7 @@ function SocialLoginButton({
 	provider,
 	icon,
 	label,
-	isLoading
+	isLoading,
 }: {
 	provider: string;
 	icon: React.ReactNode;
@@ -299,5 +359,14 @@ function SocialLoginButton({
 				</Clerk.Loading>
 			</Button>
 		</Clerk.Connection>
+	);
+}
+
+// Component to handle sign-up prompts
+function SignUpPrompt() {
+	return (
+		<div className="hidden" id="signup-prompt">
+			{/* This could be used for custom handling */}
+		</div>
 	);
 }
