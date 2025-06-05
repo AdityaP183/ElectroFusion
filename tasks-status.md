@@ -4,7 +4,7 @@
 
 - [ ] Landing Page
 - [ ] Main Home Page
-- [ ] Sign-in Page `(90%)`
+- [x] Sign-in Page
 - [x] Sign-out Page
 - [x] Footer
 - [x] Navbar

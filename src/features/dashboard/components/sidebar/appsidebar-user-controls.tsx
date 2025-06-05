@@ -25,18 +25,10 @@ import {
 	LogOut,
 	Sparkles,
 } from "lucide-react";
+import { Doc } from "../../../../../convex/_generated/dataModel";
 
 interface Props {
-	dbUser: {
-		_creationTime: number;
-		_id: string;
-		clerkId: string;
-		email: string;
-		firstName: string;
-		imageUrl: string;
-		lastName: string;
-		role: string;
-	};
+	dbUser: Doc<"users">;
 }
 
 export default function AppSidebarUserControls({ dbUser }: Props) {

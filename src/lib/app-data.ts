@@ -208,18 +208,18 @@ export const sidebarData = {
 			{
 				id: "products",
 				title: "Products",
-				href: "/dashboard/products",
+				href: "/products",
 				icon: Package,
 				items: [
 					{
 						id: "all-products",
 						title: "All Products",
-						href: "/products/all",
+						href: "/all",
 					},
 					{
 						id: "new-product",
 						title: "Add Product",
-						href: "/products/new",
+						href: "/new",
 					},
 				],
 			},

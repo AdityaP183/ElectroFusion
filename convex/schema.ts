@@ -11,30 +11,41 @@ export const roleValidator = v.union(
 );
 
 export const vendorVerificationStatusValidator = v.union(
-    v.literal("pending"),
-    v.literal("approved"),
-    v.literal("rejected")
+	v.literal("pending"),
+	v.literal("approved"),
+	v.literal("rejected")
 );
 
 export default defineSchema({
-    users: defineTable({
-        email: v.string(),
-        clerkId: v.string(),
-        firstName: v.string(),
-        lastName: v.string(),
-        imageUrl: v.optional(v.string()),
-        role: roleValidator,
+	users: defineTable({
+		email: v.string(),
+		clerkId: v.string(),
+		firstName: v.string(),
+		lastName: v.string(),
+		imageUrl: v.optional(v.string()),
+		role: roleValidator,
+	}).index("by_clerkId", ["clerkId"]),
 
-        vendorDetails: v.optional(v.object({
-            businessName: v.string(),
-            description: v.optional(v.string()),
-            verificationStatus: vendorVerificationStatusValidator,
-            verificationDate: v.optional(v.number())
-        }))
-    }).index("by_clerkId", ["clerkId"]),
-    categories: defineTable({
-        name: v.string(),
-        slug: v.string(),
-        parentId: v.optional(v.id("categories")),
-    }).index("by_slug", ["slug"]),
+	categories: defineTable({
+		name: v.string(),
+		slug: v.string(),
+		parentId: v.optional(v.id("categories")),
+	}).index("by_slug", ["slug"]),
+
+	vendors: defineTable({
+		userId: v.id("users"),
+		contactEmail: v.string(),
+		contactPhone: v.string(),
+	}).index("by_userId", ["userId"]),
+
+	vendorShops: defineTable({
+		vendorId: v.id("vendors"),
+		name: v.string(),
+		slug: v.string(),
+		description: v.string(),
+		bannerImage: v.string(),
+		logo: v.string(),
+	})
+		.index("by_vendorId", ["vendorId"])
+		.index("by_slug", ["slug"]),
 });

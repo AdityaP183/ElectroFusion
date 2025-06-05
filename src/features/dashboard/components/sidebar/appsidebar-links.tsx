@@ -26,19 +26,48 @@ import {
 	SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import { NavItemProps, SidebarSubLink, SubNavItemProps } from "@/lib/app-types";
+import { useMemo } from "react";
 
-interface Props{
-    role: string
+interface Props {
+	role: string;
 }
 
 export default function AppSidebarLinks({ role }: Props) {
-	const sidebarLinks = role === "admin" ? sidebarData.admin : sidebarData.vendor;
+	const sidebarLinks =
+		role === "admin" ? sidebarData.admin : sidebarData.vendor;
 	const pathname = usePathname();
+
+	const transformedSidebarLinks = useMemo(() => {
+		const basePath = pathname.split("/").slice(0, 3).join("/");
+
+		const getFullHref = (href: string) => {
+			return href === "/" ? basePath : `${basePath}${href}`;
+		};
+
+		return {
+			navMain: sidebarLinks.navMain.map((link) => ({
+				...link,
+				href: getFullHref(link.href),
+				items: link.items?.map((item) => ({
+					...item,
+					href: getFullHref(link.href + item.href),
+				})),
+			})),
+			others: sidebarLinks.others.map((link) => ({
+				...link,
+				href: getFullHref(link.href),
+				items: link.items?.map((item) => ({
+					...item,
+					href: getFullHref(link.href + item.href),
+				})),
+			})),
+		};
+	}, [pathname, sidebarLinks]);
 
 	const { openSections, toggleSection } = useSidebarState(
 		pathname,
-		sidebarLinks.navMain,
-		sidebarLinks.others
+		transformedSidebarLinks.navMain,
+		transformedSidebarLinks.others
 	);
 
 	return (
@@ -46,7 +75,7 @@ export default function AppSidebarLinks({ role }: Props) {
 			<SidebarGroup className="group-data-[collapsible=icon]:p-0">
 				<SidebarGroupLabel>Platform</SidebarGroupLabel>
 				<SidebarMenu>
-					{sidebarLinks.navMain.map((link) => (
+					{transformedSidebarLinks.navMain.map((link) => (
 						<NavItem
 							key={link.id}
 							link={link}
@@ -60,7 +89,7 @@ export default function AppSidebarLinks({ role }: Props) {
 			<SidebarGroup className="group-data-[collapsible=icon]:p-0">
 				<SidebarGroupLabel>Others</SidebarGroupLabel>
 				<SidebarMenu>
-					{sidebarLinks.others.map((link) => (
+					{transformedSidebarLinks.others.map((link) => (
 						<NavItem
 							key={link.id}
 							link={link}
@@ -77,10 +106,8 @@ export default function AppSidebarLinks({ role }: Props) {
 
 function NavItem({ link, pathname, isOpen, onToggle }: NavItemProps) {
 	const Icon = link.icon;
-	const isActive =
-		pathname === link.href || pathname.startsWith(`${link.href}/`);
+	const isActive = pathname === link.href;
 
-	// If this is a submenu parent
 	if (link.items?.length) {
 		const isGroupActive = link.items.some(
 			(item) =>

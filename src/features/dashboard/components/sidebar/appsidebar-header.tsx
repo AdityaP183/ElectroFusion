@@ -1,10 +1,10 @@
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Card } from "@/components/ui/card";
 import { SidebarMenu, SidebarMenuItem } from "@/components/ui/sidebar";
 import { Role } from "../../../../../convex/schema";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
 
 interface Props {
-	role: string;
+	role: Role;
 }
 
 export default function AppSidebarHeader({ role }: Props) {
@@ -39,6 +39,17 @@ function HeaderCard({ avatarStyle }: { avatarStyle: string }) {
 					<AvatarImage src={avatarStyle} />
 				</Avatar>
 				<span className="text-xl font-bold mb-0.5">ElectroFusion</span>
+			</div>
+		</Card>
+	);
+}
+
+export function HeaderLoader() {
+	return (
+		<Card className="p-0 border-none bg-accent rounded-md">
+			<div className="flex items-center gap-2 p-2">
+				<div className="w-6 h-6 rounded-md animate-pulse bg-gray-600" />
+				<div className="h-5 rounded-md w-full mb-0.5 animate-pulse bg-gray-600" />
 			</div>
 		</Card>
 	);

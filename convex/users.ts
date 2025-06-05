@@ -42,35 +42,6 @@ async function userByClerkUserId(ctx: QueryCtx, clerkUserId: string) {
 		.unique();
 }
 
-// export const createOrUpdateUser = internalMutation({
-// 	args: { data: v.any() as Validator<UserJSON> },
-// 	handler: async (ctx, { data }) => {
-// 		const user = await userByClerkUserId(ctx, data.id);
-
-// 		if (user === null) {
-// 			const userAttributes = {
-// 				email: data.email_addresses[0].email_address,
-// 				clerkId: data.id,
-// 				firstName: data.first_name ?? "",
-// 				lastName: data.last_name ?? "",
-// 				imageUrl: data.image_url ?? undefined,
-// 				role: "customer" as Role,
-// 			};
-// 			await ctx.db.insert("users", userAttributes);
-// 		} else {
-// 			console.log("Updating user", user);
-// 			const updateAttributes = {
-// 				email: data.email_addresses[0].email_address,
-// 				firstName: data.first_name ?? "",
-// 				lastName: data.last_name ?? "",
-// 				imageUrl: data.image_url ?? undefined,
-// 			};
-// 			console.log("updateAttributes", updateAttributes);
-// 			await ctx.db.patch(user._id, updateAttributes);
-// 		}
-// 	},
-// });
-
 export const createUser = internalMutation({
 	args: { data: v.any() as Validator<UserJSON> },
 	handler: async (ctx, { data }) => {
@@ -102,8 +73,7 @@ export const updateUser = internalMutation({
 			firstName: data.first_name ?? "",
 			lastName: data.last_name ?? "",
 			imageUrl: data.image_url ?? undefined,
-            role: user.role,
-            vendorDetails: user.vendorDetails
+			role: user.role,
 		};
 
 		await ctx.db.patch(user._id, updateAttributes);
