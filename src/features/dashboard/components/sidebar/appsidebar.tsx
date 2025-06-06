@@ -26,13 +26,10 @@ export default async function AppSidebar({
 		userId: dbUser._id,
 	});
 
-	console.log("dbUser", dbUser);
-	console.log("vendor", vendor);
-
 	return (
 		<Sidebar collapsible="icon" {...props} className="relative group">
 			<SidebarHeader>
-				<AppSidebarHeader role={dbUser.role} />
+				<AppSidebarHeader role={dbUser.role} vendorData={vendor} />
 			</SidebarHeader>
 			<SidebarContent>
 				<AppSidebarLinks role={dbUser.role} />
