@@ -80,7 +80,7 @@ function VendorHeader({ shops, activeShop, setActiveShop }: VendorHeaderProps) {
 	const currentShop = shops?.find((shop) => shop._id === activeShop);
 	const hasShops = shops && shops.length > 0;
 
-	if (!hasShops) return null;
+	if (!hasShops) return <VendorNoShops />;
 
 	return (
 		<SidebarMenu>
@@ -156,6 +156,17 @@ function HeaderCard({ avatarStyle }: { avatarStyle: string }) {
 					<AvatarImage src={avatarStyle} />
 				</Avatar>
 				<span className="text-xl font-bold mb-0.5">ElectroFusion</span>
+			</div>
+		</Card>
+	);
+}
+
+function VendorNoShops() {
+	return (
+		<Card className="p-1 border-none bg-accent rounded-md">
+			<div className="flex items-center justify-center border-2 border-dashed rounded-md gap-2 py-0.5">
+				<Plus className="w-6 h-6" />
+				<span className="text-xl font-bold mb-0.5">Add Shop</span>
 			</div>
 		</Card>
 	);
