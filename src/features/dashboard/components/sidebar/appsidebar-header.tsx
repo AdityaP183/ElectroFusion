@@ -3,14 +3,6 @@
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import {
-	SidebarMenu,
-	SidebarMenuButton,
-	SidebarMenuItem,
-} from "@/components/ui/sidebar";
-import { Doc } from "../../../../../convex/_generated/dataModel";
-import { Role } from "../../../../../convex/schema";
-import { useQueryState } from "nuqs";
-import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
@@ -18,9 +10,20 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useEffect } from "react";
-import { ChevronsUpDown, Plus } from "lucide-react";
+import {
+	SidebarMenu,
+	SidebarMenuButton,
+	SidebarMenuItem,
+} from "@/components/ui/sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useVendorStore } from "@/store/use-vendor";
+import { useUser } from "@clerk/nextjs";
+import { ChevronsUpDown, Plus } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useMemo } from "react";
+import { Doc } from "../../../../../convex/_generated/dataModel";
+import { Role } from "../../../../../convex/schema";
 
 type VendorDoc = Doc<"vendors">;
 type VendorShopDoc = Doc<"vendorShops">;
@@ -37,24 +40,26 @@ interface Props {
 }
 
 export default function AppSidebarHeader({ role, vendorData }: Props) {
-	const [activeShopId, setActiveShopId] = useQueryState("activeShop", {
-		defaultValue: "",
-		shallow: false,
-	});
+	const {
+		shops: shopsInStore,
+		activeShopId,
+		setShops,
+		setActiveShop,
+	} = useVendorStore();
 
 	useEffect(() => {
-		if (vendorData?.shops && vendorData.shops.length > 0 && !activeShopId) {
-			setActiveShopId(vendorData.shops[0]._id);
+		if (vendorData?.shops && vendorData.shops.length > 0) {
+			setShops(vendorData.shops);
 		}
-	}, [vendorData, activeShopId, setActiveShopId]);
+	}, [vendorData?.shops, setShops]);
 
 	return role === "admin" ? (
 		<AdminHeader />
 	) : (
 		<VendorHeader
-			shops={vendorData?.shops}
+			shops={shopsInStore}
 			activeShop={activeShopId}
-			setActiveShop={setActiveShopId}
+			setActiveShop={setActiveShop}
 		/>
 	);
 }
@@ -70,14 +75,20 @@ function AdminHeader() {
 }
 
 interface VendorHeaderProps {
-	shops?: VendorShopDoc[];
-	activeShop: string;
+	shops: VendorShopDoc[];
+	activeShop: string | null;
 	setActiveShop: (shop: string) => void;
 }
 
 function VendorHeader({ shops, activeShop, setActiveShop }: VendorHeaderProps) {
+	const { user } = useUser();
 	const isMobile = useIsMobile();
-	const currentShop = shops?.find((shop) => shop._id === activeShop);
+	const router = useRouter();
+
+	const currentShop = useMemo(() => {
+		return shops?.find((shop) => shop._id === activeShop) || null;
+	}, [shops, activeShop]);
+
 	const hasShops = shops && shops.length > 0;
 
 	if (!hasShops) return <VendorNoShops />;
@@ -91,7 +102,7 @@ function VendorHeader({ shops, activeShop, setActiveShop }: VendorHeaderProps) {
 							size="lg"
 							className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
 						>
-							<div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+							<div className="text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
 								<Avatar className="w-6 h-6">
 									<AvatarImage
 										src={currentShop?.logo || "/logo.svg"}
@@ -100,7 +111,7 @@ function VendorHeader({ shops, activeShop, setActiveShop }: VendorHeaderProps) {
 							</div>
 							<div className="grid flex-1 text-left text-xl leading-tight">
 								<span className="truncate font-bold">
-									{currentShop?.name}
+									{currentShop?.name || "Select Shop"}
 								</span>
 							</div>
 							<ChevronsUpDown className="ml-auto" />
@@ -116,13 +127,13 @@ function VendorHeader({ shops, activeShop, setActiveShop }: VendorHeaderProps) {
 							Shops
 						</DropdownMenuLabel>
 						{shops &&
-							shops.map((shop, index) => (
+							shops.map((shop) => (
 								<DropdownMenuItem
 									key={shop._id}
 									onClick={() => setActiveShop(shop._id)}
 									className="gap-2 p-2"
 								>
-									<div className="flex size-6 items-center justify-center rounded-md border">
+									<div className="flex size-6 items-center justify-center">
 										<Avatar className="w-6 h-6">
 											<AvatarImage
 												src={shop.logo || "/logo.svg"}
@@ -130,15 +141,25 @@ function VendorHeader({ shops, activeShop, setActiveShop }: VendorHeaderProps) {
 										</Avatar>
 									</div>
 									{shop.name}
+									{activeShop === shop._id && (
+										<span className="ml-auto text-xs text-muted-foreground">
+											Active
+										</span>
+									)}
 								</DropdownMenuItem>
 							))}
 						<DropdownMenuSeparator />
-						<DropdownMenuItem className="gap-2 p-2">
+						<DropdownMenuItem
+							className="gap-2 p-2"
+							onClick={() =>
+								router.push(`/dashboard/${user?.id}/add-shop`)
+							}
+						>
 							<div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
 								<Plus className="size-4" />
 							</div>
 							<div className="text-muted-foreground font-medium">
-								Add team
+								Add shop
 							</div>
 						</DropdownMenuItem>
 					</DropdownMenuContent>
@@ -162,12 +183,16 @@ function HeaderCard({ avatarStyle }: { avatarStyle: string }) {
 }
 
 function VendorNoShops() {
+	const { isLoaded, user } = useUser();
+
 	return (
 		<Card className="p-1 border-none bg-accent rounded-md">
-			<div className="flex items-center justify-center border-2 border-dashed rounded-md gap-2 py-0.5">
-				<Plus className="w-6 h-6" />
-				<span className="text-xl font-bold mb-0.5">Add Shop</span>
-			</div>
+			<Link href={isLoaded ? `/dashboard/${user?.id}/add-shop` : "#"}>
+				<div className="flex items-center justify-center border-2 border-dashed rounded-md gap-2 py-0.5">
+					<Plus className="w-6 h-6" />
+					<span className="text-xl font-bold mb-0.5">Add Shop</span>
+				</div>
+			</Link>
 		</Card>
 	);
 }

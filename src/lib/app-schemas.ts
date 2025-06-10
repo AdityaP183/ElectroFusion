@@ -8,3 +8,12 @@ export const priceSchema = z.string().refine(
 	},
 	{ message: "Price must be a positive number or zero" }
 );
+
+export const vendorShopSchema = z.object({
+	vendorId: z.string(),
+	name: z.string(),
+	slug: z.string(),
+	description: z.string(),
+	bannerImage: z.string().url(),
+	logo: z.string().url(),
+});

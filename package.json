@@ -31,6 +31,7 @@
 		"@radix-ui/react-switch": "^1.2.4",
 		"@radix-ui/react-tooltip": "^1.2.6",
 		"class-variance-authority": "^0.7.1",
+		"cloudinary": "^2.6.1",
 		"clsx": "^2.1.1",
 		"cmdk": "^1.1.1",
 		"convex": "^1.24.1",
@@ -50,7 +51,8 @@
 		"svix": "^1.65.0",
 		"tailwind-merge": "^3.2.0",
 		"vaul": "^1.1.2",
-		"zod": "^3.24.4"
+		"zod": "^3.24.4",
+		"zustand": "^5.0.5"
 	},
 	"devDependencies": {
 		"@eslint/eslintrc": "^3",

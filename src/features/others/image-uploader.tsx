@@ -12,19 +12,21 @@ type UploadedFile = {
 	name: string;
 };
 
-export default function ImageUploader({
-	file,
-	setFile,
-	ratio = "square", // "square" or "rectangle"
-	width = "w-[300px]",
-	height = "h-[300px]",
-}: {
+interface Props {
 	file: UploadedFile | null;
 	setFile: (file: UploadedFile | null) => void;
 	ratio?: "square" | "rectangle";
-	width?: string; // Tailwind width class
-	height?: string; // Tailwind height class
-}) {
+	width?: string;
+	height?: string;
+}
+
+export default function ImageUploader({
+	file,
+	setFile,
+	ratio = "square",
+	width = "w-[300px]",
+	height = "h-[300px]",
+}: Props) {
 	const fileInputRef = useRef<HTMLInputElement | null>(null);
 	const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
@@ -43,7 +45,7 @@ export default function ImageUploader({
 
 	const handleFile = (selectedFile: File) => {
 		const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
-		const maxSize = 5 * 1024 * 1024;
+		const maxSize = 5 * 1024 * 1024; // 5MB
 
 		if (!allowedTypes.includes(selectedFile.type)) {
 			toast.error("Please upload a valid PNG or JPEG image.");
@@ -78,7 +80,7 @@ export default function ImageUploader({
 	return (
 		<div className="flex flex-col gap-2">
 			<div
-				className={`relative overflow-hidden rounded-lg border-2 border-dashed border-primary group ${width} ${height}`}
+				className={`relative w-full max-w-md overflow-hidden rounded-lg border-2 border-dashed border-primary p-2 group ${aspectClass}`}
 			>
 				<input
 					type="file"
@@ -116,13 +118,8 @@ export default function ImageUploader({
 						onDragOver={handleDragOver}
 						onDrop={handleDrop}
 					>
-						<ImageUp
-							className="mb-2 w-10 h-10 sm:w-12 sm:h-12"
-							strokeWidth={1.5}
-						/>
-						<p className="text-sm sm:text-base text-center">
-							Drop your image here or click to browse
-						</p>
+						<ImageUp className="w-10 h-10 mb-2" strokeWidth={1.5} />
+						<p>Drop your image here or click to browse</p>
 					</div>
 				)}
 			</div>
