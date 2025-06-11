@@ -1,36 +1,119 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ElectroFusion
 
-## Getting Started
+ElectroFusion is a multi-vendor e-commerce platform designed to provide a seamless online shopping experience for electronic products and gadgets.
 
-First, run the development server:
+## Abstract
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+ElectroFusion V2 is built with modern full-stack tools for improved performance, scalability, and developer experience. Vendors can efficiently list and manage their products, while customers enjoy a fast, interactive, and secure shopping journey. With optimized backend handling and dynamic UI/UX features, V2 delivers a responsive and engaging platform for electronic commerce.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Project Guide
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Sulagna Basak
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+## Team Members
 
-To learn more about Next.js, take a look at the following resources:
+Sattwik Sinha Mahapatra
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Sabnam Begum
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Arina Dutta
 
-## Deploy on Vercel
+Aditya Prasad
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Project Details
+
+### Features
+
+- 🔍 Advanced Search & Filtering — Smart product discovery using query parameters and filters.
+
+- ⭐ Product Ratings & Reviews — Let users provide feedback and improve product credibility.
+
+- 🔐 Authentication & Authorization — Role-based access using Clerk.
+
+- 🛒 Multi-vendor Dashboard — Vendor-specific views to manage product listings and track orders.
+
+- 💳 Secure Checkout Flow — Integration-ready for payment gateways with proper validation.
+
+- 📦 Order Tracking System — Customers can track their order status in real-time.
+
+- ☁️ Image Upload & Optimization — Cloudinary-powered, responsive image handling.
+
+- 🔄 Real-time Data Sync — Convex backend with reactive UI updates and live data.
+
+- 📊 Interactive Charts — Analytics and insights using Recharts.
+
+- 🔔 Notification System — Webhook-based updates using Svix.
+
+- ⚡ Modern UI & UX — Built with Tailwind v4, Framer Motion, and Shadcn UI for sleek interactions.
+
+- 🧠 Schema Validation — Robust input handling with Zod on both frontend and backend.
+
+- 🌐 URL State Management — Using Nuqs to sync filters, sorting, and pagination with URL state.
+
+---
+
+## Architecture
+
+### Tech Stack Overview:
+
+Frontend: Next.js App Router (React 19), Tailwind CSS v4, Zustand, Zod, Framer Motion, Shadcn UI
+
+Backend: Convex (Database + Functions), Clerk (Auth), Cloudinary (Media Storage), Svix (Webhooks)
+
+
+## Key Architectural Highlights
+
+[Client] ←→ [Next.js Frontend]
+   |          ├─ Auth UI (Clerk)
+   |          ├─ State Mgmt (Zustand + Nuqs)
+   |          └─ UI (Tailwind + Shadcn + Motion)
+   ↓
+[Convex Functions API Layer]
+   ├─ Secure Convex queries & mutations
+   ├─ Real-time sync with frontend
+   └─ Validated by Zod schemas
+
+[Convex DB] ←→ Schema-less, reactive database
+
+[Cloudinary] ←→ Media uploads via signed URL  
+[Clerk] ←→ User management (JWT-based auth)  
+[Svix] ←→ Event triggers and notifications (webhooks)
+
+
+---
+
+## Technologies Used
+
+### Frontend
+
+Next.js 15
+
+React 19
+
+Tailwind CSS v4
+
+Shadcn UI
+
+Zod
+
+Zustand
+
+Nuqs
+
+Framer Motion
+
+Recharts
+
+
+### Backend
+
+Convex
+
+Clerk
+
+Cloudinary
+
+Svix
