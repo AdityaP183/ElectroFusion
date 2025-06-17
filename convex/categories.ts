@@ -58,3 +58,13 @@ export const getCategoriesWithoutParent = query({
 			.collect();
 	},
 });
+
+export const getOnlyParentCategory = query({
+	args: {},
+	handler: async (ctx, args) => {
+		return await ctx.db
+			.query("categories")
+			.filter((q) => q.eq(q.field("parentId"), undefined))
+			.collect();
+	},
+});

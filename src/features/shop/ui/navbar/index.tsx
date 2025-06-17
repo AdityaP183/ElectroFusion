@@ -26,6 +26,7 @@ import NavbarCategories from "./navbar-categories";
 import NavbarUserSection from "./navbar-user-section";
 import { navBrowseLinks } from "@/lib/app-data";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function Navbar() {
 	const { isLoaded, isSignedIn } = useAuth();
@@ -88,8 +89,14 @@ function MainNavbar({
 					<Logo />
 				</NavigationMenuItem>
 			</NavigationMenuList>
-			<NavbarLinks />
-			<NavbarUserSection isLoaded={isLoaded} isSignedIn={isSignedIn} />
+			{isLoaded && isSignedIn && <NavbarLinks />}
+			{isLoaded && !isSignedIn && <NavbarNoAuth />}
+			{isLoaded && isSignedIn && (
+				<NavbarUserSection
+					isLoaded={isLoaded}
+					isSignedIn={isSignedIn}
+				/>
+			)}
 		</NavigationMenu>
 	);
 }
@@ -150,6 +157,29 @@ function NavbarLinks() {
 					<NavigationMenuContent>
 						<NavbarCategories categories={categories} />
 					</NavigationMenuContent>
+				</NavigationMenuItem>
+			</NavigationMenuList>
+		</NavigationMenu>
+	);
+}
+
+function NavbarNoAuth() {
+	return (
+		<NavigationMenu>
+			<NavigationMenuList className="flex-1 gap-5">
+				<NavigationMenuItem>
+					<Link href={`/sign-in`} className="cursor-pointer">
+						<Button className="bg-secondary/80 border-border border rounded-full text-foreground hover:bg-secondary/30 cursor-pointer">
+							Sign In
+						</Button>
+					</Link>
+				</NavigationMenuItem>
+				<NavigationMenuItem>
+					<Link href={`/sign-in`} className="cursor-pointer">
+						<Button className="bg-background border-border border rounded-full text-foreground hover:bg-secondary/30 cursor-pointer">
+							Sign Up
+						</Button>
+					</Link>
 				</NavigationMenuItem>
 			</NavigationMenuList>
 		</NavigationMenu>

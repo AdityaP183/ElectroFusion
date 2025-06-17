@@ -9,7 +9,7 @@ export default function ShopLayout({
 	return (
 		<main className="min-h-screen w-full flex flex-col">
 			<Navbar />
-			<div className="flex-1 mt-20 min-h-screen">{children}</div>
+			<div className="flex-1 mt-25 min-h-screen">{children}</div>
 			<Footer />
 		</main>
 	);

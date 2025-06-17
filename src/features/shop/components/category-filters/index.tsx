@@ -32,7 +32,7 @@ export default function CategoryFilters({ isCategory }: Props) {
 	);
 
 	return (
-		<Card className="flex gap-3 py-2 rounded-md w-[300px]">
+		<Card className="flex gap-3 py-2 rounded-md w-[300px] h-fit">
 			<Searchfilter search={search} setSearch={setSearch} />
 			<Separator />
 			<PriceRange

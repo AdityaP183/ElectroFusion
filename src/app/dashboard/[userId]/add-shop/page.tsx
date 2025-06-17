@@ -26,12 +26,7 @@ import { api } from "../../../../../convex/_generated/api";
 import { Doc } from "../../../../../convex/_generated/dataModel";
 import { useRouter } from "next/navigation";
 import { useVendorStore } from "@/store/use-vendor";
-
-type UploadedFile = {
-	imgFile: File;
-	img: string;
-	name: string;
-};
+import { UploadedFile } from "@/lib/app-types";
 
 export default function AddShop() {
 	const { user } = useUser();
@@ -174,25 +169,6 @@ export default function AddShop() {
 				<div className="text-center">
 					<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto mb-4"></div>
 					<p>Loading vendor information...</p>
-				</div>
-			</div>
-		);
-	}
-
-	if (dbUser.verificationStatus !== "approved") {
-		return (
-			<div className="w-full h-full flex items-center justify-center">
-				<div className="text-center p-8 bg-yellow-50 rounded-lg border border-yellow-200">
-					<h2 className="text-xl font-semibold text-yellow-800 mb-2">
-						Verification Required
-					</h2>
-					<p className="text-yellow-700">
-						Your vendor account needs to be approved before you can
-						create a shop. Current status:{" "}
-						<span className="font-medium">
-							{dbUser.verificationStatus}
-						</span>
-					</p>
 				</div>
 			</div>
 		);

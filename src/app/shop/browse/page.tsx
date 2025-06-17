@@ -1,3 +1,5 @@
+import ProductCard from "@/components/modules/product-card";
+import { allProducts } from "@/lib/app-data";
 import { z } from "zod";
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
@@ -21,22 +23,12 @@ export default async function Page({ params, searchParams }: Props) {
 	const query = querySchema.safeParse(await searchParams);
 
 	return (
-		<div>
-			<div>
-				<h1>Query:</h1>
-				Browse Type: {query.data?.type ?? "null"}
-				<br />
-				Search Query: {query.data?.query ?? "null"}
-				<br />
-				Price Min: {query.data?.priceMin ?? "null"}
-				<br />
-				Price Max: {query.data?.priceMax ?? "null"}
-				<br />
-				Categories: {query.data?.categories?.join(", ") || "null"}
-				<br />
-				Page: {query.data?.page ?? "null"}
-				<br />
-				Limit: {query.data?.limit ?? "null"}
+		<div className="w-full min-h-screen overflow-y-auto">
+			<div className="grid grid-cols-5 gap-x-10 gap-y-20">
+				{/* {allProducts.map((product) => (
+					<ProductCard key={product._id} product={product} />
+				))} */}
+				<ProductCard product={allProducts[0]} />
 			</div>
 		</div>
 	);

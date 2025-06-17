@@ -78,3 +78,42 @@ export const createVendorShop = mutation({
 		return vendorShop;
 	},
 });
+
+export const getCategoryById = query({
+	args: {
+		id: v.id("categories"),
+	},
+	handler: async (ctx, args) => {
+		return await ctx.db.get(args.id);
+	},
+});
+
+export const listProductsWithCategoriesByShop = query({
+	args: {
+		shopId: v.id("vendorShops"),
+	},
+	async handler(ctx, args) {
+		const products = await ctx.db
+			.query("products")
+			.withIndex("by_shopId", (q) => q.eq("shopId", args.shopId))
+			.collect();
+
+		const categoryIds = [
+			...new Set(products.flatMap((product) => product.categoryIds)),
+		];
+
+		const categories = await Promise.all(
+			categoryIds.map((id) => ctx.db.get(id))
+		);
+		const categoryMap = new Map(
+			categories.filter(Boolean).map((cat) => [cat!._id, cat])
+		);
+
+		const enrichedProducts = products.map((product) => ({
+			...product,
+			categories: product.categoryIds.map((id) => categoryMap.get(id)),
+		}));
+
+		return enrichedProducts;
+	},
+});

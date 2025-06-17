@@ -1,89 +1,146 @@
 "use client";
 
-import { useScroll, useTransform, motion } from "motion/react";
-import Image from "next/image";
-import { useRef } from "react";
+import React, { useState, useEffect } from "react";
+import { ChevronDown, ArrowRight } from "lucide-react";
 
-export default function HeroSection() {
+const Hero = () => {
+	const [isLoaded, setIsLoaded] = useState(false);
+
+	useEffect(() => {
+		setIsLoaded(true);
+	}, []);
+
 	return (
-		<div
-			className="relative my-10 flex h-screen mx-10 flex-col items-center justify-center overflow-hidden rounded-3xl"
-		>
-			{/* Product boxes */}
-			<div
-				className="absolute top-20 left-40 z-20 w-32 h-32 rounded-xl overflow-hidden shadow-lg rotate-3"
-			>
-				<Image
-					src="/products/product1.jpg"
-					alt="Product 1"
-					fill
-					className="object-cover"
+		<div className="relative min-h-screen bg-black overflow-hidden">
+			{/* Animated Grid Background */}
+			<div className="absolute inset-0">
+				<div
+					className="absolute inset-0 opacity-5 animate-pulse"
+					style={{
+						backgroundImage: `
+              linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
+            `,
+						backgroundSize: "60px 60px",
+					}}
 				/>
 			</div>
 
-			<div
-				className="absolute top-1/2 right-10 z-20 w-32 h-32 rounded-xl overflow-hidden shadow-lg"
-			>
-				<Image
-					src="/products/product2.jpg"
-					alt="Product 2"
-					fill
-					className="object-cover"
-				/>
+			{/* Subtle Moving Particles */}
+			<div className="absolute inset-0 pointer-events-none">
+				{[...Array(3)].map((_, i) => (
+					<div
+						key={i}
+						className="absolute w-1 h-1 bg-white/30 rounded-full"
+						style={{
+							top: `${20 + i * 30}%`,
+							left: `${10 + i * 20}%`,
+							animation: `float ${4 + i}s ease-in-out infinite`,
+							animationDelay: `${i * 1.5}s`,
+						}}
+					/>
+				))}
 			</div>
 
-			<div
-				className="absolute top-1/2 left-40 z-20 w-28 h-28 rounded-xl overflow-hidden shadow-lg"
-			>
-				<Image
-					src="/products/product3.jpg"
-					alt="Product 3"
-					fill
-					className="object-cover"
-				/>
+			{/* Custom CSS for floating animation */}
+			<style jsx>{`
+				@keyframes float {
+					0%,
+					100% {
+						transform: translateY(0px) translateX(0px);
+						opacity: 0.3;
+					}
+					25% {
+						transform: translateY(-10px) translateX(5px);
+						opacity: 0.6;
+					}
+					50% {
+						transform: translateY(-20px) translateX(-5px);
+						opacity: 0.9;
+					}
+					75% {
+						transform: translateY(-10px) translateX(10px);
+						opacity: 0.6;
+					}
+				}
+			`}</style>
+
+			{/* Main Content */}
+			<div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 lg:px-8">
+				<div
+					className={`text-center max-w-5xl mx-auto transition-all duration-1000 ease-out ${
+						isLoaded
+							? "opacity-100 translate-y-0"
+							: "opacity-0 translate-y-6"
+					}`}
+				>
+					{/* Status Indicator */}
+					<div className="flex items-center justify-center space-x-3 mb-12">
+						<div className="w-2 h-2 bg-white rounded-full animate-pulse" />
+						<span className="text-white/70 text-sm font-light tracking-widest uppercase">
+							Available Now
+						</span>
+					</div>
+
+					{/* Main Heading */}
+					<div className="mb-8">
+						<h1 className="text-4xl md:text-6xl lg:text-7xl font-thin text-white leading-tight tracking-tight mb-4">
+							ElectroFusion
+						</h1>
+						<div className="w-24 h-px bg-white/30 mx-auto" />
+					</div>
+
+					{/* Tagline */}
+					<div className="mb-12">
+						<p className="text-lg md:text-xl font-light text-white/80 tracking-wide max-w-2xl mx-auto">
+							Where premium electronics meet refined taste
+						</p>
+					</div>
+
+					{/* Description */}
+					<div className="mb-16 max-w-2xl mx-auto">
+						<p className="text-base text-white/60 font-light leading-relaxed">
+							Discover our curated selection of premium
+							electronics. Each product represents the pinnacle of
+							design and technology, chosen for those who
+							appreciate excellence.
+						</p>
+					</div>
+
+					{/* Action Buttons */}
+					<div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-20">
+						<button className="group px-8 py-3 bg-white text-black font-medium tracking-wide uppercase transition-all duration-300 hover:bg-white/90 hover:scale-105 rounded-xl">
+							<div className="flex items-center space-x-2">
+								<span>Shop Now</span>
+								<ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+							</div>
+						</button>
+
+						<button className="px-8 py-3 border border-white/40 text-white font-medium tracking-wide uppercase transition-all duration-300 hover:border-white/70 hover:bg-white/5 rounded-xl">
+							Explore Categories
+						</button>
+					</div>
+				</div>
+
+				{/* Corner Decorations */}
+				<div className="absolute top-8 left-8 w-6 h-6 border-l border-t border-white/20" />
+				<div className="absolute top-8 right-8 w-6 h-6 border-r border-t border-white/20" />
+				<div className="absolute bottom-8 left-8 w-6 h-6 border-l border-b border-white/20" />
+				<div className="absolute bottom-8 right-8 w-6 h-6 border-r border-b border-white/20" />
 			</div>
 
-			<div
-				className="absolute top-80 right-24 z-20 w-28 h-28 rounded-xl overflow-hidden shadow-lg"
-			>
-				<Image
-					src="/products/product4.jpg"
-					alt="Product 4"
-					fill
-					className="object-cover"
-				/>
+			{/* Scroll Indicator */}
+			<div className="absolute bottom-6 left-1/2 transform -translate-x-1/2">
+				<div className="flex flex-col items-center space-y-2">
+					<div className="w-px h-6 bg-white/30" />
+					<ChevronDown
+						className="w-4 h-4 text-white/40 animate-bounce"
+						style={{ animationDuration: "2s" }}
+					/>
+				</div>
 			</div>
-
-			{/* Main content */}
-			<h2 className="relative z-20 mx-auto max-w-4xl text-center text-2xl font-bold text-white md:text-4xl lg:text-6xl">
-				This is your life and it&apos;s ending one{" "}
-				<span className="relative z-20 inline-block rounded-xl bg-blue-500/40 px-4 py-1 text-white underline decoration-sky-500 decoration-[6px] underline-offset-[16px] backdrop-blur-sm">
-					moment
-				</span>{" "}
-				at a time.
-			</h2>
-
-			<p className="relative z-20 mx-auto max-w-2xl py-8 text-center text-sm text-neutral-200 md:text-base">
-				You are not your job, you&apos;re not how much money you have in
-				the bank...
-			</p>
-
-			<div className="relative z-20 flex flex-wrap items-center justify-center gap-4 pt-4">
-				<button className="rounded-md bg-sky-600 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-sky-700">
-					Join the club
-				</button>
-				<button className="rounded-md border border-white/20 bg-white/10 px-6 py-2.5 text-sm font-medium text-white hover:bg-white/20">
-					Read more
-				</button>
-			</div>
-
-			<HeroSectionOverlay />
 		</div>
 	);
-}
+};
 
-function HeroSectionOverlay() {
-	return (
-		<div className="absolute inset-0 z-10 h-full w-full bg-slate-900" />
-	);
-}
+export default Hero;

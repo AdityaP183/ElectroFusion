@@ -38,3 +38,9 @@ export interface SubNavItemProps {
 	subItem: SidebarSubLink;
 	pathname: string;
 }
+
+export type UploadedFile = {
+	imgFile: File;
+	img: string;
+	name: string;
+};

@@ -3,7 +3,6 @@
 import MultipleSelector, { Option } from "@/components/ui/multi-selector";
 import { useQuery } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
-import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
 
 interface Props {
 	categoryValues?: string[] | null;
@@ -14,8 +13,6 @@ export default function CategorySelector({
 	categoryValues,
 	setCategoryValues,
 }: Props) {
-	// Store only string values in URL params
-
 	const categories = useQuery(api.categories.getCategoriesWithHierarchy);
 
 	const parsedCategories =
@@ -23,7 +20,7 @@ export default function CategorySelector({
 		categories.flatMap((parent) =>
 			parent.children.map((child) => ({
 				label: child.name,
-				value: child.slug,
+				value: child._id,
 				group: parent.name,
 			}))
 		);

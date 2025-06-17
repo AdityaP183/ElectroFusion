@@ -26,6 +26,7 @@ import {
 	X,
 	Zap,
 } from "lucide-react";
+import Hero from "@/features/landing-page/ui/hero-section";
 export default function Page() {
 	const headerRef = useRef<HTMLElement>(null);
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -62,161 +63,11 @@ export default function Page() {
 	return (
 		<div className="flex min-h-[100dvh] flex-col">
 			{/* Header */}
-			<header
-				ref={headerRef}
-				className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
-			>
-				<div className="container flex h-16 items-center justify-between">
-					<div className="flex items-center gap-2">
-						<Zap className="h-6 w-6 text-primary" />
-						<span className="text-xl font-bold">StreamLine</span>
-					</div>
-					<nav className="hidden md:flex gap-6">
-						<button
-							onClick={() => scrollToSection("features")}
-							className="text-sm font-medium hover:text-primary transition-colors"
-						>
-							Features
-						</button>
-						<button
-							onClick={() => scrollToSection("testimonials")}
-							className="text-sm font-medium hover:text-primary transition-colors"
-						>
-							Testimonials
-						</button>
-						<button
-							onClick={() => scrollToSection("pricing")}
-							className="text-sm font-medium hover:text-primary transition-colors"
-						>
-							Pricing
-						</button>
-						<Link
-							href="#"
-							className="text-sm font-medium hover:text-primary transition-colors"
-						>
-							Blog
-						</Link>
-					</nav>
-					<div className="flex items-center gap-4">
-						<Link
-							href="#"
-							className="text-sm font-medium hover:underline underline-offset-4 hidden sm:inline-block"
-						>
-							Sign In
-						</Link>
-						<Button asChild>
-							<Link href="#" className="hidden sm:inline-flex">
-								Get Started
-							</Link>
-						</Button>
-						<Button
-							variant="outline"
-							size="icon"
-							className="md:hidden"
-							onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-						>
-							<span className="sr-only">Toggle menu</span>
-							{mobileMenuOpen ? (
-								<X className="h-6 w-6" />
-							) : (
-								<Menu className="h-6 w-6" />
-							)}
-						</Button>
-					</div>
-				</div>
-
-				{/* Mobile menu */}
-				{mobileMenuOpen && (
-					<motion.div
-						className="md:hidden"
-						initial={{ opacity: 0, height: 0 }}
-						animate={{ opacity: 1, height: "auto" }}
-						exit={{ opacity: 0, height: 0 }}
-						transition={{ duration: 0.3, ease: "easeInOut" }}
-					>
-						<div className="container py-4 flex flex-col gap-4 border-t">
-							<button
-								onClick={() => scrollToSection("features")}
-								className="text-sm font-medium py-2"
-							>
-								Features
-							</button>
-							<button
-								onClick={() => scrollToSection("testimonials")}
-								className="text-sm font-medium py-2"
-							>
-								Testimonials
-							</button>
-							<button
-								onClick={() => scrollToSection("pricing")}
-								className="text-sm font-medium py-2"
-							>
-								Pricing
-							</button>
-							<Link href="#" className="text-sm font-medium py-2">
-								Blog
-							</Link>
-							<Button className="w-full mt-2">Get Started</Button>
-						</div>
-					</motion.div>
-				)}
-			</header>
+			<Navbar />
 
 			<main className="flex-1">
 				{/* Hero Section */}
-				<section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 overflow-hidden">
-					<div className="container px-4 md:px-6">
-						<div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
-							<motion.div
-								className="flex flex-col justify-center space-y-4"
-								initial="hidden"
-								whileInView="visible"
-								viewport={{ once: true, margin: "-100px" }}
-								variants={fadeInUp}
-							>
-								<div className="space-y-2">
-									<h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-										Streamline Your Workflow, Amplify Your
-										Productivity
-									</h1>
-									<p className="max-w-[600px] text-muted-foreground md:text-xl">
-										The all-in-one platform that helps teams
-										collaborate, manage projects, and
-										deliver results faster than ever before.
-									</p>
-								</div>
-								<div className="flex flex-col gap-2 min-[400px]:flex-row">
-									<Button asChild size="lg">
-										<Link href="#">
-											Get Started{" "}
-											<ChevronRight className="ml-1 h-4 w-4" />
-										</Link>
-									</Button>
-									<Button variant="outline" size="lg">
-										View Demo
-									</Button>
-								</div>
-							</motion.div>
-							<motion.div
-								initial={{ opacity: 0, x: 100 }}
-								whileInView={{ opacity: 1, x: 0 }}
-								transition={{
-									duration: 0.8,
-									ease: [0.22, 1, 0.36, 1],
-								}}
-								viewport={{ once: true, margin: "-100px" }}
-							>
-								<Image
-									src="/placeholder.svg?height=550&width=550"
-									width={550}
-									height={550}
-									alt="Hero Image"
-									className="mx-auto aspect-video overflow-hidden rounded-xl object-cover sm:w-full lg:order-last lg:aspect-square"
-								/>
-							</motion.div>
-						</div>
-					</div>
-				</section>
+				<Hero />
 
 				{/* Features Section */}
 				<section
