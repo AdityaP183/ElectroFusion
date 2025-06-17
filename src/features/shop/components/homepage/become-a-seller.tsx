@@ -145,7 +145,10 @@ export default function BecomeASeller() {
 							size="lg"
 							className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8 py-6 rounded-full group transition-all duration-300 hover:scale-105 hover:shadow-lg"
 						>
-							<Link href="/shop/vendor-application" className="flex items-center">
+							<Link
+								href="/shop/vendor-application"
+								className="flex items-center"
+							>
 								Start Selling
 								<ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
 							</Link>

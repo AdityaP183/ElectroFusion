@@ -131,18 +131,18 @@ export const sidebarData = {
 			{
 				id: "vendors",
 				title: "Vendors",
-				href: "/",
+				href: "/vendors",
 				icon: Users,
 				items: [
 					{
 						id: "all-vendors",
 						title: "All Vendors",
-						href: "/",
+						href: "/all",
 					},
 					{
 						id: "new-vendor",
 						title: "Vendor Applications",
-						href: "/",
+						href: "/applications",
 					},
 				],
 			},
@@ -155,12 +155,12 @@ export const sidebarData = {
 					{
 						id: "all-categories",
 						title: "All Categories",
-						href: "/categories/all",
+						href: "/all",
 					},
 					{
 						id: "new-category",
 						title: "Add Category",
-						href: "/categories/new",
+						href: "/new",
 					},
 				],
 			},
@@ -171,29 +171,6 @@ export const sidebarData = {
 				title: "Settings",
 				href: "/settings",
 				icon: Cog,
-			},
-			{
-				id: "actions",
-				title: "Actions",
-				href: "/actions",
-				icon: Lightbulb,
-				items: [
-					{
-						id: "applications",
-						title: "Applications",
-						href: "/actions/applications",
-					},
-					{
-						id: "announcements",
-						title: "Announcements",
-						href: "/actions/announcements",
-					},
-					{
-						id: "report-query",
-						title: "Report Query",
-						href: "/actions/report-query",
-					},
-				],
 			},
 		],
 	},
@@ -253,29 +230,6 @@ export const sidebarData = {
 				title: "Settings",
 				href: "/settings",
 				icon: Cog,
-			},
-			{
-				id: "actions",
-				title: "Actions",
-				href: "/actions",
-				icon: Lightbulb,
-				items: [
-					{
-						id: "applications",
-						title: "Applications",
-						href: "/actions/applications",
-					},
-					{
-						id: "announcements",
-						title: "Announcements",
-						href: "/actions/announcements",
-					},
-					{
-						id: "report-query",
-						title: "Report Query",
-						href: "/actions/report-query",
-					},
-				],
 			},
 		],
 	},
