@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { paginationOptsValidator } from "convex/server";
 
 export const getFeaturedProductsWithCategories = query({
 	args: {
@@ -127,5 +128,71 @@ export const createProduct = mutation({
 			isFeatured,
 			categoryIds,
 		});
+	},
+});
+
+export const getFilteredProducts = query({
+	args: {
+		paginationOpts: paginationOptsValidator,
+		vendorId: v.id("vendors"),
+		shopId: v.id("vendorShops"),
+		search: v.optional(v.string()),
+	},
+	handler: async (ctx, args) => {
+		try {
+			const { paginationOpts, vendorId, shopId, search } = args;
+
+			// Verify ownership
+			const shop = await ctx.db.get(shopId);
+			if (!shop || shop.vendorId !== vendorId) {
+				return {
+					page: [],
+					isDone: true,
+					continueCursor: null,
+				};
+			}
+
+			// Get all products for the shop
+			const result = await ctx.db
+				.query("products")
+				.withIndex("by_shopId", (q) => q.eq("shopId", shopId))
+				.collect();
+
+			// Search filter
+			let filteredPage = result;
+			if (search) {
+				const s = search.toLowerCase();
+				filteredPage = result.filter(
+					(p) =>
+						p.name.toLowerCase().includes(s) ||
+						(p.description &&
+							p.description.toLowerCase().includes(s))
+				);
+			}
+
+			// Manual pagination
+			const start = paginationOpts?.cursor
+				? parseInt(paginationOpts.cursor)
+				: 0;
+			const limit = paginationOpts?.numItems ?? 10;
+			const page = filteredPage.slice(start, start + limit);
+			const nextCursor =
+				start + limit >= filteredPage.length
+					? null
+					: String(start + limit);
+
+			return {
+				page,
+				isDone: nextCursor === null,
+				continueCursor: nextCursor,
+			};
+		} catch (error) {
+			console.error("Error in getFilteredProducts:", error);
+			return {
+				page: [],
+				isDone: true,
+				continueCursor: null,
+			};
+		}
 	},
 });

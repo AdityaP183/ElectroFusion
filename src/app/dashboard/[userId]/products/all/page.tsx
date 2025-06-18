@@ -6,7 +6,6 @@ import {
 	flexRender,
 	getCoreRowModel,
 	getFilteredRowModel,
-	getPaginationRowModel,
 	getSortedRowModel,
 	SortingState,
 	useReactTable,
@@ -25,6 +24,7 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { useDebounce } from "@/components/ui/multi-selector";
 import {
 	Table,
 	TableBody,
@@ -33,18 +33,57 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { allProducts } from "@/lib/app-data";
 import { cn } from "@/lib/utils";
+import { useVendorStore } from "@/store/use-vendor";
+import { useUser } from "@clerk/nextjs";
+import { useQuery } from "convex/react";
+import { api } from "../../../../../../convex/_generated/api";
+import { Doc, Id } from "../../../../../../convex/_generated/dataModel";
 
 export default function ProductsPage() {
+	const { user } = useUser();
+	const { activeShopId } = useVendorStore();
+
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] =
 		React.useState<ColumnFiltersState>([]);
 	const [columnVisibility, setColumnVisibility] =
 		React.useState<VisibilityState>({});
 	const [rowSelection, setRowSelection] = React.useState({});
+	const [pagination, setPagination] = React.useState({
+		pageIndex: 0,
+		pageSize: 10,
+	});
+	const [search, setSearch] = React.useState("");
+	const [cursor, setCursor] = React.useState<string | null>(null);
+	const debouncedSearch = useDebounce(search, 300);
 
-	const columns: ColumnDef<(typeof allProducts)[0]>[] = [
+	const dbUser = useQuery(api.vendor.getVendorDetails, {
+		clerkId: user?.id || "",
+	});
+
+	const shouldFetch =
+		activeShopId &&
+		dbUser &&
+		dbUser._id &&
+		typeof activeShopId === "string";
+
+	const allProducts = useQuery(
+		api.vendorProducts.getFilteredProducts,
+		shouldFetch
+			? {
+					shopId: activeShopId as Id<"vendorShops">,
+					vendorId: dbUser._id as Id<"vendors">,
+					search: debouncedSearch || undefined,
+					paginationOpts: {
+						numItems: pagination.pageSize,
+						cursor: cursor ?? null,
+					},
+			  }
+			: "skip"
+	);
+
+	const columns: ColumnDef<Doc<"products">>[] = [
 		{
 			id: "select",
 			header: ({ table }) => (
@@ -85,7 +124,7 @@ export default function ProductsPage() {
 				// Format the amount as a dollar amount
 				const formatted = new Intl.NumberFormat("en-US", {
 					style: "currency",
-					currency: "USD",
+					currency: "INR",
 				}).format(amount);
 
 				return <div className="font-medium">{formatted}</div>;
@@ -166,25 +205,32 @@ export default function ProductsPage() {
 			},
 		},
 	];
-	const table = useReactTable<(typeof allProducts)[0]>({
-		data: allProducts,
+
+	const table = useReactTable({
+		data: allProducts?.page ?? [],
 		columns,
-		onSortingChange: setSorting,
-		onColumnFiltersChange: setColumnFilters,
+		manualPagination: true,
+		pageCount: allProducts?.isDone
+			? pagination.pageIndex + 1
+			: pagination.pageIndex + 2,
+		onPaginationChange: setPagination,
 		getCoreRowModel: getCoreRowModel(),
-		getPaginationRowModel: getPaginationRowModel(),
 		getSortedRowModel: getSortedRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
-		onColumnVisibilityChange: setColumnVisibility,
-		onRowSelectionChange: setRowSelection,
 		state: {
+			pagination,
 			sorting,
 			columnFilters,
 			columnVisibility,
 			rowSelection,
 		},
+		onSortingChange: setSorting,
+		onColumnFiltersChange: setColumnFilters,
+		onColumnVisibilityChange: setColumnVisibility,
+		onRowSelectionChange: setRowSelection,
 	});
 
+	console.log(allProducts);
 	return (
 		<div className="w-full h-full overflow-y-auto">
 			<div className="px-5 mb-5">
@@ -196,6 +242,8 @@ export default function ProductsPage() {
 					<Input
 						placeholder="Filter products..."
 						className="max-w-sm"
+						value={search}
+						onChange={(e) => setSearch(e.target.value)}
 					/>
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
@@ -288,16 +336,28 @@ export default function ProductsPage() {
 						<Button
 							variant="outline"
 							size="sm"
-							onClick={() => table.previousPage()}
-							disabled={!table.getCanPreviousPage()}
+							onClick={() => {
+								setPagination((prev) => ({
+									...prev,
+									pageIndex: prev.pageIndex - 1,
+								}));
+								setCursor(null); // reset to first page if needed
+							}}
+							disabled={pagination.pageIndex === 0}
 						>
 							Previous
 						</Button>
 						<Button
 							variant="outline"
 							size="sm"
-							onClick={() => table.nextPage()}
-							disabled={!table.getCanNextPage()}
+							onClick={() => {
+								setPagination((prev) => ({
+									...prev,
+									pageIndex: prev.pageIndex + 1,
+								}));
+								setCursor(allProducts?.continueCursor ?? null);
+							}}
+							disabled={allProducts?.isDone}
 						>
 							Next
 						</Button>
