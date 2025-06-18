@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { roleValidator } from "./schema";
 
 export const getVendorDetails = query({
 	args: { clerkId: v.string() },
@@ -115,5 +116,38 @@ export const listProductsWithCategoriesByShop = query({
 		}));
 
 		return enrichedProducts;
+	},
+});
+
+export const getAllVendors = query({
+	args: {},
+	handler: async (ctx, args) => {
+		const vendors = await ctx.db.query("vendors").collect();
+
+		const enrichedVendors = await Promise.all(
+			vendors.map(async (vendor) => {
+				const user = await ctx.db
+					.query("users")
+					.withIndex("by_id", (q) => q.eq("_id", vendor.userId))
+					.unique();
+
+				const shops = await ctx.db
+					.query("vendorShops")
+					.withIndex("by_vendorId", (q) =>
+						q.eq("vendorId", vendor._id)
+					)
+					.collect();
+
+				return {
+					...vendor,
+					firstName: user?.firstName ?? "",
+					lastName: user?.lastName ?? "",
+					email: user?.email ?? "",
+					shops,
+				};
+			})
+		);
+
+		return enrichedVendors;
 	},
 });
