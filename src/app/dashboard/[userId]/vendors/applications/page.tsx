@@ -46,11 +46,7 @@ import { api } from "../../../../../../convex/_generated/api";
 import type { Id } from "../../../../../../convex/_generated/dataModel";
 
 export default function VendorApplications() {
-	const {
-		results: vendorApplications,
-		status,
-		loadMore,
-	} = usePaginatedQuery(
+	const { results: vendorApplications } = usePaginatedQuery(
 		api.vendorApplication.getVendorApplications,
 		{
 			sortBy: "_creationTime",
@@ -65,14 +61,6 @@ export default function VendorApplications() {
 	]);
 	const [columnVisibility, setColumnVisibility] =
 		React.useState<VisibilityState>({});
-
-	// const { results, status, loadMore } = {
-	// 	results: mockResults,
-	// 	status: "CanLoadMore" as const,
-	// 	loadMore: () => {
-	// 		console.log("Loading more applications...");
-	// 	},
-	// };
 
 	const approveMutation = useMutation(
 		api.vendorApplication.approveVendorApplication
@@ -97,7 +85,11 @@ export default function VendorApplications() {
 	const handleReject = async (applicationId: string) => {
 		setProcessingId(applicationId);
 		try {
-			// await onReject(applicationId);
+			await rejectMutation({
+				applicationId: applicationId as Id<"vendorApplications">,
+			});
+		} catch (error) {
+			console.error("Rejection failed:", error);
 		} finally {
 			setProcessingId(null);
 		}
@@ -342,7 +334,7 @@ export default function VendorApplications() {
 							table.getRowModel().rows.map((row) => (
 								<TableRow
 									key={row.id}
-                                    className="hover:bg-transparent"
+									className="hover:bg-transparent"
 								>
 									{row.getVisibleCells().map((cell) => (
 										<TableCell

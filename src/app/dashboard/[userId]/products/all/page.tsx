@@ -36,129 +36,6 @@ import {
 import { allProducts } from "@/lib/app-data";
 import { cn } from "@/lib/utils";
 
-export const columns: ColumnDef<(typeof allProducts)[0]>[] = [
-	{
-		id: "select",
-		header: ({ table }) => (
-			<Checkbox
-				checked={
-					table.getIsAllPageRowsSelected() ||
-					(table.getIsSomePageRowsSelected() && "indeterminate")
-				}
-				onCheckedChange={(value) =>
-					table.toggleAllPageRowsSelected(!!value)
-				}
-				aria-label="Select all"
-			/>
-		),
-		cell: ({ row }) => (
-			<Checkbox
-				checked={row.getIsSelected()}
-				onCheckedChange={(value) => row.toggleSelected(!!value)}
-				aria-label="Select row"
-			/>
-		),
-		enableSorting: false,
-		enableHiding: false,
-	},
-	{
-		accessorKey: "name",
-		header: "Name",
-		cell: ({ row }) => (
-			<div className="capitalize">{row.getValue("name")}</div>
-		),
-	},
-	{
-		accessorKey: "originalPrice",
-		header: () => <div>Original Price</div>,
-		cell: ({ row }) => {
-			const amount = parseFloat(row.getValue("originalPrice"));
-
-			// Format the amount as a dollar amount
-			const formatted = new Intl.NumberFormat("en-US", {
-				style: "currency",
-				currency: "USD",
-			}).format(amount);
-
-			return <div className="font-medium">{formatted}</div>;
-		},
-	},
-	{
-		accessorKey: "isDiscounted",
-		header: () => <div>Is Discounted</div>,
-		cell: ({ row }) => {
-			const isDiscounted = row.getValue("isDiscounted");
-			return (
-				<Badge variant={isDiscounted ? "default" : "secondary"}>
-					{isDiscounted ? "Yes" : "No"}
-				</Badge>
-			);
-		},
-	},
-	{
-		accessorKey: "isActive",
-		header: () => <div>Is Active</div>,
-		cell: ({ row }) => {
-			const isActive = row.getValue("isActive");
-			return (
-				<Badge
-					className={cn(
-						"font-semibold text-white",
-						isActive
-							? "bg-green-500/40 border-green-500"
-							: "bg-red-500/40 border-red-500"
-					)}
-				>
-					{isActive ? "Active" : "Not Active"}
-				</Badge>
-			);
-		},
-	},
-	{
-		accessorKey: "stock",
-		header: () => <div>Stock</div>,
-	},
-	{
-		accessorKey: "purchaseCount",
-		header: () => <div>Total Purchases</div>,
-	},
-	{
-		accessorKey: "categories",
-		header: () => <div>Categories</div>,
-		cell: ({ row }) => {
-			const categories = row.getValue("categories") as {
-				_id: string;
-				name: string;
-				slug: string;
-				parentId: string;
-				_creationTime: number;
-			}[];
-
-			if (!categories?.length) {
-				return (
-					<Badge variant="secondary" className="text-xs">
-						No Categories
-					</Badge>
-				);
-			}
-
-			return (
-				<div className="flex flex-wrap gap-1">
-					{categories.map((category) => (
-						<Badge
-							key={category._id}
-							variant="secondary"
-							className="text-xs"
-						>
-							{category.name}
-						</Badge>
-					))}
-				</div>
-			);
-		},
-	},
-];
-
 export default function ProductsPage() {
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] =
@@ -167,6 +44,128 @@ export default function ProductsPage() {
 		React.useState<VisibilityState>({});
 	const [rowSelection, setRowSelection] = React.useState({});
 
+	const columns: ColumnDef<(typeof allProducts)[0]>[] = [
+		{
+			id: "select",
+			header: ({ table }) => (
+				<Checkbox
+					checked={
+						table.getIsAllPageRowsSelected() ||
+						(table.getIsSomePageRowsSelected() && "indeterminate")
+					}
+					onCheckedChange={(value) =>
+						table.toggleAllPageRowsSelected(!!value)
+					}
+					aria-label="Select all"
+				/>
+			),
+			cell: ({ row }) => (
+				<Checkbox
+					checked={row.getIsSelected()}
+					onCheckedChange={(value) => row.toggleSelected(!!value)}
+					aria-label="Select row"
+				/>
+			),
+			enableSorting: false,
+			enableHiding: false,
+		},
+		{
+			accessorKey: "name",
+			header: "Name",
+			cell: ({ row }) => (
+				<div className="capitalize">{row.getValue("name")}</div>
+			),
+		},
+		{
+			accessorKey: "originalPrice",
+			header: () => <div>Original Price</div>,
+			cell: ({ row }) => {
+				const amount = parseFloat(row.getValue("originalPrice"));
+
+				// Format the amount as a dollar amount
+				const formatted = new Intl.NumberFormat("en-US", {
+					style: "currency",
+					currency: "USD",
+				}).format(amount);
+
+				return <div className="font-medium">{formatted}</div>;
+			},
+		},
+		{
+			accessorKey: "isDiscounted",
+			header: () => <div>Is Discounted</div>,
+			cell: ({ row }) => {
+				const isDiscounted = row.getValue("isDiscounted");
+				return (
+					<Badge variant={isDiscounted ? "default" : "secondary"}>
+						{isDiscounted ? "Yes" : "No"}
+					</Badge>
+				);
+			},
+		},
+		{
+			accessorKey: "isActive",
+			header: () => <div>Is Active</div>,
+			cell: ({ row }) => {
+				const isActive = row.getValue("isActive");
+				return (
+					<Badge
+						className={cn(
+							"font-semibold text-white",
+							isActive
+								? "bg-green-500/40 border-green-500"
+								: "bg-red-500/40 border-red-500"
+						)}
+					>
+						{isActive ? "Active" : "Not Active"}
+					</Badge>
+				);
+			},
+		},
+		{
+			accessorKey: "stock",
+			header: () => <div>Stock</div>,
+		},
+		{
+			accessorKey: "purchaseCount",
+			header: () => <div>Total Purchases</div>,
+		},
+		{
+			accessorKey: "categories",
+			header: () => <div>Categories</div>,
+			cell: ({ row }) => {
+				const categories = row.getValue("categories") as {
+					_id: string;
+					name: string;
+					slug: string;
+					parentId: string;
+					_creationTime: number;
+				}[];
+
+				if (!categories?.length) {
+					return (
+						<Badge variant="secondary" className="text-xs">
+							No Categories
+						</Badge>
+					);
+				}
+
+				return (
+					<div className="flex flex-wrap gap-1">
+						{categories.map((category) => (
+							<Badge
+								key={category._id}
+								variant="secondary"
+								className="text-xs"
+							>
+								{category.name}
+							</Badge>
+						))}
+					</div>
+				);
+			},
+		},
+	];
 	const table = useReactTable<(typeof allProducts)[0]>({
 		data: allProducts,
 		columns,

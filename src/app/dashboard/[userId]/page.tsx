@@ -1,8 +1,6 @@
-import { fetchQuery } from "convex/nextjs";
-import { api } from "../../../../convex/_generated/api";
-import { SectionCards } from "@/features/dashboard/components/section-cards";
 import { ChartAreaInteractive } from "@/features/dashboard/components/chart-area-interactive";
 import DataTable from "@/features/dashboard/components/data-table";
+import { SectionCards } from "@/features/dashboard/components/section-cards";
 
 interface Params {
 	params: Promise<{ userId: string }>;
@@ -10,7 +8,7 @@ interface Params {
 
 export default async function Dashboard({ params }: Params) {
 	const { userId } = await params;
-	const user = await fetchQuery(api.users.getUser, { userId });
+	console.log(userId);
 
 	return (
 		<div className="flex flex-1 flex-col">

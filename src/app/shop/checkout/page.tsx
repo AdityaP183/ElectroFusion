@@ -7,7 +7,14 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import { allProducts } from "@/lib/app-data";
-import { Banknote, CreditCard, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
+import {
+	Banknote,
+	CreditCard,
+	Minus,
+	Plus,
+	ShoppingBag,
+	Trash2,
+} from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -21,14 +28,14 @@ export default function Checkout() {
 	const tax = subtotal * 0.08;
 	const total = subtotal + shipping + tax;
 
-	const [cardForm, setCardForm] = useState({
+	const [cardForm, setCardForm] = useState<CardForm>({
 		cardNumber: "",
 		expiryDate: "",
 		cvv: "",
 		cardName: "",
 	});
 
-	const [billingAddress, setBillingAddress] = useState({
+	const [billingAddress, setBillingAddress] = useState<BillingAddress>({
 		firstName: "",
 		lastName: "",
 		email: "",
@@ -46,16 +53,16 @@ export default function Checkout() {
 			</div>
 
 			<div className="grid lg:grid-cols-3 gap-8">
-				{/* Left Side */}
 				<div className="space-y-6 col-span-2">
 					<BillingInfo
 						billingAddress={billingAddress}
 						setBillingAddress={setBillingAddress}
 					/>
-                    <PaymentMethod cardForm={cardForm} setCardForm={setCardForm}/>
+					<PaymentMethod
+						cardForm={cardForm}
+						setCardForm={setCardForm}
+					/>
 				</div>
-
-				{/* Right Side */}
 				<div className="space-y-6">
 					<OrderSummary
 						items={chartItems}
@@ -70,7 +77,28 @@ export default function Checkout() {
 	);
 }
 
-function BillingInfo({ billingAddress, setBillingAddress }: any) {
+// ---------------- Types ---------------- //
+
+interface BillingAddress {
+	firstName: string;
+	lastName: string;
+	email: string;
+	address: string;
+	city: string;
+	zipCode: string;
+	country: string;
+}
+
+interface BillingInfoProps {
+	billingAddress: BillingAddress;
+	setBillingAddress: React.Dispatch<React.SetStateAction<BillingAddress>>;
+}
+
+function BillingInfo({ billingAddress, setBillingAddress }: BillingInfoProps) {
+	const handleChange = (field: keyof BillingAddress, value: string) => {
+		setBillingAddress((prev) => ({ ...prev, [field]: value }));
+	};
+
 	return (
 		<Card>
 			<CardHeader>
@@ -86,6 +114,9 @@ function BillingInfo({ billingAddress, setBillingAddress }: any) {
 						<Input
 							id="firstName"
 							value={billingAddress.firstName}
+							onChange={(
+								e: React.ChangeEvent<HTMLInputElement>
+							) => handleChange("firstName", e.target.value)}
 							placeholder="John"
 						/>
 					</div>
@@ -94,6 +125,9 @@ function BillingInfo({ billingAddress, setBillingAddress }: any) {
 						<Input
 							id="lastName"
 							value={billingAddress.lastName}
+							onChange={(
+								e: React.ChangeEvent<HTMLInputElement>
+							) => handleChange("lastName", e.target.value)}
 							placeholder="Doe"
 						/>
 					</div>
@@ -102,9 +136,12 @@ function BillingInfo({ billingAddress, setBillingAddress }: any) {
 					<Label htmlFor="email">Email</Label>
 					<Input
 						id="email"
-						type="email"
 						value={billingAddress.email}
-						placeholder="john.doe@example.com"
+						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+							handleChange("email", e.target.value)
+						}
+						type="email"
+						placeholder="john@example.com"
 					/>
 				</div>
 				<div className="space-y-2">
@@ -112,6 +149,9 @@ function BillingInfo({ billingAddress, setBillingAddress }: any) {
 					<Input
 						id="address"
 						value={billingAddress.address}
+						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+							handleChange("address", e.target.value)
+						}
 						placeholder="123 Main Street"
 					/>
 				</div>
@@ -121,6 +161,9 @@ function BillingInfo({ billingAddress, setBillingAddress }: any) {
 						<Input
 							id="city"
 							value={billingAddress.city}
+							onChange={(
+								e: React.ChangeEvent<HTMLInputElement>
+							) => handleChange("city", e.target.value)}
 							placeholder="New York"
 						/>
 					</div>
@@ -129,6 +172,9 @@ function BillingInfo({ billingAddress, setBillingAddress }: any) {
 						<Input
 							id="zipCode"
 							value={billingAddress.zipCode}
+							onChange={(
+								e: React.ChangeEvent<HTMLInputElement>
+							) => handleChange("zipCode", e.target.value)}
 							placeholder="10001"
 						/>
 					</div>
@@ -138,8 +184,25 @@ function BillingInfo({ billingAddress, setBillingAddress }: any) {
 	);
 }
 
-function PaymentMethod({ cardForm, setCardForm }: any) {
-    const paymentMethod = "card"
+interface CardForm {
+	cardNumber: string;
+	expiryDate: string;
+	cvv: string;
+	cardName: string;
+}
+
+interface PaymentMethodProps {
+	cardForm: CardForm;
+	setCardForm: React.Dispatch<React.SetStateAction<CardForm>>;
+}
+
+function PaymentMethod({ cardForm, setCardForm }: PaymentMethodProps) {
+	const handleChange = (field: keyof CardForm, value: string) => {
+		setCardForm((prev) => ({ ...prev, [field]: value }));
+	};
+
+	const paymentMethod = "card";
+
 	return (
 		<Card>
 			<CardHeader>
@@ -148,7 +211,7 @@ function PaymentMethod({ cardForm, setCardForm }: any) {
 			<CardContent>
 				<RadioGroup
 					value={"card"}
-					onValueChange={(value) => console.log(value)}
+					onValueChange={(value: string) => console.log(value)}
 				>
 					<div className="flex items-center space-x-2 p-4 border rounded-lg">
 						<RadioGroupItem value="card" id="card" />
@@ -172,7 +235,6 @@ function PaymentMethod({ cardForm, setCardForm }: any) {
 					</div>
 				</RadioGroup>
 
-				{/* Card Payment Form */}
 				{paymentMethod === "card" && (
 					<div className="mt-6 space-y-4 p-4 rounded-lg">
 						<div className="space-y-2">
@@ -180,6 +242,9 @@ function PaymentMethod({ cardForm, setCardForm }: any) {
 							<Input
 								id="cardName"
 								value={cardForm.cardName}
+								onChange={(
+									e: React.ChangeEvent<HTMLInputElement>
+								) => handleChange("cardName", e.target.value)}
 								placeholder="John Doe"
 							/>
 						</div>
@@ -188,6 +253,9 @@ function PaymentMethod({ cardForm, setCardForm }: any) {
 							<Input
 								id="cardNumber"
 								value={cardForm.cardNumber}
+								onChange={(
+									e: React.ChangeEvent<HTMLInputElement>
+								) => handleChange("cardNumber", e.target.value)}
 								placeholder="1234 5678 9012 3456"
 								maxLength={19}
 							/>
@@ -198,6 +266,14 @@ function PaymentMethod({ cardForm, setCardForm }: any) {
 								<Input
 									id="expiryDate"
 									value={cardForm.expiryDate}
+									onChange={(
+										e: React.ChangeEvent<HTMLInputElement>
+									) =>
+										handleChange(
+											"expiryDate",
+											e.target.value
+										)
+									}
 									placeholder="MM/YY"
 									maxLength={5}
 								/>
@@ -207,6 +283,9 @@ function PaymentMethod({ cardForm, setCardForm }: any) {
 								<Input
 									id="cvv"
 									value={cardForm.cvv}
+									onChange={(
+										e: React.ChangeEvent<HTMLInputElement>
+									) => handleChange("cvv", e.target.value)}
 									placeholder="123"
 									maxLength={4}
 								/>
@@ -214,15 +293,6 @@ function PaymentMethod({ cardForm, setCardForm }: any) {
 						</div>
 					</div>
 				)}
-
-				{/* {paymentMethod === "cash" && (
-					<div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-						<p className="text-green-800 text-sm">
-							You'll pay in cash when your order is delivered.
-							Please have the exact amount ready.
-						</p>
-					</div>
-				)} */}
 			</CardContent>
 		</Card>
 	);
@@ -235,8 +305,9 @@ interface OrderSummaryProps {
 	tax: number;
 	total: number;
 }
+
 function OrderSummary({
-	items: cartItems,
+	items,
 	subtotal,
 	shipping,
 	tax,
@@ -249,7 +320,7 @@ function OrderSummary({
 			</CardHeader>
 			<CardContent>
 				<div className="space-y-4">
-					{cartItems.map((item, index) => (
+					{items.map((item, index) => (
 						<div
 							key={item._id}
 							className="flex items-center gap-4 pb-4 border-b last:border-b-0"

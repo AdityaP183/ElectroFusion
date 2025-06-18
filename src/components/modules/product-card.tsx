@@ -1,7 +1,8 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge"; // Adjust path based on your project
+import { Badge } from "@/components/ui/badge";
 import { Heart, Plus } from "lucide-react";
+import Image from "next/image";
 import React, { useState } from "react";
 
 type Category = {
@@ -61,12 +62,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 		<div className="relative w-full bg-transparent rounded-2xl shadow-2xl">
 			{/* Image Section */}
 			<div className="relative aspect-square overflow-hidden rounded-md">
-				<img
+				<Image
 					src={primaryImage?.url || "/fallback.png"}
 					alt={primaryImage?.altText || "Product image"}
 					className="w-full h-full object-cover"
 				/>
-                {/* Low stock */}
+				{/* Low stock */}
 				{product.stock > 0 && product.stock <= 5 && (
 					<div className="absolute top-1 left-1 bg-black/80 px-2 py-1 rounded-full flex items-center">
 						<p className="text-xs text-orange-400">
@@ -80,7 +81,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 			<div className="py-2 px-0.5 space-y-4">
 				{/* Name & Categories */}
 				<div className="space-y-1">
-					<h3 className="text-lg font-semibold text-white truncate" title={product.name}>
+					<h3
+						className="text-lg font-semibold text-white truncate"
+						title={product.name}
+					>
 						{product.name}
 					</h3>
 					<div className="flex flex-wrap gap-1">

@@ -21,9 +21,13 @@ export function useCloudinaryUpload() {
 
 			if (!res.ok) throw new Error(data.error || "Upload failed");
 
-			return data.url; // cloudinary secure_url
-		} catch (err: any) {
-			setError(err.message || "Something went wrong");
+			return data.url;
+		} catch (err: unknown) {
+			if (err instanceof Error) {
+				setError(err.message);
+			} else {
+				setError("Something went wrong");
+			}
 			return null;
 		} finally {
 			setUploading(false);

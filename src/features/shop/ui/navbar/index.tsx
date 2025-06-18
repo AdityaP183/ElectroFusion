@@ -1,16 +1,12 @@
 "use client";
 
 import { useAuth } from "@clerk/nextjs";
-import {
-	AnimatePresence,
-	motion,
-	useMotionValueEvent,
-	useScroll,
-} from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import Logo from "@/components/modules/logo";
+import { Button } from "@/components/ui/button";
 import {
 	NavigationMenu,
 	NavigationMenuContent,
@@ -20,33 +16,16 @@ import {
 	NavigationMenuTrigger,
 	navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { navBrowseLinks } from "@/lib/app-data";
 import { useQuery } from "convex/react";
+import Link from "next/link";
 import { api } from "../../../../../convex/_generated/api";
 import NavbarCategories from "./navbar-categories";
 import NavbarUserSection from "./navbar-user-section";
-import { navBrowseLinks } from "@/lib/app-data";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 
 export default function Navbar() {
 	const { isLoaded, isSignedIn } = useAuth();
-	const { scrollYProgress } = useScroll();
-	const [visible, setVisible] = useState(true);
-
-	// useMotionValueEvent(scrollYProgress, "change", (current) => {
-	// 	if (typeof current === "number" && scrollYProgress) {
-	// 		const previous = scrollYProgress.getPrevious();
-
-	// 		if (typeof previous === "number") {
-	// 			const direction = current - previous;
-	// 			if (scrollYProgress.get() < 0.05) {
-	// 				setVisible(true);
-	// 			} else {
-	// 				setVisible(direction < 0);
-	// 			}
-	// 		}
-	// 	}
-	// });
+	const [visible] = useState(true);
 
 	return (
 		<AnimatePresence>

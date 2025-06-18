@@ -65,7 +65,7 @@ export default function AddProduct() {
 		},
 	});
 
-	const { watch, setValue, reset, setError, clearErrors } = form;
+	const { watch, setValue, reset, clearErrors } = form;
 	const name = watch("name");
 	const isDiscounted = watch("isDiscounted");
 
@@ -128,7 +128,7 @@ export default function AddProduct() {
 		setValue("image", productImg?.img || "");
 	}, [productImg, setValue]);
 
-	const { uploadImage, uploading, error } = useCloudinaryUpload();
+	const { uploadImage } = useCloudinaryUpload();
 	const createShop = useMutation(api.vendorProducts.createProduct);
 
 	const onSubmitHandler = async (

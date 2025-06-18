@@ -1,5 +1,3 @@
-import { cn } from "@/lib/utils";
-import Image from "next/image";
 import { SVGProps } from "react";
 
 type IconProps = React.HTMLAttributes<SVGElement>;

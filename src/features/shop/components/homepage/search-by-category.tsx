@@ -1,7 +1,6 @@
 import { fetchQuery } from "convex/nextjs";
 import { api } from "../../../../../convex/_generated/api";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import {
 	Smartphone,
 	Tablet,
@@ -15,7 +14,7 @@ import {
 import Link from "next/link";
 
 const getCategoryIcon = (slug: string) => {
-	const iconMap: Record<string, any> = {
+	const iconMap: Record<string, React.ElementType> = {
 		smartphones: Smartphone,
 		"tablets-and-ereaders": Tablet,
 		"laptops-and-computers": Laptop,
@@ -29,7 +28,9 @@ const getCategoryIcon = (slug: string) => {
 };
 
 export default async function SearchByCategory() {
-	const allCategories = await fetchQuery(api.categories.getOnlyParentCategory);
+	const allCategories = await fetchQuery(
+		api.categories.getOnlyParentCategory
+	);
 
 	return (
 		<section className="w-full mx-auto py-12">
@@ -51,7 +52,13 @@ export default async function SearchByCategory() {
 	);
 }
 
-function CategoryCard({ category }: { category: any }) {
+type Category = {
+	_id: string;
+	slug: string;
+	name: string;
+};
+
+function CategoryCard({ category }: { category: Category }) {
 	const IconComponent = getCategoryIcon(category.slug);
 
 	return (

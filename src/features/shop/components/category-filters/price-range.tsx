@@ -24,7 +24,7 @@ export default function PriceRange({
 		if (priceMax === undefined) {
 			setPriceMax("");
 		}
-	}, []);
+	}, [priceMin, priceMax, setPriceMin, setPriceMax]);
 
 	const handleCorrectPriceChange = (
 		value: string,

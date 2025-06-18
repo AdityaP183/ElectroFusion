@@ -1,7 +1,6 @@
 "use client";
 
-import { useParams, usePathname, useSearchParams } from "next/navigation";
-import { ChevronsRightIcon, HomeIcon, LucideIcon } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -9,9 +8,9 @@ import {
 	BreadcrumbList,
 	BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Badge } from "@/components/ui/badge";
-import React from "react";
 import { cn, slugToText } from "@/lib/utils";
+import { ChevronsRightIcon, HomeIcon } from "lucide-react";
+import { useParams, usePathname, useSearchParams } from "next/navigation";
 
 export default function InfoStrip() {
 	const params = useParams();

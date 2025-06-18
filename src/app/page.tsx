@@ -1,12 +1,7 @@
 "use client";
 
 import Navbar from "@/features/shop/ui/navbar";
-import { useState } from "react";
 
-import Link from "next/link";
-import Image from "next/image";
-import { useRef } from "react";
-import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -16,28 +11,22 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import {
-	Check,
-	ChevronRight,
-	Clock,
-	Code,
-	Laptop,
-	Menu,
-	X,
-	Zap,
-} from "lucide-react";
 import Hero from "@/features/landing-page/ui/hero-section";
+import { Check, ChevronRight, Clock, Code, Laptop, Zap } from "lucide-react";
+import { motion } from "motion/react";
+import Image from "next/image";
+import Link from "next/link";
 export default function Page() {
-	const headerRef = useRef<HTMLElement>(null);
-	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+	// const headerRef = useRef<HTMLElement>(null);
+	// const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-	const scrollToSection = (id: string) => {
-		setMobileMenuOpen(false);
-		const element = document.getElementById(id);
-		if (element) {
-			element.scrollIntoView({ behavior: "smooth" });
-		}
-	};
+	// const scrollToSection = (id: string) => {
+	// 	setMobileMenuOpen(false);
+	// 	const element = document.getElementById(id);
+	// 	if (element) {
+	// 		element.scrollIntoView({ behavior: "smooth" });
+	// 	}
+	// };
 
 	const fadeInUp = {
 		hidden: { opacity: 0, y: 60 },
@@ -171,8 +160,9 @@ export default function Page() {
 									Trusted by thousands of teams
 								</h2>
 								<p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-									Don't just take our word for it. Here's what
-									our customers have to say about StreamLine.
+									Don&apos;t just take our word for it.
+									Here&apos;s what our customers have to say
+									about StreamLine.
 								</p>
 							</div>
 						</motion.div>
@@ -204,10 +194,10 @@ export default function Page() {
 											</div>
 										</div>
 										<blockquote className="mt-4 border-l-2 pl-4 italic">
-											"StreamLine has transformed how our
-											team works. We've cut meeting time
-											by 50% and increased delivery speed
-											by 35%."
+											&quot;StreamLine has transformed how
+											our team works. We&apos;ve cut
+											meeting time by 50% and increased
+											delivery speed by 35%.&quot;
 										</blockquote>
 									</CardContent>
 								</Card>
@@ -233,10 +223,10 @@ export default function Page() {
 											</div>
 										</div>
 										<blockquote className="mt-4 border-l-2 pl-4 italic">
-											"The automation features alone have
-											saved us countless hours. Our team
-											can now focus on what truly
-											matters."
+											&quot;The automation features alone
+											have saved us countless hours. Our
+											team can now focus on what truly
+											matters.&quot;
 										</blockquote>
 									</CardContent>
 								</Card>
@@ -263,10 +253,11 @@ export default function Page() {
 											</div>
 										</div>
 										<blockquote className="mt-4 border-l-2 pl-4 italic">
-											"StreamLine has been a game-changer
-											for our marketing team. We've
-											improved campaign coordination and
-											reporting significantly."
+											&quot;StreamLine has been a
+											game-changer for our marketing team.
+											We&apos;ve improved campaign
+											coordination and reporting
+											significantly.&quot;
 										</blockquote>
 									</CardContent>
 								</Card>
@@ -296,8 +287,8 @@ export default function Page() {
 									Simple, transparent pricing
 								</h2>
 								<p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-									Choose the plan that's right for your team.
-									All plans include a 14-day free trial.
+									Choose the plan that&apos;s right for your
+									team. All plans include a 14-day free trial.
 								</p>
 							</div>
 						</motion.div>

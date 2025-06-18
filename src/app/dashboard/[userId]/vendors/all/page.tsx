@@ -33,84 +33,6 @@ import * as React from "react";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 
-export const columns: ColumnDef<(typeof allVendors)[0]>[] = [
-	{
-		id: "select",
-		header: ({ table }) => (
-			<div className="flex items-center">
-				<Checkbox
-					checked={
-						table.getIsAllPageRowsSelected() ||
-						(table.getIsSomePageRowsSelected() && "indeterminate")
-					}
-					onCheckedChange={(value) =>
-						table.toggleAllPageRowsSelected(!!value)
-					}
-					aria-label="Select all"
-				/>
-			</div>
-		),
-		cell: ({ row }) => (
-			<div className="flex items-center">
-				<Checkbox
-					checked={row.getIsSelected()}
-					onCheckedChange={(value) => row.toggleSelected(!!value)}
-					aria-label="Select row"
-				/>
-			</div>
-		),
-		enableSorting: false,
-		enableHiding: false,
-	},
-	{
-		accessorKey: "name",
-		header: "Name",
-		cell: ({ row }) => (
-			<div className="flex items-center gap-x-2">
-				{row.original.firstName} {row.original.lastName}
-			</div>
-		),
-	},
-	{
-		accessorKey: "contactEmail",
-		header: "Contact Email",
-		cell: ({ row }) => (
-			<div className="flex items-center">
-				{row.original.contactEmail ?? "-"}
-			</div>
-		),
-	},
-	{
-		accessorKey: "_creationTime",
-		header: "Joined On",
-		cell: ({ row }) => (
-			<div className="flex items-center">
-				{format(
-					new Date(row.original._creationTime),
-					"dd MMM yyyy hh:mm:ss"
-				)}
-			</div>
-		),
-	},
-	{
-		accessorKey: "contactPhone",
-		header: "Contact Phone",
-		cell: ({ row }) => (
-			<div className="flex items-center">{row.original.contactPhone}</div>
-		),
-	},
-	{
-		accessorKey: "shops",
-		header: "Shops",
-		cell: ({ row }) => (
-			<div className="flex flex-wrap items-center gap-2">
-				{row.original.shops.length > 0 &&
-					row.original.shops.map((shop) => <Badge key={shop._id} variant="outline">{shop.name}</Badge>)}
-			</div>
-		),
-	},
-];
-
 const allVendors = [
 	{
 		_creationTime: 1750162303681.288,
@@ -162,6 +84,91 @@ export default function AllVendors() {
 	const [columnVisibility, setColumnVisibility] =
 		React.useState<VisibilityState>({});
 	const [rowSelection, setRowSelection] = React.useState({});
+
+	const columns: ColumnDef<(typeof allVendors)[0]>[] = [
+		{
+			id: "select",
+			header: ({ table }) => (
+				<div className="flex items-center">
+					<Checkbox
+						checked={
+							table.getIsAllPageRowsSelected() ||
+							(table.getIsSomePageRowsSelected() &&
+								"indeterminate")
+						}
+						onCheckedChange={(value) =>
+							table.toggleAllPageRowsSelected(!!value)
+						}
+						aria-label="Select all"
+					/>
+				</div>
+			),
+			cell: ({ row }) => (
+				<div className="flex items-center">
+					<Checkbox
+						checked={row.getIsSelected()}
+						onCheckedChange={(value) => row.toggleSelected(!!value)}
+						aria-label="Select row"
+					/>
+				</div>
+			),
+			enableSorting: false,
+			enableHiding: false,
+		},
+		{
+			accessorKey: "name",
+			header: "Name",
+			cell: ({ row }) => (
+				<div className="flex items-center gap-x-2">
+					{row.original.firstName} {row.original.lastName}
+				</div>
+			),
+		},
+		{
+			accessorKey: "contactEmail",
+			header: "Contact Email",
+			cell: ({ row }) => (
+				<div className="flex items-center">
+					{row.original.contactEmail ?? "-"}
+				</div>
+			),
+		},
+		{
+			accessorKey: "_creationTime",
+			header: "Joined On",
+			cell: ({ row }) => (
+				<div className="flex items-center">
+					{format(
+						new Date(row.original._creationTime),
+						"dd MMM yyyy hh:mm:ss"
+					)}
+				</div>
+			),
+		},
+		{
+			accessorKey: "contactPhone",
+			header: "Contact Phone",
+			cell: ({ row }) => (
+				<div className="flex items-center">
+					{row.original.contactPhone}
+				</div>
+			),
+		},
+		{
+			accessorKey: "shops",
+			header: "Shops",
+			cell: ({ row }) => (
+				<div className="flex flex-wrap items-center gap-2">
+					{row.original.shops.length > 0 &&
+						row.original.shops.map((shop) => (
+							<Badge key={shop._id} variant="outline">
+								{shop.name}
+							</Badge>
+						))}
+				</div>
+			),
+		},
+	];
 
 	const table = useReactTable<(typeof allVendors)[0]>({
 		data: allVendors,

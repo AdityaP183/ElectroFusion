@@ -23,7 +23,6 @@ interface Props {
 }
 
 export default function ImageUploader({
-	file,
 	setFile,
 	ratio,
 	width,
@@ -33,7 +32,7 @@ export default function ImageUploader({
 	const maxSizeMB = 2;
 	const maxSize = maxSizeMB * 1024 * 1024;
 	const [
-		{ files, isDragging, errors },
+		{ files, isDragging },
 		{
 			handleDragEnter,
 			handleDragLeave,
@@ -51,7 +50,6 @@ export default function ImageUploader({
 	useEffect(() => {
 		if (files.length > 0) {
 			const uploadedFile = files[0];
-			// Check if uploadedFile.file is actually a File object
 			if (uploadedFile.file instanceof File) {
 				setFile({
 					imgFile: uploadedFile.file,

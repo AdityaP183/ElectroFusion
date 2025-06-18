@@ -9,17 +9,12 @@ export type PillProps = ComponentProps<typeof Badge> & {
   themed?: boolean;
 };
 
-export const Pill = ({
-  variant = 'secondary',
-  themed = false,
-  className,
-  ...props
-}: PillProps) => (
-  <Badge
-    variant={variant}
-    className={cn('gap-2 rounded-full px-3 py-1.5 font-normal', className)}
-    {...props}
-  />
+export const Pill = ({ variant = "secondary", className, ...props }: PillProps) => (
+	<Badge
+		variant={variant}
+		className={cn("gap-2 rounded-full px-3 py-1.5 font-normal", className)}
+		{...props}
+	/>
 );
 
 export type PillAvatarProps = ComponentProps<typeof AvatarImage> & {

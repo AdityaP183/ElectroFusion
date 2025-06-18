@@ -56,10 +56,6 @@ export default function AppSidebarLinks({ role }: Props) {
 			others: sidebarLinks.others.map((link) => ({
 				...link,
 				href: getFullHref(link.href),
-				items: link.items?.map((item) => ({
-					...item,
-					href: getFullHref(link.href + item.href),
-				})),
 			})),
 		};
 	}, [pathname, sidebarLinks]);

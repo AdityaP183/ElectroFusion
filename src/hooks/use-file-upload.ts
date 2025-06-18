@@ -139,31 +139,31 @@ export const useFileUpload = (
   }, [])
 
   const clearFiles = useCallback(() => {
-    setState((prev) => {
-		prev.files.forEach((file) => {
-			if (
-				file.preview &&
-				file.file instanceof File &&
-				file.file.type.startsWith("image/")
-			) {
-				URL.revokeObjectURL(file.preview);
+		setState((prev) => {
+			prev.files.forEach((file) => {
+				if (
+					file.preview &&
+					file.file instanceof File &&
+					file.file.type.startsWith("image/")
+				) {
+					URL.revokeObjectURL(file.preview);
+				}
+			});
+
+			if (inputRef.current) {
+				inputRef.current.value = "";
 			}
+
+			const newState = {
+				...prev,
+				files: [],
+				errors: [],
+			};
+
+			onFilesChange?.(newState.files);
+			return newState;
 		});
-
-		if (inputRef.current) {
-			inputRef.current.value = "";
-		}
-
-		const newState = {
-			...prev,
-			files: [],
-			errors: [],
-		};
-
-		onFilesChange?.(newState.files);
-		return newState;
-	});
-  }, [onFilesChange])
+  }, [onFilesChange]);
 
   const addFiles = useCallback(
 		(newFiles: FileList | File[]) => {
@@ -256,7 +256,7 @@ export const useFileUpload = (
 			}
 		},
 		[
-			state.files.length,
+			state.files,
 			maxFiles,
 			multiple,
 			maxSize,

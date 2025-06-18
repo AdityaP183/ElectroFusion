@@ -1,13 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Kbd, KbdKey, KbdSeparator } from "@/components/ui/kbd";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 
 export default function Searchbar() {
-    const [openSearch, setOpenSearch] = useState(false);
+	const [, setOpenSearch] = useState(false);
 	return (
 		<Button
 			variant="outline"
@@ -16,15 +15,13 @@ export default function Searchbar() {
 			)}
 			onClick={() => setOpenSearch(true)}
 		>
-			<span className="hidden lg:inline-flex">
-				Search...
-			</span>
+			<span className="hidden lg:inline-flex">Search...</span>
 			<span className="inline-flex lg:hidden">Search...</span>
-            <Kbd className="pointer-events-none absolute right-[0.3rem] top-[0.3rem] hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
-                <KbdKey>Ctrl</KbdKey>
-                <KbdSeparator />
-                <KbdKey>K</KbdKey>
-            </Kbd>
+			<Kbd className="pointer-events-none absolute right-[0.3rem] top-[0.3rem] hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
+				<KbdKey>Ctrl</KbdKey>
+				<KbdSeparator />
+				<KbdKey>K</KbdKey>
+			</Kbd>
 		</Button>
 	);
 }

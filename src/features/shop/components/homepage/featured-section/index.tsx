@@ -1,15 +1,25 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { formatValueWithIndianNumericPrefix } from "@/lib/utils";
 import { useQuery } from "convex/react";
+import {
+	ChevronLeft,
+	ChevronRight,
+	Heart,
+	MoveRight,
+	Package,
+	Pause,
+	Play,
+	ShoppingCart,
+} from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { api } from "../../../../../../convex/_generated/api";
 import FeaturesLoading, { ErrorState } from "./features-loading";
-import { Card, CardContent } from "@/components/ui/card";
-import { motion, AnimatePresence } from "motion/react";
-import { Badge } from "@/components/ui/badge";
-import { formatValueWithIndianNumericPrefix } from "@/lib/utils";
-import { ChevronLeft, ChevronRight, Eye, Heart, MoveRight, Package, Pause, Play, ShoppingCart, Users } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 const slideVariants = {
 	enter: (direction: number) => ({
@@ -89,32 +99,11 @@ export default function FeaturedSection() {
 		return featuredProducts[currentSlide];
 	}, [featuredProducts, currentSlide]);
 
-	// Memoized primary image with error handling
 	const primaryImage = useMemo(() => {
-		if (!currentProduct?.images?.length) return null;
-		return (
-			currentProduct.images.find((img) => img.isPrimary) ||
-			currentProduct.images[0]
-		);
+		if (!currentProduct?.image) return null;
+		return currentProduct.image;
 	}, [currentProduct]);
 
-	// Auto-slide functionality with pause capability
-	useEffect(() => {
-		if (
-			!featuredProducts?.length ||
-			featuredProducts.length <= 1 ||
-			isPaused
-		)
-			return;
-
-		const interval = setInterval(() => {
-			paginate(1);
-		}, 6000); // Increased interval for better UX
-
-		return () => clearInterval(interval);
-	}, [featuredProducts, isPaused, currentSlide]);
-
-	// Navigation functions
 	const paginate = useCallback(
 		(newDirection: number) => {
 			if (!featuredProducts?.length) return;
@@ -134,6 +123,21 @@ export default function FeaturedSection() {
 		},
 		[featuredProducts]
 	);
+
+	useEffect(() => {
+		if (
+			!featuredProducts?.length ||
+			featuredProducts.length <= 1 ||
+			isPaused
+		)
+			return;
+
+		const interval = setInterval(() => {
+			paginate(1);
+		}, 6000);
+
+		return () => clearInterval(interval);
+	}, [featuredProducts, isPaused, currentSlide, paginate]);
 
 	const goToSlide = useCallback(
 		(index: number) => {
@@ -350,12 +354,9 @@ export default function FeaturedSection() {
 								>
 									{!imageError[currentProduct._id] &&
 									primaryImage ? (
-										<img
-											src={primaryImage.url}
-											alt={
-												primaryImage.altText ||
-												currentProduct.name
-											}
+										<Image
+											src={primaryImage}
+											alt={currentProduct.name}
 											className="w-full h-auto max-h-80 object-contain rounded-lg shadow-lg"
 											onError={() =>
 												handleImageError(

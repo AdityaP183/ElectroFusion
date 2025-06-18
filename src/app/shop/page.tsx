@@ -1,6 +1,5 @@
 import ProductsCarousel from "@/components/modules/products-carousel";
 import BecomeASeller from "@/features/shop/components/homepage/become-a-seller";
-import FeaturedSection from "@/features/shop/components/homepage/featured-section";
 import SearchByCategory from "@/features/shop/components/homepage/search-by-category";
 import { Flame } from "lucide-react";
 import Link from "next/link";

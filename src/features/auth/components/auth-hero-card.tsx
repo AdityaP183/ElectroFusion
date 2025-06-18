@@ -18,7 +18,7 @@ export default function AuthHeroCard({
 		}, 6000);
 
 		return () => clearInterval(interval);
-	}, []);
+	}, [texts.length]);
 
 	return (
 		<div className="relative flex-1 w-full h-auto overflow-hidden rounded-xl">

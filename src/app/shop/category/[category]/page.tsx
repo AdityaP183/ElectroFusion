@@ -1,11 +1,6 @@
-import { useUser } from "@clerk/nextjs";
-import { api } from "../../../../../convex/_generated/api";
-import { query } from "../../../../../convex/_generated/server";
-import { fetchQuery } from "convex/nextjs";
-import { currentUser } from "@clerk/nextjs/server";
-import { z } from "zod";
-import { allProducts } from "@/lib/app-data";
 import ProductCard from "@/components/modules/product-card";
+import { allProducts } from "@/lib/app-data";
+import { z } from "zod";
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
@@ -23,9 +18,10 @@ const querySchema = z.object({
 });
 
 export default async function Page({ params, searchParams }: Props) {
-	const { category } = await params;
+	// const { category } = await params;
 	const query = querySchema.safeParse(await searchParams);
 
+	console.log(query, params);
 	return (
 		<div className="w-full min-h-screen overflow-y-auto">
 			<div className="grid grid-cols-5 gap-x-10 gap-y-20">

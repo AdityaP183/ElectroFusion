@@ -48,8 +48,8 @@ export async function POST(req: NextRequest) {
 
 		return NextResponse.json({
 			success: true,
-			url: (result as any).secure_url,
-			public_id: (result as any).public_id,
+			url: result.secure_url,
+			public_id: result.public_id,
 		});
 	} catch (error) {
 		console.log("Upload error", error);

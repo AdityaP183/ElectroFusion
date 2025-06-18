@@ -34,7 +34,7 @@ export const ErrorState = ({ onRetry }: { onRetry?: () => void }) => (
 						Unable to Load Featured Products
 					</h3>
 					<p className="text-muted-foreground max-w-md">
-						We're having trouble loading the featured products.
+						We&apos;re having trouble loading the featured products.
 						Please try again.
 					</p>
 					{onRetry && (

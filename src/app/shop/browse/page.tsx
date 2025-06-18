@@ -22,6 +22,7 @@ const querySchema = z.object({
 export default async function Page({ params, searchParams }: Props) {
 	const query = querySchema.safeParse(await searchParams);
 
+    console.log(query, params);
 	return (
 		<div className="w-full min-h-screen overflow-y-auto">
 			<div className="grid grid-cols-5 gap-x-10 gap-y-20">
