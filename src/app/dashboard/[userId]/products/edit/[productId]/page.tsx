@@ -1,6 +1,5 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import DateDurationPicker from "@/components/ui/date-duration-picker";
@@ -20,14 +19,13 @@ import { updateProductSchema } from "@/lib/app-schemas";
 import { useUser } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "convex/react";
-import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 import { use, useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { api } from "../../../../../../../convex/_generated/api";
-import { Id } from "../../../../../../../convex/_generated/dataModel";
+import { Doc, Id } from "../../../../../../../convex/_generated/dataModel";
 
 interface Props {
 	params:
@@ -182,7 +180,7 @@ export default function EditProduct({ params }: Props) {
 		setIsSubmitting(true);
 
 		try {
-			const updateData: any = {
+			const updateData: Partial<Doc<"products">> = {
 				name: values.name,
 				slug: values.slug,
 				description: values.description,
