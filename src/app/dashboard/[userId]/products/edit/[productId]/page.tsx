@@ -19,27 +19,16 @@ import { updateProductSchema } from "@/lib/app-schemas";
 import { useUser } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "convex/react";
-import { useRouter } from "next/navigation";
-import { use, useCallback, useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { api } from "../../../../../../../convex/_generated/api";
 import { Doc, Id } from "../../../../../../../convex/_generated/dataModel";
 
-interface Props {
-	params:
-		| {
-				productId: string;
-		  }
-		| Promise<{
-				productId: string;
-		  }>;
-}
-
-export default function EditProduct({ params }: Props) {
-	const resolvedParams = params instanceof Promise ? use(params) : params;
-	const { productId } = resolvedParams;
+export default function EditProduct() {
+	const { productId } = useParams();
 	const { user } = useUser();
 	const router = useRouter();
 

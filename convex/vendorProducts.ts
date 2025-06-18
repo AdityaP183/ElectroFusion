@@ -269,3 +269,13 @@ export const updateProduct = mutation({
 		return product;
 	},
 });
+
+export const deleteProduct = mutation({
+	args: {
+		productId: v.id("products"),
+	},
+	handler: async (ctx, { productId }) => {
+		const product = await ctx.db.delete(productId);
+		return product;
+	},
+});
