@@ -2,14 +2,7 @@ import { ChartAreaInteractive } from "@/features/dashboard/components/chart-area
 import DataTable from "@/features/dashboard/components/data-table";
 import { SectionCards } from "@/features/dashboard/components/section-cards";
 
-interface Params {
-	params: Promise<{ userId: string }>;
-}
-
-export default async function Dashboard({ params }: Params) {
-	const { userId } = await params;
-	console.log(userId);
-
+export default async function Dashboard() {
 	return (
 		<div className="flex flex-1 flex-col">
 			<div className="@container/main flex flex-1 flex-col gap-2">

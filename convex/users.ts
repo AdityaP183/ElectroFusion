@@ -55,7 +55,6 @@ export const createUser = internalMutation({
 		};
 
 		await ctx.db.insert("users", userAttributes);
-		console.log("User created successfully with role: customer");
 	},
 });
 

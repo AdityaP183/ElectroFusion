@@ -60,6 +60,20 @@ export const addProductSchema = z
 		}
 	);
 
+export const updateProductSchema = z.object({
+	name: z.string().min(1),
+	slug: z.string().min(1),
+	description: z.string().min(1),
+	originalPrice: z.string(),
+	isDiscounted: z.boolean(),
+	discountPercent: z.string().optional(),
+	discountStartDate: z.string().optional(),
+	discountEndDate: z.string().optional(),
+	stock: z.string(),
+	isActive: z.boolean(),
+	categoryIds: z.array(z.string()).min(1),
+});
+
 export const vendorApplicationFormSchema = z.object({
 	contactPhone: z
 		.string()

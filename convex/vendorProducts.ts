@@ -131,6 +131,41 @@ export const createProduct = mutation({
 	},
 });
 
+export const getProductById = query({
+	args: {
+		productId: v.id("products"),
+	},
+	handler: async (ctx, args) => {
+		const { productId } = args;
+
+		const product = await ctx.db.get(productId);
+		if (!product) return null;
+
+		const categories = await Promise.all(
+			product.categoryIds.map(async (categoryId) => {
+				const category = await ctx.db.get(categoryId);
+				if (!category) return null;
+
+				// Get parent category if exists
+				let parent = null;
+				if (category.parentId) {
+					parent = await ctx.db.get(category.parentId);
+				}
+
+				return {
+					...category,
+					parent,
+				};
+			})
+		);
+
+		return {
+			...product,
+			categories: categories.filter(Boolean),
+		};
+	},
+});
+
 export const getFilteredProducts = query({
 	args: {
 		paginationOpts: paginationOptsValidator,
@@ -197,11 +232,40 @@ export const getFilteredProducts = query({
 	},
 });
 
-export const deleteProduct = mutation({
+export const updateProduct = mutation({
 	args: {
 		productId: v.id("products"),
+		data: v.object({
+			name: v.optional(v.string()),
+			slug: v.optional(v.string()),
+			description: v.optional(v.string()),
+			originalPrice: v.optional(v.float64()),
+			isDiscounted: v.optional(v.boolean()),
+			discountPercent: v.optional(v.float64()),
+			discountStartDate: v.optional(v.string()),
+			discountEndDate: v.optional(v.string()),
+			stock: v.optional(v.number()),
+			isActive: v.optional(v.boolean()),
+			categoryIds: v.optional(v.array(v.id("categories"))),
+		}),
 	},
-	handler: async (ctx, { productId }) => {
-		return await ctx.db.delete(productId);
+	handler: async (ctx, { productId, data }) => {
+		const existingProduct = await ctx.db.get(productId);
+		if (!existingProduct) {
+			throw new Error("Product not found");
+		}
+
+		// Build update object by including only defined keys
+		const updatePayload: Partial<typeof existingProduct> = {};
+		for (const key in data) {
+			const value = data[key as keyof typeof data];
+			if (value !== undefined) {
+				(updatePayload as any)[key] = value;
+			}
+		}
+
+		const product = await ctx.db.patch(productId, updatePayload);
+
+		return product;
 	},
 });

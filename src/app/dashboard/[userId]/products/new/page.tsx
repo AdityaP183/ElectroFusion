@@ -135,7 +135,7 @@ export default function AddProduct() {
 		values: z.infer<typeof addProductSchema>
 	) => {
 		if (!productImg?.imgFile) {
-			toast.error("Please upload a shop logo.");
+			toast.error("Please upload a product image.");
 			return;
 		}
 
@@ -169,7 +169,9 @@ export default function AddProduct() {
 			const productImgUrl = await uploadImage(productImg.imgFile);
 
 			if (!productImgUrl) {
-				toast.error("Failed to upload logo. Please try again.");
+				toast.error(
+					"Failed to upload product image. Please try again."
+				);
 				return;
 			}
 
