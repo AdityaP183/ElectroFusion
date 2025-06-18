@@ -20,54 +20,69 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { profileFormSchema } from "@/lib/app-schemas";
 import { useUser } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "convex/react";
-import { Upload } from "lucide-react";
+import { useMutation, useQuery } from "convex/react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
+import { toast } from "sonner";
+import { z } from "zod";
 import { api } from "../../../../../convex/_generated/api";
-
-// Form validation schema
-const profileFormSchema = z.object({
-	firstName: z.string().min(2, {
-		message: "First name must be at least 2 characters.",
-	}),
-	lastName: z.string().min(2, {
-		message: "Last name must be at least 2 characters.",
-	}),
-	email: z.string().email({
-		message: "Please enter a valid email address.",
-	}),
-});
-
-type ProfileFormValues = z.infer<typeof profileFormSchema>;
+import { Id } from "../../../../../convex/_generated/dataModel";
 
 export default function DashboardSettings() {
+	const router = useRouter();
 	const { user, isLoaded } = useUser();
 	const dbUser = useQuery(api.users.getUser, { userId: user?.id || "" });
+	const updateUser = useMutation(api.vendor.updateProfile);
 
-	const form = useForm<ProfileFormValues>({
+	const [isSubmitting, setIsSubmitting] = useState(false);
+
+	const form = useForm<z.infer<typeof profileFormSchema>>({
 		resolver: zodResolver(profileFormSchema),
 		defaultValues: {
-			firstName: user?.firstName || "",
-			lastName: user?.lastName || "",
-			email: user?.emailAddresses[0].emailAddress || "",
+			firstName: "",
+			lastName: "",
+			email: "",
 		},
 	});
 
-	if (!isLoaded) {
-		return <div>Loading...</div>;
-	}
+	useEffect(() => {
+		if (dbUser) {
+			form.reset({
+				firstName: dbUser?.firstName || "",
+				lastName: dbUser?.lastName || "",
+				email: dbUser?.email || "",
+			});
+		}
+	}, [dbUser, form]);
 
-	if (!user) {
-		return <div>User not found</div>;
-	}
+	const { reset } = form;
 
-	function onSubmit(data: ProfileFormValues) {
-		console.log("Form submitted:", data);
-		// Handle form submission here
-		// You would typically update the user profile via API call
+	async function onSubmit(data: z.infer<typeof profileFormSchema>) {
+		setIsSubmitting(true);
+
+		try {
+			await updateUser({
+				userId: dbUser?._id as Id<"users">,
+				data: {
+					firstName: data.firstName,
+					lastName: data.lastName,
+					email: data.email,
+				},
+			});
+
+			toast.success("Profile updated successfully!");
+			reset();
+			router.push(`/dashboard/${user?.id}`);
+		} catch (error) {
+			console.error("Error:", error);
+			toast.error("Failed to create product");
+		} finally {
+			setIsSubmitting(false);
+		}
 	}
 
 	const getRoleBadgeColor = (role: string) => {
@@ -82,6 +97,14 @@ export default function DashboardSettings() {
 				return "bg-gray-500/40 border-gray-500 text-white";
 		}
 	};
+
+	if (!isLoaded) {
+		return <div>Loading...</div>;
+	}
+
+	if (!user) {
+		return <div>User not found</div>;
+	}
 
 	return (
 		<div className="w-full h-full overflow-y-auto">
@@ -112,7 +135,7 @@ export default function DashboardSettings() {
 							<div className="space-y-2">
 								<div className="flex items-center gap-2">
 									<h3 className="text-lg font-semibold">
-										{user.firstName} {user.lastName}
+										{dbUser?.firstName} {dbUser?.lastName}
 									</h3>
 									{dbUser?.role && (
 										<Badge
@@ -125,7 +148,7 @@ export default function DashboardSettings() {
 									)}
 								</div>
 								<p className="text-sm text-muted-foreground">
-									{user.emailAddresses[0].emailAddress}
+									{dbUser?.email}
 								</p>
 								<p className="text-xs text-muted-foreground">
 									User ID: {user.id}
@@ -149,32 +172,6 @@ export default function DashboardSettings() {
 								onSubmit={form.handleSubmit(onSubmit)}
 								className="space-y-6"
 							>
-								{/* Profile Picture Section */}
-								<div className="space-y-2">
-									<FormLabel>Profile Picture</FormLabel>
-									<div className="flex items-center space-x-4">
-										<Avatar className="h-16 w-16">
-											<AvatarImage
-												src={user.imageUrl}
-												alt="Profile picture"
-											/>
-										</Avatar>
-										<Button
-											type="button"
-											variant="outline"
-											size="sm"
-											className="flex items-center gap-2"
-										>
-											<Upload className="h-4 w-4" />
-											Change Picture
-										</Button>
-									</div>
-									<FormDescription>
-										Upload a new profile picture.
-										Recommended size: 400x400px.
-									</FormDescription>
-								</div>
-
 								<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 									<FormField
 										control={form.control}
@@ -239,6 +236,7 @@ export default function DashboardSettings() {
 									<Button
 										type="submit"
 										className="w-full sm:w-auto"
+										disabled={isSubmitting}
 									>
 										Save Changes
 									</Button>

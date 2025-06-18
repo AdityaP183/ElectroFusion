@@ -151,3 +151,21 @@ export const getAllVendors = query({
 		return enrichedVendors;
 	},
 });
+
+export const updateProfile = mutation({
+	args: {
+		userId: v.id("users"),
+		data: v.object({
+			firstName: v.optional(v.string()),
+			lastName: v.optional(v.string()),
+			email: v.optional(v.string()),
+		}),
+	},
+	handler: async (ctx, { userId, data }) => {
+		const user = await ctx.db.get(userId);
+		if (!user) {
+			throw new Error("User not found");
+		}
+		return await ctx.db.patch(user._id, data);
+	},
+});

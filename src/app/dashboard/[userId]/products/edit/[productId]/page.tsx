@@ -205,7 +205,7 @@ export default function EditProduct() {
 			router.push(`/dashboard/${user?.id}/products/all`);
 		} catch (error) {
 			console.error("Error:", error);
-			toast.error("Failed to create product");
+			toast.error("Failed to edit product");
 		} finally {
 			setIsSubmitting(false);
 		}
