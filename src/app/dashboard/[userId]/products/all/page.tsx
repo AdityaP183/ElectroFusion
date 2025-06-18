@@ -36,13 +36,15 @@ import {
 import { cn } from "@/lib/utils";
 import { useVendorStore } from "@/store/use-vendor";
 import { useUser } from "@clerk/nextjs";
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../../../convex/_generated/api";
 import { Doc, Id } from "../../../../../../convex/_generated/dataModel";
+import { useRouter } from "next/navigation";
 
 export default function ProductsPage() {
 	const { user } = useUser();
 	const { activeShopId } = useVendorStore();
+	const router = useRouter();
 
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] =
@@ -82,6 +84,7 @@ export default function ProductsPage() {
 			  }
 			: "skip"
 	);
+	const deleteProduct = useMutation(api.vendorProducts.deleteProduct);
 
 	const columns: ColumnDef<Doc<"products">>[] = [
 		{
@@ -168,41 +171,46 @@ export default function ProductsPage() {
 		{
 			accessorKey: "purchaseCount",
 			header: () => <div>Total Purchases</div>,
-		},
-		{
-			accessorKey: "categories",
-			header: () => <div>Categories</div>,
 			cell: ({ row }) => {
-				const categories = row.getValue("categories") as {
-					_id: string;
-					name: string;
-					slug: string;
-					parentId: string;
-					_creationTime: number;
-				}[];
-
-				if (!categories?.length) {
-					return (
-						<Badge variant="secondary" className="text-xs">
-							No Categories
-						</Badge>
-					);
-				}
-
+				const purchaseCount = row.original.purchaseCount;
 				return (
-					<div className="flex flex-wrap gap-1">
-						{categories.map((category) => (
-							<Badge
-								key={category._id}
-								variant="secondary"
-								className="text-xs"
-							>
-								{category.name}
-							</Badge>
-						))}
+					<div className="font-medium text-center">
+						{purchaseCount || 0}
 					</div>
 				);
 			},
+		},
+		{
+			accessorKey: "actions",
+			header: () => <div>Actions</div>,
+			cell: ({ row }) => {
+				const productId = row.original._id;
+
+				return (
+					<div className="flex gap-2">
+						<Button
+							size="sm"
+							onClick={() => {
+								router.push(
+									`/dashboard/${user?.id}/products/edit/${productId}`
+								);
+							}}
+							className="bg-emerald-500/40 border-emerald-500 text-white hover:bg-emerald-500/60"
+						>
+							Edit
+						</Button>
+						<Button
+							size="sm"
+							className="bg-rose-500/40 text-white hover:bg-rose-500/60"
+							onClick={() => deleteProduct({ productId })}
+						>
+							Delete
+						</Button>
+					</div>
+				);
+			},
+			enableSorting: false,
+			enableHiding: false,
 		},
 	];
 

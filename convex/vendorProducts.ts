@@ -196,3 +196,12 @@ export const getFilteredProducts = query({
 		}
 	},
 });
+
+export const deleteProduct = mutation({
+	args: {
+		productId: v.id("products"),
+	},
+	handler: async (ctx, { productId }) => {
+		return await ctx.db.delete(productId);
+	},
+});
