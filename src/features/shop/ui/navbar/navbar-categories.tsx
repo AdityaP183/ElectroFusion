@@ -1,10 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
-import { Pill } from "@/components/ui/pill";
 import { CategoryWithChildren } from "@/lib/app-types";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 export default function NavbarCategories({
 	categories,
@@ -23,14 +22,6 @@ export default function NavbarCategories({
 		<div className="w-[400px] md:w-[500px] lg:w-[700px] p-4">
 			<div className="flex items-center justify-between mb-2">
 				<h2 className="font-semibold text-lg">All Categories</h2>
-				<Pill>
-					<Link
-						href="/shop/category/all"
-						className="text-xs text-primary hover:text-primary/80 hover:underline"
-					>
-						View All
-					</Link>
-				</Pill>
 			</div>
 			<Separator className="mb-4" />
 

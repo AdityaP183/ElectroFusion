@@ -1,11 +1,14 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { Heart, Plus } from "lucide-react";
+import { Heart, Plus, Trash2 } from "lucide-react";
 import Image from "next/image";
-import React, { useState } from "react";
-import { Doc } from "../../../convex/_generated/dataModel";
+import React, { useEffect, useState } from "react";
+import { Doc, Id } from "../../../convex/_generated/dataModel";
 import { cn } from "@/lib/utils";
+import { useMutation } from "convex/react";
+import { api } from "../../../convex/_generated/api";
+import { toast } from "sonner";
 
 type Product = {
 	_id: string;
@@ -21,6 +24,7 @@ type Product = {
 	image: string;
 	isActive: boolean;
 	isFeatured: boolean;
+	isWishlisted?: boolean;
 	viewCount?: number;
 	purchaseCount?: number;
 	shopId: string;
@@ -36,9 +40,14 @@ type Product = {
 type ProductCardProps = {
 	product: Product;
 	className?: string;
+	showWishlist?: boolean;
 };
 
-const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
+const ProductCard: React.FC<ProductCardProps> = ({
+	product,
+	className,
+	showWishlist = true,
+}) => {
 	const [isWishlisted, setIsWishlisted] = useState(false);
 
 	const primaryImage = product.image;
@@ -50,7 +59,40 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
 		? discountedPrice
 		: product.originalPrice;
 
-	const handleWishlistToggle = () => setIsWishlisted(!isWishlisted);
+	const addToWishlist = useMutation(api.wishlist.addToWishlist);
+	const removeFromWishlist = useMutation(api.wishlist.removeFromWishlist);
+
+	const handleWishlistToggle = async () => {
+		if (!isWishlisted) {
+			setIsWishlisted(true); // optimistic update
+			try {
+				await addToWishlist({
+					productId: product._id as Id<"products">,
+				});
+				toast.success("Product added to wishlist");
+			} catch (err) {
+				console.error("Failed to add to wishlist", err);
+				setIsWishlisted(false);
+			}
+		} else {
+			setIsWishlisted(false);
+			try {
+				await removeFromWishlist({
+					productId: product._id as Id<"products">,
+				});
+				toast.success("Product removed from wishlist");
+			} catch (err) {
+				console.error("Failed to remove from wishlist", err);
+				setIsWishlisted(true);
+			}
+		}
+	};
+
+	useEffect(() => {
+		if (product && product.isWishlisted) {
+			setIsWishlisted(true);
+		}
+	}, [product]);
 
 	return (
 		<div
@@ -122,22 +164,33 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
 
 				{/* Actions */}
 				<div className="flex gap-3 pt-1">
-					<button
-						onClick={handleWishlistToggle}
-						className={`w-10 h-10 rounded-xl border-2 flex items-center justify-center transition-all duration-200 ${
-							isWishlisted
-								? "border-red-500 bg-red-500/10"
-								: "border-gray-600 hover:border-gray-500"
-						}`}
-					>
-						<Heart
-							className={`w-5 h-5 transition-colors ${
+					{showWishlist && (
+						<button
+							onClick={handleWishlistToggle}
+							className={`w-10 h-10 rounded-xl border-2 flex items-center justify-center transition-all duration-200 ${
 								isWishlisted
-									? "fill-red-500 text-red-500"
-									: "text-gray-400 hover:text-white"
+									? "border-red-500 bg-red-500/10"
+									: "border-gray-600 hover:border-gray-500"
 							}`}
-						/>
-					</button>
+						>
+							<Heart
+								className={`w-5 h-5 transition-colors ${
+									isWishlisted
+										? "fill-red-500 text-red-500"
+										: "text-gray-400 hover:text-white"
+								}`}
+							/>
+						</button>
+					)}
+
+					{showWishlist === false && (
+						<button
+							onClick={handleWishlistToggle}
+							className="w-10 h-10 rounded-xl border-2 flex items-center justify-center transition-all duration-200 border-red-500 bg-rose-500/40"
+						>
+							<Trash2 className="w-5 h-5 text-white" />
+						</button>
+					)}
 
 					<button
 						disabled={product.stock === 0}

@@ -18,14 +18,7 @@ import {
 import { Pill } from "@/components/ui/pill";
 import { useClerk, useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
-import {
-	Headphones,
-	LogOut,
-	Package,
-	ShoppingCart,
-	Tags,
-	User,
-} from "lucide-react";
+import { Cog, LogOut, Package, ShoppingCart, Tags } from "lucide-react";
 import Link from "next/link";
 import { api } from "../../../../../convex/_generated/api";
 
@@ -98,15 +91,22 @@ function UserButton({ children }: { children: React.ReactNode }) {
 						<ShoppingCart /> Cart
 					</DropdownMenuItem>
 					<DropdownMenuItem>
-						<Tags /> Wishlist
+						<Link
+							href={"/shop/wishlists"}
+							className="flex items-center gap-2"
+						>
+							<Tags /> Wishlist
+						</Link>
 					</DropdownMenuItem>
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
 				<DropdownMenuItem>
-					<User /> Profile
-				</DropdownMenuItem>
-				<DropdownMenuItem>
-					<Headphones /> Help Center
+					<Link
+						href={"/shop/settings"}
+						className="flex items-center gap-2"
+					>
+						<Cog /> Settings
+					</Link>
 				</DropdownMenuItem>
 				<DropdownMenuSeparator />
 				<DropdownMenuItem onClick={() => signOut()}>

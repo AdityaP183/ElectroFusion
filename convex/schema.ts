@@ -81,6 +81,7 @@ export default defineSchema({
 		purchaseCount: v.optional(v.number()),
 
 		// Organization
+		isWishlisted: v.optional(v.boolean()),
 		shopId: v.id("vendorShops"),
 		categoryIds: v.array(v.id("categories")),
 	})
@@ -89,4 +90,9 @@ export default defineSchema({
 		.index("by_isActive", ["isActive"])
 		.index("by_isFeatured", ["isFeatured"])
 		.index("by_categoryIds", ["categoryIds"]),
+
+	wishlists: defineTable({
+		userId: v.id("users"),
+		products: v.array(v.id("products")),
+	}).index("by_userId", ["userId"]),
 });

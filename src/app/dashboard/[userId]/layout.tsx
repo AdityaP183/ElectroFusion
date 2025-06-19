@@ -1,6 +1,5 @@
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import AppSidebar from "@/features/dashboard/components/sidebar/appsidebar";
-import AppSidebarContentHeader from "@/features/dashboard/components/sidebar/appsidebar-content-header";
 
 export default async function DashboardLayout({
 	children,
@@ -17,8 +16,7 @@ export default async function DashboardLayout({
 			}
 		>
 			<AppSidebar />
-			<SidebarInset className="h-screen overflow-y-auto">
-				<AppSidebarContentHeader />
+			<SidebarInset className="h-screen overflow-y-auto py-1">
 				{children}
 			</SidebarInset>
 		</SidebarProvider>

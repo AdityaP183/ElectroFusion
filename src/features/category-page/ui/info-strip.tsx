@@ -68,7 +68,7 @@ function ShowBreadCrumb({
 			<BreadcrumbList>
 				{/* Deafult Home */}
 				<BreadcrumbItem>
-					<BreadcrumbLink href="/">
+					<BreadcrumbLink href="/shop">
 						<Badge
 							variant="outline"
 							className="text-muted-foreground hover:text-foreground rounded-full"
