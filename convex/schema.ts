@@ -82,6 +82,7 @@ export default defineSchema({
 
 		// Organization
 		isWishlisted: v.optional(v.boolean()),
+		isInCart: v.optional(v.boolean()),
 		shopId: v.id("vendorShops"),
 		categoryIds: v.array(v.id("categories")),
 	})
@@ -95,4 +96,63 @@ export default defineSchema({
 		userId: v.id("users"),
 		products: v.array(v.id("products")),
 	}).index("by_userId", ["userId"]),
+
+	cart: defineTable({
+		userId: v.id("users"),
+		items: v.array(
+			v.object({
+				productId: v.id("products"),
+				quantity: v.number(),
+			})
+		),
+	}).index("by_userId", ["userId"]),
+
+	productReviews: defineTable({
+		productId: v.id("products"),
+		userId: v.id("users"),
+		rating: v.float64(),
+		comment: v.string(),
+	}),
+
+	order: defineTable({
+		userId: v.id("users"),
+		items: v.array(
+			v.object({
+				productId: v.id("products"),
+				quantity: v.number(),
+				price: v.float64(),
+				totalPrice: v.float64(),
+			})
+		),
+		orderStatus: v.string(),
+	}).index("by_userId", ["userId"]),
+
+	vendorSales: defineTable({
+		vendorId: v.id("vendors"),
+		orderId: v.optional(v.id("order")),
+		vendorEarning: v.float64(),
+		items: v.array(
+			v.object({
+				productId: v.id("products"),
+				quantity: v.number(),
+				price: v.float64(),
+				totalPrice: v.float64(),
+			})
+		),
+	}),
+
+	adminSales: defineTable({
+		orderId: v.optional(v.id("order")),
+		vendorId: v.optional(v.id("vendors")),
+		createdAt: v.number(),
+		totalAmount: v.float64(),
+		items: v.array(
+			v.object({
+				productId: v.id("products"),
+				quantity: v.number(),
+				price: v.float64(),
+				totalPrice: v.float64(),
+			})
+		),
+	}),
 });

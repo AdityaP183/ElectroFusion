@@ -11,6 +11,7 @@ import {
 	useReactTable,
 	VisibilityState,
 } from "@tanstack/react-table";
+import { useQuery } from "convex/react";
 import { Filter } from "lucide-react";
 import * as React from "react";
 
@@ -21,7 +22,6 @@ import {
 	DropdownMenuContent,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import {
 	Table,
 	TableBody,
@@ -30,94 +30,18 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { columns } from "@/features/dashboard/components/data-table";
+import { useVendorStore } from "@/store/use-vendor";
+import { api } from "../../../../../convex/_generated/api";
+import { Id } from "../../../../../convex/_generated/dataModel";
 import { allOrdersColumn, Order } from "./columns";
 
-// Temporary orders data
-const allOrders = [
-	{
-		id: "ORD-001",
-		customerName: "John Doe",
-		purchasedPrice: 125.99,
-		orderStatus: "delivered",
-		orderedOn: "2024-01-15",
-		deliveryOn: "2024-01-20",
-	},
-	{
-		id: "ORD-002",
-		customerName: "Jane Smith",
-		purchasedPrice: 89.5,
-		orderStatus: "pending",
-		orderedOn: "2024-01-18",
-		deliveryOn: "2024-01-25",
-	},
-	{
-		id: "ORD-003",
-		customerName: "Mike Johnson",
-		purchasedPrice: 234.75,
-		orderStatus: "shipped",
-		orderedOn: "2024-01-12",
-		deliveryOn: "2024-01-22",
-	},
-	{
-		id: "ORD-004",
-		customerName: "Sarah Wilson",
-		purchasedPrice: 67.25,
-		orderStatus: "cancelled",
-		orderedOn: "2024-01-16",
-		deliveryOn: null,
-	},
-	{
-		id: "ORD-005",
-		customerName: "David Brown",
-		purchasedPrice: 156.8,
-		orderStatus: "processing",
-		orderedOn: "2024-01-19",
-		deliveryOn: "2024-01-26",
-	},
-	{
-		id: "ORD-006",
-		customerName: "Emily Davis",
-		purchasedPrice: 98.4,
-		orderStatus: "delivered",
-		orderedOn: "2024-01-10",
-		deliveryOn: "2024-01-17",
-	},
-	{
-		id: "ORD-007",
-		customerName: "Robert Martinez",
-		purchasedPrice: 312.6,
-		orderStatus: "shipped",
-		orderedOn: "2024-01-20",
-		deliveryOn: "2024-01-27",
-	},
-	{
-		id: "ORD-008",
-		customerName: "Lisa Anderson",
-		purchasedPrice: 45.99,
-		orderStatus: "pending",
-		orderedOn: "2024-01-21",
-		deliveryOn: "2024-01-28",
-	},
-	{
-		id: "ORD-009",
-		customerName: "Chris Taylor",
-		purchasedPrice: 189.25,
-		orderStatus: "processing",
-		orderedOn: "2024-01-17",
-		deliveryOn: "2024-01-24",
-	},
-	{
-		id: "ORD-010",
-		customerName: "Amanda White",
-		purchasedPrice: 78.9,
-		orderStatus: "delivered",
-		orderedOn: "2024-01-14",
-		deliveryOn: "2024-01-21",
-	},
-];
-
 export default function OrdersPage() {
+	const { activeShopId } = useVendorStore();
+
+	const orders = useQuery(api.order.getVendorOrders, {
+		shopId: activeShopId as Id<"vendorShops">,
+	});
+
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] =
 		React.useState<ColumnFiltersState>([]);
@@ -125,8 +49,25 @@ export default function OrdersPage() {
 		React.useState<VisibilityState>({});
 	const [rowSelection, setRowSelection] = React.useState({});
 
+	const transformedOrders: Order[] = (orders ?? []).map((order) => ({
+		id: order._id,
+		customerId: order.userId,
+		items: order.items,
+		purchasedPrice: order.items.reduce(
+			(acc, item) => acc + item.totalPrice,
+			0
+		),
+		orderStatus: order.orderStatus as Order["orderStatus"],
+		orderedOn: new Date(order._creationTime).toLocaleDateString("en-US", {
+			month: "short",
+			day: "numeric",
+			year: "numeric",
+		}),
+		deliveryOn: null,
+	}));
+
 	const table = useReactTable<Order>({
-		data: allOrders,
+		data: transformedOrders,
 		columns: allOrdersColumn,
 		onSortingChange: setSorting,
 		onColumnFiltersChange: setColumnFilters,
@@ -152,20 +93,6 @@ export default function OrdersPage() {
 
 			<div className="w-full px-5">
 				<div className="flex items-center py-4">
-					<Input
-						placeholder="Filter orders..."
-						value={
-							(table
-								.getColumn("customerName")
-								?.getFilterValue() as string) ?? ""
-						}
-						onChange={(event) =>
-							table
-								.getColumn("customerName")
-								?.setFilterValue(event.target.value)
-						}
-						className="max-w-sm"
-					/>
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
 							<Button variant="outline" className="ml-auto">
@@ -176,32 +103,18 @@ export default function OrdersPage() {
 							{table
 								.getAllColumns()
 								.filter((column) => column.getCanHide())
-								.map((column) => {
-									return (
-										<DropdownMenuCheckboxItem
-											key={column.id}
-											className="capitalize"
-											checked={column.getIsVisible()}
-											onCheckedChange={(value) =>
-												column.toggleVisibility(!!value)
-											}
-										>
-											{column.id === "id"
-												? "Order ID"
-												: column.id === "customerName"
-												? "Customer Name"
-												: column.id === "purchasedPrice"
-												? "Purchased Price"
-												: column.id === "orderStatus"
-												? "Order Status"
-												: column.id === "orderedOn"
-												? "Ordered On"
-												: column.id === "deliveryOn"
-												? "Delivery On"
-												: column.id}
-										</DropdownMenuCheckboxItem>
-									);
-								})}
+								.map((column) => (
+									<DropdownMenuCheckboxItem
+										key={column.id}
+										className="capitalize"
+										checked={column.getIsVisible()}
+										onCheckedChange={(value) =>
+											column.toggleVisibility(!!value)
+										}
+									>
+										{column.id}
+									</DropdownMenuCheckboxItem>
+								))}
 						</DropdownMenuContent>
 					</DropdownMenu>
 				</div>
@@ -210,20 +123,17 @@ export default function OrdersPage() {
 						<TableHeader>
 							{table.getHeaderGroups().map((headerGroup) => (
 								<TableRow key={headerGroup.id}>
-									{headerGroup.headers.map((header) => {
-										return (
-											<TableHead key={header.id}>
-												{header.isPlaceholder
-													? null
-													: flexRender(
-															header.column
-																.columnDef
-																.header,
-															header.getContext()
-													  )}
-											</TableHead>
-										);
-									})}
+									{headerGroup.headers.map((header) => (
+										<TableHead key={header.id}>
+											{header.isPlaceholder
+												? null
+												: flexRender(
+														header.column.columnDef
+															.header,
+														header.getContext()
+												  )}
+										</TableHead>
+									))}
 								</TableRow>
 							))}
 						</TableHeader>
@@ -249,7 +159,7 @@ export default function OrdersPage() {
 							) : (
 								<TableRow>
 									<TableCell
-										colSpan={columns.length}
+										colSpan={allOrdersColumn.length}
 										className="h-24 text-center"
 									>
 										No results.

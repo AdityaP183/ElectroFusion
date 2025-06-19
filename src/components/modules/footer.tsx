@@ -1,19 +1,10 @@
 "use client";
 
-import {
-    ArrowUpCircle,
-    Mail,
-    MapPin,
-    Phone,
-} from "lucide-react";
+import { Mail, MapPin, Phone } from "lucide-react";
 import { Icons } from "../ui/icons";
 import Logo from "./logo";
 
 export default function Footer() {
-	const scrollToTop = () => {
-		window.scrollTo({ top: 0, behavior: "smooth" });
-	};
-
 	return (
 		<footer className="bg-black text-white mt-20 border border-border">
 			{/* Main footer container */}
@@ -30,37 +21,12 @@ export default function Footer() {
 							{/* Social media icons */}
 							<a
 								href="https://github.com/AdityaP183/ElectroFusion"
-                                target="_blank"
+								target="_blank"
 								className="text-gray-400 hover:text-white transition-transform duration-300 transform hover:scale-110"
 							>
 								<Icons.gitHub />
 							</a>
 						</div>
-					</div>
-
-					{/* Shop Links */}
-					<div>
-						<h3 className="text-lg font-semibold mb-4 border-b border-gray-800 pb-2">
-							Shop
-						</h3>
-						<ul className="space-y-2 text-sm">
-							{[
-								"Smartphones",
-								"Laptops",
-								"Audio",
-								"Wearables",
-								"Accessories",
-							].map((item) => (
-								<li key={item}>
-									<a
-										href="#"
-										className="text-gray-400 hover:text-white hover:pl-1 transition-all duration-300"
-									>
-										{item}
-									</a>
-								</li>
-							))}
-						</ul>
 					</div>
 
 					{/* Info Links */}
@@ -111,20 +77,6 @@ export default function Footer() {
 							</div>
 						</div>
 					</div>
-				</div>
-
-				{/* Back to top */}
-				<div className="flex justify-end mt-10">
-					<button
-						onClick={scrollToTop}
-						className="p-2 bg-gray-900 rounded-full hover:bg-gray-800 transform hover:scale-110 transition duration-300 group"
-						aria-label="Back to top"
-					>
-						<ArrowUpCircle
-							className="text-gray-400 group-hover:text-white transition-colors duration-300"
-							size={24}
-						/>
-					</button>
 				</div>
 			</div>
 

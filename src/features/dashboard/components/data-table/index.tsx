@@ -1,7 +1,6 @@
 "use client";
 
 import {
-	ColumnDef,
 	ColumnFiltersState,
 	flexRender,
 	getCoreRowModel,
@@ -12,19 +11,10 @@ import {
 	useReactTable,
 	VisibilityState,
 } from "@tanstack/react-table";
-import { Filter } from "lucide-react";
+import { useQuery } from "convex/react";
 import * as React from "react";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-	DropdownMenu,
-	DropdownMenuCheckboxItem,
-	DropdownMenuContent,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import {
 	Table,
 	TableBody,
@@ -33,133 +23,18 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { allProducts } from "@/lib/app-data";
-import { cn } from "@/lib/utils";
-
-export const columns: ColumnDef<(typeof allProducts)[0]>[] = [
-	{
-		id: "select",
-		header: ({ table }) => (
-			<Checkbox
-				checked={
-					table.getIsAllPageRowsSelected() ||
-					(table.getIsSomePageRowsSelected() && "indeterminate")
-				}
-				onCheckedChange={(value) =>
-					table.toggleAllPageRowsSelected(!!value)
-				}
-				aria-label="Select all"
-			/>
-		),
-		cell: ({ row }) => (
-			<Checkbox
-				checked={row.getIsSelected()}
-				onCheckedChange={(value) => row.toggleSelected(!!value)}
-				aria-label="Select row"
-			/>
-		),
-		enableSorting: false,
-		enableHiding: false,
-	},
-	{
-		accessorKey: "name",
-		header: "Name",
-		cell: ({ row }) => (
-			<div className="capitalize">{row.getValue("name")}</div>
-		),
-	},
-	{
-		accessorKey: "originalPrice",
-		header: () => <div>Original Price</div>,
-		cell: ({ row }) => {
-			const amount = parseFloat(row.getValue("originalPrice"));
-
-			// Format the amount as a dollar amount
-			const formatted = new Intl.NumberFormat("en-US", {
-				style: "currency",
-				currency: "USD",
-			}).format(amount);
-
-			return <div className="font-medium">{formatted}</div>;
-		},
-	},
-	{
-		accessorKey: "isDiscounted",
-		header: () => <div>Is Discounted</div>,
-		cell: ({ row }) => {
-			const isDiscounted = row.getValue("isDiscounted");
-			return (
-				<Badge variant={isDiscounted ? "default" : "secondary"}>
-					{isDiscounted ? "Yes" : "No"}
-				</Badge>
-			);
-		},
-	},
-	{
-		accessorKey: "isActive",
-		header: () => <div>Is Active</div>,
-		cell: ({ row }) => {
-			const isActive = row.getValue("isActive");
-			return (
-				<Badge
-					className={cn(
-						"font-semibold text-white",
-						isActive
-							? "bg-green-500/40 border-green-500"
-							: "bg-red-500/40 border-red-500"
-					)}
-				>
-					{isActive ? "Active" : "Not Active"}
-				</Badge>
-			);
-		},
-	},
-	{
-		accessorKey: "stock",
-		header: () => <div>Stock</div>,
-	},
-	{
-		accessorKey: "purchaseCount",
-		header: () => <div>Total Purchases</div>,
-	},
-	{
-		accessorKey: "categories",
-		header: () => <div>Categories</div>,
-		cell: ({ row }) => {
-			const categories = row.getValue("categories") as {
-				_id: string;
-				name: string;
-				slug: string;
-				parentId: string;
-				_creationTime: number;
-			}[];
-
-			if (!categories?.length) {
-				return (
-					<Badge variant="secondary" className="text-xs">
-						No Categories
-					</Badge>
-				);
-			}
-
-			return (
-				<div className="flex flex-wrap gap-1">
-					{categories.map((category) => (
-						<Badge
-							key={category._id}
-							variant="secondary"
-							className="text-xs"
-						>
-							{category.name}
-						</Badge>
-					))}
-				</div>
-			);
-		},
-	},
-];
+import { useVendorStore } from "@/store/use-vendor";
+import { api } from "../../../../../convex/_generated/api";
+import { Id } from "../../../../../convex/_generated/dataModel";
+import { allOrdersColumn, Order } from "./columns";
 
 export default function DataTable() {
+	const { activeShopId } = useVendorStore();
+
+	const orders = useQuery(api.order.getVendorOrders, {
+		shopId: activeShopId as Id<"vendorShops">,
+	});
+
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] =
 		React.useState<ColumnFiltersState>([]);
@@ -167,9 +42,31 @@ export default function DataTable() {
 		React.useState<VisibilityState>({});
 	const [rowSelection, setRowSelection] = React.useState({});
 
-	const table = useReactTable<(typeof allProducts)[0]>({
-		data: allProducts,
-		columns,
+	const transformedOrders: Order[] = (orders ?? [])
+		.slice(0, 5)
+		.map((order) => ({
+			id: order._id,
+			customerId: order.userId,
+			items: order.items,
+			purchasedPrice: order.items.reduce(
+				(acc, item) => acc + item.totalPrice,
+				0
+			),
+			orderStatus: order.orderStatus as Order["orderStatus"],
+			orderedOn: new Date(order._creationTime).toLocaleDateString(
+				"en-US",
+				{
+					month: "short",
+					day: "numeric",
+					year: "numeric",
+				}
+			),
+			deliveryOn: null,
+		}));
+
+	const table = useReactTable<Order>({
+		data: transformedOrders,
+		columns: allOrdersColumn,
 		onSortingChange: setSorting,
 		onColumnFiltersChange: setColumnFilters,
 		getCoreRowModel: getCoreRowModel(),
@@ -189,57 +86,22 @@ export default function DataTable() {
 	return (
 		<div className="w-full h-full overflow-y-auto">
 			<div className="w-full px-5">
-				<div className="flex items-center py-4">
-					<Input
-						placeholder="Filter products..."
-						className="max-w-sm"
-					/>
-					<DropdownMenu>
-						<DropdownMenuTrigger asChild>
-							<Button variant="outline" className="ml-auto">
-								Filters <Filter />
-							</Button>
-						</DropdownMenuTrigger>
-						<DropdownMenuContent align="end">
-							{table
-								.getAllColumns()
-								.filter((column) => column.getCanHide())
-								.map((column) => {
-									return (
-										<DropdownMenuCheckboxItem
-											key={column.id}
-											className="capitalize"
-											checked={column.getIsVisible()}
-											onCheckedChange={(value) =>
-												column.toggleVisibility(!!value)
-											}
-										>
-											{column.id}
-										</DropdownMenuCheckboxItem>
-									);
-								})}
-						</DropdownMenuContent>
-					</DropdownMenu>
-				</div>
 				<div className="rounded-md border">
 					<Table>
 						<TableHeader>
 							{table.getHeaderGroups().map((headerGroup) => (
 								<TableRow key={headerGroup.id}>
-									{headerGroup.headers.map((header) => {
-										return (
-											<TableHead key={header.id}>
-												{header.isPlaceholder
-													? null
-													: flexRender(
-															header.column
-																.columnDef
-																.header,
-															header.getContext()
-													  )}
-											</TableHead>
-										);
-									})}
+									{headerGroup.headers.map((header) => (
+										<TableHead key={header.id}>
+											{header.isPlaceholder
+												? null
+												: flexRender(
+														header.column.columnDef
+															.header,
+														header.getContext()
+												  )}
+										</TableHead>
+									))}
 								</TableRow>
 							))}
 						</TableHeader>
@@ -265,7 +127,7 @@ export default function DataTable() {
 							) : (
 								<TableRow>
 									<TableCell
-										colSpan={columns.length}
+										colSpan={allOrdersColumn.length}
 										className="h-24 text-center"
 									>
 										No results.

@@ -15,7 +15,6 @@ import {
 	NavigationMenuItem,
 	NavigationMenuList,
 } from "@/components/ui/navigation-menu";
-import { Pill } from "@/components/ui/pill";
 import { useClerk, useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { Cog, LogOut, Package, ShoppingCart, Tags } from "lucide-react";
@@ -34,11 +33,6 @@ export default function NavbarUserSection({
 
 	return (
 		<NavigationMenuList className="flex items-center gap-5 mr-3">
-			<NavigationMenuItem>
-				<Pill className="py-2">
-					<ShoppingCart className="size-6 stroke-3" />0
-				</Pill>
-			</NavigationMenuItem>
 			{isLoaded &&
 				isSignedIn &&
 				dbUser &&
@@ -85,10 +79,20 @@ function UserButton({ children }: { children: React.ReactNode }) {
 			<DropdownMenuContent className="w-60 glass p-1.5 bg-popover/60">
 				<DropdownMenuGroup className="grid grid-cols-2 gap-2 *:bg-accent mb-2 *:cursor-pointer">
 					<DropdownMenuItem>
-						<Package /> Orders
+						<Link
+							href={"/shop/orders"}
+							className="flex items-center gap-2"
+						>
+							<Package /> Orders
+						</Link>
 					</DropdownMenuItem>
 					<DropdownMenuItem>
-						<ShoppingCart /> Cart
+						<Link
+							href={"/shop/cart"}
+							className="flex items-center gap-2"
+						>
+							<ShoppingCart /> Cart
+						</Link>
 					</DropdownMenuItem>
 					<DropdownMenuItem>
 						<Link

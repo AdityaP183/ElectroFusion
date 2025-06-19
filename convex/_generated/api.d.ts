@@ -13,9 +13,13 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as cart from "../cart.js";
 import type * as categories from "../categories.js";
+import type * as dashboard from "../dashboard.js";
 import type * as http from "../http.js";
+import type * as order from "../order.js";
 import type * as products from "../products.js";
+import type * as review from "../review.js";
 import type * as users from "../users.js";
 import type * as vendor from "../vendor.js";
 import type * as vendorApplication from "../vendorApplication.js";
@@ -31,9 +35,13 @@ import type * as wishlist from "../wishlist.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  cart: typeof cart;
   categories: typeof categories;
+  dashboard: typeof dashboard;
   http: typeof http;
+  order: typeof order;
   products: typeof products;
+  review: typeof review;
   users: typeof users;
   vendor: typeof vendor;
   vendorApplication: typeof vendorApplication;

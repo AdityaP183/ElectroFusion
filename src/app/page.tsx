@@ -1,615 +1,190 @@
 "use client";
 
+import Footer from "@/components/modules/footer";
+import { BentoCard } from "@/components/ui/bento-grid";
+import { Marquee, MarqueeCard } from "@/components/ui/marquee";
 import Navbar from "@/features/shop/ui/navbar";
+import { reviewsData } from "@/lib/app-data";
+import { CreditCard, Palette, ShoppingBasket, Truck } from "lucide-react";
+import { useMemo } from "react";
 
-import { Button } from "@/components/ui/button";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
-import Hero from "@/features/landing-page/ui/hero-section";
-import { Check, ChevronRight, Clock, Code, Laptop, Zap } from "lucide-react";
-import { motion } from "motion/react";
 import Image from "next/image";
-import Link from "next/link";
-export default function Page() {
-	// const headerRef = useRef<HTMLElement>(null);
-	// const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-	// const scrollToSection = (id: string) => {
-	// 	setMobileMenuOpen(false);
-	// 	const element = document.getElementById(id);
-	// 	if (element) {
-	// 		element.scrollIntoView({ behavior: "smooth" });
-	// 	}
-	// };
+const features = [
+	{
+		Icon: Palette,
+		name: "Modern, Intuitive Design",
+		description:
+			"Navigate effortlessly with a sleek and user-friendly interface, designed for a seamless shopping experience.",
+		background: (
+			<div className="relative aspect-video w-full h-full">
+				<Image
+					src="/assets/landing/modern_ui.svg"
+					alt="Modern UI"
+					fill
+					className="transition-all duration-300 group-hover:scale-110 opacity-60 object-cover"
+				/>
+			</div>
+		),
+		className: "col-start-1 col-end-2 row-start-1 row-end-3",
+	},
+	{
+		Icon: Truck,
+		name: "Seamless Order Tracking",
+		description:
+			"Stay updated on your purchases with real-time order tracking and delivery updates.",
+		background: (
+			<div className="relative aspect-video w-full h-full">
+				<Image
+					src="/assets/landing/track_order.svg"
+					alt="Track Order"
+					fill
+					className="transition-all duration-300 group-hover:scale-110 opacity-60 object-cover"
+				/>
+			</div>
+		),
+		className: "col-start-2 col-end-3 row-start-1 row-end-2",
+	},
+	{
+		Icon: CreditCard,
+		name: "Secure & Easy Payments",
+		description:
+			"Enjoy hassle-free transactions with multiple secure payment options tailored to your needs.",
+		background: (
+			<div className="relative aspect-video w-full h-full">
+				<Image
+					src="/assets/landing/payment.svg"
+					alt="Payment"
+					fill
+					className="transition-all duration-300 group-hover:scale-110 opacity-60 object-cover"
+				/>
+			</div>
+		),
+		className: "col-start-3 col-end-4 row-start-1 row-end-2",
+	},
+	{
+		Icon: ShoppingBasket,
+		name: "Personalized Shopping Experience",
+		description:
+			"Browse a wide range of electronics tailored to your preferences with a seamless shopping experience.",
+		background: (
+			<div className="relative aspect-video w-full h-full">
+				<Image
+					src="/assets/landing/shopping.svg"
+					alt="Shopping"
+					fill
+					className="transition-all duration-300 scale-90 group-hover:scale-110 opacity-60 object-cover"
+				/>
+			</div>
+		),
+		className: "col-start-2 col-end-4 row-start-2 row-end-3",
+	},
+];
 
-	const fadeInUp = {
-		hidden: { opacity: 0, y: 60 },
-		visible: {
-			opacity: 1,
-			y: 0,
-			transition: {
-				duration: 0.6,
-				ease: [0.22, 1, 0.36, 1],
-			},
-		},
-	};
+export default function Landing() {
+	const marqueeFirstRow = useMemo(() => reviewsData.slice(0, 10), []);
+	const marqueeSecondRow = useMemo(() => reviewsData.slice(10, 20), []);
 
-	const staggerContainer = {
-		hidden: { opacity: 0 },
-		visible: {
-			opacity: 1,
-			transition: {
-				staggerChildren: 0.2,
-			},
-		},
-	};
 	return (
-		<div className="flex min-h-[100dvh] flex-col">
-			{/* Header */}
+		<div>
 			<Navbar />
 
-			<main className="flex-1">
-				{/* Hero Section */}
-				<Hero />
-
-				{/* Features Section */}
-				<section
-					id="features"
-					className="w-full py-12 md:py-24 lg:py-32 bg-muted overflow-hidden"
-				>
-					<div className="container px-4 md:px-6">
-						<motion.div
-							className="flex flex-col items-center justify-center space-y-4 text-center"
-							initial="hidden"
-							whileInView="visible"
-							viewport={{ once: true, margin: "-100px" }}
-							variants={fadeInUp}
-						>
-							<div className="space-y-2">
-								<div className="inline-block rounded-lg bg-primary px-3 py-1 text-sm text-primary-foreground">
-									Features
-								</div>
-								<h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
-									Everything you need to boost productivity
-								</h2>
-								<p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-									StreamLine combines powerful features with
-									an intuitive interface to help your team
-									work smarter, not harder.
-								</p>
+			{/* Hero Section */}
+			<div className="flex flex-col items-center justify-center gap-6 my-20 h-fit">
+				<div className="flex items-center gap-3">
+					<div className="flex-[2] space-y-3">
+						<div className="text-7xl">
+							<div className="p-1 font-extrabold rounded-md bg-primary text-primary-foreground w-fit font-ox">
+								Redefining
 							</div>
-						</motion.div>
-						<motion.div
-							className="mx-auto grid max-w-5xl items-center gap-6 py-12 md:grid-cols-2 lg:grid-cols-3"
-							variants={staggerContainer}
-							initial="hidden"
-							whileInView="visible"
-							viewport={{ once: true, margin: "-100px" }}
-						>
-							<motion.div variants={fadeInUp}>
-								<Card className="h-full transition-all duration-300 hover:shadow-lg">
-									<CardHeader>
-										<Clock className="h-10 w-10 text-primary mb-2" />
-										<CardTitle>Time Tracking</CardTitle>
-										<CardDescription>
-											Effortlessly track time spent on
-											tasks and projects to improve
-											productivity and billing accuracy.
-										</CardDescription>
-									</CardHeader>
-								</Card>
-							</motion.div>
-							<motion.div variants={fadeInUp}>
-								<Card className="h-full transition-all duration-300 hover:shadow-lg">
-									<CardHeader>
-										<Laptop className="h-10 w-10 text-primary mb-2" />
-										<CardTitle>
-											Project Management
-										</CardTitle>
-										<CardDescription>
-											Organize tasks, set deadlines, and
-											monitor progress with our intuitive
-											project management tools.
-										</CardDescription>
-									</CardHeader>
-								</Card>
-							</motion.div>
-							<motion.div variants={fadeInUp}>
-								<Card className="h-full transition-all duration-300 hover:shadow-lg">
-									<CardHeader>
-										<Code className="h-10 w-10 text-primary mb-2" />
-										<CardTitle>
-											Workflow Automation
-										</CardTitle>
-										<CardDescription>
-											Automate repetitive tasks and
-											workflows to save time and reduce
-											human error.
-										</CardDescription>
-									</CardHeader>
-								</Card>
-							</motion.div>
-						</motion.div>
+							<h1 className="italic font-extrabold">
+								the Way You Shop
+							</h1>
+						</div>
 					</div>
-				</section>
-
-				{/* Testimonials Section */}
-				<section
-					id="testimonials"
-					className="w-full py-12 md:py-24 lg:py-32 overflow-hidden"
-				>
-					<div className="container px-4 md:px-6">
-						<motion.div
-							className="flex flex-col items-center justify-center space-y-4 text-center"
-							initial="hidden"
-							whileInView="visible"
-							viewport={{ once: true, margin: "-100px" }}
-							variants={fadeInUp}
-						>
-							<div className="space-y-2">
-								<div className="inline-block rounded-lg bg-primary px-3 py-1 text-sm text-primary-foreground">
-									Testimonials
-								</div>
-								<h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
-									Trusted by thousands of teams
-								</h2>
-								<p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-									Don&apos;t just take our word for it.
-									Here&apos;s what our customers have to say
-									about StreamLine.
-								</p>
-							</div>
-						</motion.div>
-						<motion.div
-							className="mx-auto grid max-w-5xl gap-6 py-12 md:grid-cols-2 lg:grid-cols-3"
-							variants={staggerContainer}
-							initial="hidden"
-							whileInView="visible"
-							viewport={{ once: true, margin: "-100px" }}
-						>
-							<motion.div variants={fadeInUp}>
-								<Card className="h-full transition-all duration-300 hover:shadow-lg">
-									<CardContent className="pt-6">
-										<div className="flex items-start gap-4">
-											<Image
-												src="/placeholder.svg?height=40&width=40"
-												width={40}
-												height={40}
-												alt="User Avatar"
-												className="rounded-full"
-											/>
-											<div>
-												<p className="text-sm font-medium">
-													Sarah Johnson
-												</p>
-												<p className="text-sm text-muted-foreground">
-													Product Manager, TechCorp
-												</p>
-											</div>
-										</div>
-										<blockquote className="mt-4 border-l-2 pl-4 italic">
-											&quot;StreamLine has transformed how
-											our team works. We&apos;ve cut
-											meeting time by 50% and increased
-											delivery speed by 35%.&quot;
-										</blockquote>
-									</CardContent>
-								</Card>
-							</motion.div>
-							<motion.div variants={fadeInUp}>
-								<Card className="h-full transition-all duration-300 hover:shadow-lg">
-									<CardContent className="pt-6">
-										<div className="flex items-start gap-4">
-											<Image
-												src="/placeholder.svg?height=40&width=40"
-												width={40}
-												height={40}
-												alt="User Avatar"
-												className="rounded-full"
-											/>
-											<div>
-												<p className="text-sm font-medium">
-													Michael Chen
-												</p>
-												<p className="text-sm text-muted-foreground">
-													CTO, StartupX
-												</p>
-											</div>
-										</div>
-										<blockquote className="mt-4 border-l-2 pl-4 italic">
-											&quot;The automation features alone
-											have saved us countless hours. Our
-											team can now focus on what truly
-											matters.&quot;
-										</blockquote>
-									</CardContent>
-								</Card>
-							</motion.div>
-							<motion.div variants={fadeInUp}>
-								<Card className="h-full transition-all duration-300 hover:shadow-lg">
-									<CardContent className="pt-6">
-										<div className="flex items-start gap-4">
-											<Image
-												src="/placeholder.svg?height=40&width=40"
-												width={40}
-												height={40}
-												alt="User Avatar"
-												className="rounded-full"
-											/>
-											<div>
-												<p className="text-sm font-medium">
-													Emily Rodriguez
-												</p>
-												<p className="text-sm text-muted-foreground">
-													Marketing Director,
-													GrowthLabs
-												</p>
-											</div>
-										</div>
-										<blockquote className="mt-4 border-l-2 pl-4 italic">
-											&quot;StreamLine has been a
-											game-changer for our marketing team.
-											We&apos;ve improved campaign
-											coordination and reporting
-											significantly.&quot;
-										</blockquote>
-									</CardContent>
-								</Card>
-							</motion.div>
-						</motion.div>
-					</div>
-				</section>
-
-				{/* Pricing Section */}
-				<section
-					id="pricing"
-					className="w-full py-12 md:py-24 lg:py-32 bg-muted overflow-hidden"
-				>
-					<div className="container px-4 md:px-6">
-						<motion.div
-							className="flex flex-col items-center justify-center space-y-4 text-center"
-							initial="hidden"
-							whileInView="visible"
-							viewport={{ once: true, margin: "-100px" }}
-							variants={fadeInUp}
-						>
-							<div className="space-y-2">
-								<div className="inline-block rounded-lg bg-primary px-3 py-1 text-sm text-primary-foreground">
-									Pricing
-								</div>
-								<h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
-									Simple, transparent pricing
-								</h2>
-								<p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-									Choose the plan that&apos;s right for your
-									team. All plans include a 14-day free trial.
-								</p>
-							</div>
-						</motion.div>
-						<motion.div
-							className="mx-auto grid max-w-5xl gap-6 py-12 md:grid-cols-3"
-							variants={staggerContainer}
-							initial="hidden"
-							whileInView="visible"
-							viewport={{ once: true, margin: "-100px" }}
-						>
-							<motion.div variants={fadeInUp}>
-								<Card className="h-full transition-all duration-300 hover:shadow-lg">
-									<CardHeader>
-										<CardTitle>Starter</CardTitle>
-										<div className="text-3xl font-bold">
-											$12
-										</div>
-										<CardDescription>
-											per user / month
-										</CardDescription>
-									</CardHeader>
-									<CardContent>
-										<ul className="grid gap-2">
-											<li className="flex items-center gap-2">
-												<Check className="h-4 w-4 text-primary" />
-												<span>Basic time tracking</span>
-											</li>
-											<li className="flex items-center gap-2">
-												<Check className="h-4 w-4 text-primary" />
-												<span>5 projects</span>
-											</li>
-											<li className="flex items-center gap-2">
-												<Check className="h-4 w-4 text-primary" />
-												<span>Basic reporting</span>
-											</li>
-											<li className="flex items-center gap-2">
-												<Check className="h-4 w-4 text-primary" />
-												<span>Email support</span>
-											</li>
-										</ul>
-									</CardContent>
-									<CardFooter>
-										<Button className="w-full">
-											Get Started
-										</Button>
-									</CardFooter>
-								</Card>
-							</motion.div>
-							<motion.div
-								variants={fadeInUp}
-								custom={1}
-								initial={{ opacity: 0, y: 60 }}
-								whileInView={{
-									opacity: 1,
-									y: 0,
-									transition: {
-										duration: 0.6,
-										ease: [0.22, 1, 0.36, 1],
-										delay: 0.1,
-									},
-								}}
-								viewport={{ once: true, margin: "-100px" }}
-							>
-								<Card className="border-primary h-full transition-all duration-300 hover:shadow-lg">
-									<CardHeader>
-										<div className="text-center text-sm font-medium text-primary mb-2">
-											Most Popular
-										</div>
-										<CardTitle>Professional</CardTitle>
-										<div className="text-3xl font-bold">
-											$29
-										</div>
-										<CardDescription>
-											per user / month
-										</CardDescription>
-									</CardHeader>
-									<CardContent>
-										<ul className="grid gap-2">
-											<li className="flex items-center gap-2">
-												<Check className="h-4 w-4 text-primary" />
-												<span>
-													Advanced time tracking
-												</span>
-											</li>
-											<li className="flex items-center gap-2">
-												<Check className="h-4 w-4 text-primary" />
-												<span>Unlimited projects</span>
-											</li>
-											<li className="flex items-center gap-2">
-												<Check className="h-4 w-4 text-primary" />
-												<span>Advanced reporting</span>
-											</li>
-											<li className="flex items-center gap-2">
-												<Check className="h-4 w-4 text-primary" />
-												<span>Priority support</span>
-											</li>
-											<li className="flex items-center gap-2">
-												<Check className="h-4 w-4 text-primary" />
-												<span>Workflow automation</span>
-											</li>
-										</ul>
-									</CardContent>
-									<CardFooter>
-										<Button className="w-full">
-											Get Started
-										</Button>
-									</CardFooter>
-								</Card>
-							</motion.div>
-							<motion.div variants={fadeInUp}>
-								<Card className="h-full transition-all duration-300 hover:shadow-lg">
-									<CardHeader>
-										<CardTitle>Enterprise</CardTitle>
-										<div className="text-3xl font-bold">
-											$49
-										</div>
-										<CardDescription>
-											per user / month
-										</CardDescription>
-									</CardHeader>
-									<CardContent>
-										<ul className="grid gap-2">
-											<li className="flex items-center gap-2">
-												<Check className="h-4 w-4 text-primary" />
-												<span>
-													Everything in Professional
-												</span>
-											</li>
-											<li className="flex items-center gap-2">
-												<Check className="h-4 w-4 text-primary" />
-												<span>Custom integrations</span>
-											</li>
-											<li className="flex items-center gap-2">
-												<Check className="h-4 w-4 text-primary" />
-												<span>
-													Dedicated account manager
-												</span>
-											</li>
-											<li className="flex items-center gap-2">
-												<Check className="h-4 w-4 text-primary" />
-												<span>24/7 phone support</span>
-											</li>
-											<li className="flex items-center gap-2">
-												<Check className="h-4 w-4 text-primary" />
-												<span>
-													Advanced security features
-												</span>
-											</li>
-										</ul>
-									</CardContent>
-									<CardFooter>
-										<Button className="w-full">
-											Contact Sales
-										</Button>
-									</CardFooter>
-								</Card>
-							</motion.div>
-						</motion.div>
-					</div>
-				</section>
-
-				{/* Final CTA Section */}
-				<section className="w-full py-12 md:py-24 lg:py-32 overflow-hidden">
-					<div className="container px-4 md:px-6">
-						<motion.div
-							className="flex flex-col items-center justify-center space-y-4 text-center"
-							initial="hidden"
-							whileInView="visible"
-							viewport={{ once: true, margin: "-100px" }}
-							variants={fadeInUp}
-						>
-							<div className="space-y-2">
-								<h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
-									Ready to streamline your workflow?
-								</h2>
-								<p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-									Join thousands of teams that have already
-									transformed how they work with StreamLine.
-								</p>
-							</div>
-							<div className="flex flex-col gap-2 min-[400px]:flex-row">
-								<Button asChild size="lg">
-									<Link href="#">
-										Start Your Free Trial{" "}
-										<ChevronRight className="ml-1 h-4 w-4" />
-									</Link>
-								</Button>
-								<Button variant="outline" size="lg">
-									Schedule a Demo
-								</Button>
-							</div>
-							<p className="text-sm text-muted-foreground">
-								No credit card required. 14-day free trial.
-							</p>
-						</motion.div>
-					</div>
-				</section>
-			</main>
-
-			{/* Footer */}
-			<footer className="w-full border-t py-6 md:py-0">
-				<div className="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
-					<div className="flex items-center gap-2">
-						<Zap className="h-6 w-6 text-primary" />
-						<span className="text-lg font-bold">StreamLine</span>
-					</div>
-					<div className="flex gap-4">
-						<Link
-							href="#"
-							className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-						>
-							Terms
-						</Link>
-						<Link
-							href="#"
-							className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-						>
-							Privacy
-						</Link>
-						<Link
-							href="#"
-							className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-						>
-							Cookies
-						</Link>
-					</div>
-					<div className="flex gap-4">
-						<Link
-							href="#"
-							className="text-muted-foreground hover:text-foreground transition-colors"
-						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								width="24"
-								height="24"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								strokeWidth="2"
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								className="h-5 w-5"
-							>
-								<path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
-							</svg>
-							<span className="sr-only">Twitter</span>
-						</Link>
-						<Link
-							href="#"
-							className="text-muted-foreground hover:text-foreground transition-colors"
-						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								width="24"
-								height="24"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								strokeWidth="2"
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								className="h-5 w-5"
-							>
-								<path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-							</svg>
-							<span className="sr-only">Facebook</span>
-						</Link>
-						<Link
-							href="#"
-							className="text-muted-foreground hover:text-foreground transition-colors"
-						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								width="24"
-								height="24"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								strokeWidth="2"
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								className="h-5 w-5"
-							>
-								<rect
-									width="20"
-									height="20"
-									x="2"
-									y="2"
-									rx="5"
-									ry="5"
-								/>
-								<path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-								<line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-							</svg>
-							<span className="sr-only">Instagram</span>
-						</Link>
-						<Link
-							href="#"
-							className="text-muted-foreground hover:text-foreground transition-colors"
-						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								width="24"
-								height="24"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								strokeWidth="2"
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								className="h-5 w-5"
-							>
-								<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-								<rect width="4" height="12" x="2" y="9" />
-								<circle cx="4" cy="4" r="2" />
-							</svg>
-							<span className="sr-only">LinkedIn</span>
-						</Link>
+					<div className="flex justify-center flex-1">
+						<Image
+							src="/assets/landing/hero.svg"
+							alt=""
+							width={470}
+							height={375}
+							className="object-cover w-full h-full"
+						/>
 					</div>
 				</div>
-			</footer>
+				<div className="text-5xl font-bold text-center">
+					<p className="leading-none text-transparent whitespace-pre-wrap pointer-events-none bg-gradient-to-r from-violet-600 via-fuchsia-600 to-rose-600 bg-clip-text">
+						Experience Modern Shopping, Tailored for You.
+					</p>
+				</div>
+			</div>
+
+			{/* Features Section */}
+			<div className="h-[40rem] flex items-center mx-20">
+				<div className="grid w-full h-full grid-cols-3 gap-3 grid-row-2">
+					{features.map((feature) => (
+						<BentoCard key={feature.name} {...feature} />
+					))}
+				</div>
+			</div>
+
+			{/* Become a Vendor */}
+			<div className="my-20 h-fit mx-20">
+				<h1 className="mb-3 text-4xl font-bold">Become a Vendor</h1>
+				<p className="text-2xl text-justify text-muted-foreground">
+					Take your business online and connect with thousands of
+					potential customers through ElectroFusion. With a
+					user-friendly platform and tailored support, growing your
+					brand has never been easier.
+				</p>
+
+				<div className="flex items-center justify-between">
+					<ul className="my-6 ml-6 list-disc [&>li]:mt-2 text-lg space-y-3">
+						<li>
+							<strong>Wide Customer Reach</strong> &ndash; Access
+							a vast and growing marketplace for your products.
+						</li>
+						<li>
+							<strong>Easy Product Management</strong> &ndash;
+							List, update, and manage your inventory
+							effortlessly.
+						</li>
+						<li>
+							<strong>Secure Transactions</strong> &ndash; Enjoy
+							safe and reliable payment processing.
+						</li>
+						<li>
+							<strong>Real-Time Analytics</strong> &ndash; Gain
+							insights into your sales and performance with
+							detailed reports.
+						</li>
+						<li>
+							<strong>Dedicated Support</strong> &ndash; Get
+							round-the-clock assistance for any queries or
+							issues.
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			{/* Customer Reviews */}
+			<div className="relative flex flex-col items-center justify-center w-full my-20 overflow-hidden rounded-lg">
+				<h1 className="mb-5 text-4xl font-bold">What Customers Say</h1>
+				<Marquee pauseOnHover className="[--duration:20s]">
+					{marqueeFirstRow.map((review) => (
+						<MarqueeCard key={review.username} {...review} />
+					))}
+				</Marquee>
+				<Marquee reverse pauseOnHover className="[--duration:20s]">
+					{marqueeSecondRow.map((review) => (
+						<MarqueeCard key={review.username} {...review} />
+					))}
+				</Marquee>
+				<div className="absolute inset-y-0 left-0 w-1/3 pointer-events-none bg-gradient-to-r from-background"></div>
+				<div className="absolute inset-y-0 right-0 w-1/3 pointer-events-none bg-gradient-to-l from-background"></div>
+			</div>
+
+			<Footer />
 		</div>
 	);
 }

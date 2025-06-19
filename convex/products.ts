@@ -291,9 +291,8 @@ export const getCategoryProducts = query({
 		// Filter by search query (name and description)
 		if (searchQuery) {
 			const searchTerm = searchQuery.toLowerCase();
-			products = products.filter(
-				(product) =>
-					product.name.toLowerCase().includes(searchTerm)
+			products = products.filter((product) =>
+				product.name.toLowerCase().includes(searchTerm)
 			);
 		}
 
@@ -403,6 +402,139 @@ export const getCategoryProducts = query({
 					priceMax,
 				},
 				priceRange,
+			},
+		};
+	},
+});
+
+export const getProductById = query({
+	args: { productSlug: v.string() },
+	handler: async (ctx, args) => {
+		// Fetch the main product
+		const product = await ctx.db
+			.query("products")
+			.withIndex("by_slug", (q) => q.eq("slug", args.productSlug))
+			.unique();
+
+		if (!product) {
+			return null;
+		}
+
+		// Fetch vendor shop details
+		const vendorShop = await ctx.db.get(product.shopId);
+
+		if (!vendorShop) {
+			throw new Error("Vendor shop not found");
+		}
+
+		// Fetch vendor details
+		const vendor = await ctx.db.get(vendorShop.vendorId);
+
+		if (!vendor) {
+			throw new Error("Vendor not found");
+		}
+
+		// Fetch vendor user details
+		const vendorUser = await ctx.db.get(vendor.userId);
+
+		if (!vendorUser) {
+			throw new Error("Vendor user not found");
+		}
+
+		// Fetch categories
+		const categories = await Promise.all(
+			product.categoryIds.map(async (categoryId) => {
+				const category = await ctx.db.get(categoryId);
+				return category;
+			})
+		);
+
+		// Filter out any null categories (in case some were deleted)
+		const validCategories = categories.filter(Boolean);
+
+		// Fetch product reviews
+		const reviews = await ctx.db
+			.query("productReviews")
+			.filter((q) => q.eq(q.field("productId"), product._id))
+			.collect();
+
+		// Fetch reviewer details for each review
+		const reviewsWithUserDetails = await Promise.all(
+			reviews.map(async (review) => {
+				const user = await ctx.db.get(review.userId);
+				return {
+					...review,
+					user: user
+						? {
+								firstName: user.firstName,
+								lastName: user.lastName,
+								imageUrl: user.imageUrl,
+						  }
+						: null,
+				};
+			})
+		);
+
+		// Calculate average rating
+		const averageRating =
+			reviews.length > 0
+				? reviews.reduce((sum, review) => sum + review.rating, 0) /
+				  reviews.length
+				: null;
+
+		// Calculate discounted price if applicable
+		const currentPrice =
+			product.isDiscounted && product.discountPercent
+				? product.originalPrice * (1 - product.discountPercent / 100)
+				: product.originalPrice;
+
+		// Check if discount is currently active
+		const now = new Date().toISOString();
+		const isDiscountActive =
+			product.isDiscounted &&
+			(!product.discountStartDate || now >= product.discountStartDate) &&
+			(!product.discountEndDate || now <= product.discountEndDate);
+
+		return {
+			// Product details
+			...product,
+			currentPrice,
+			isDiscountActive,
+
+			// Vendor details
+			vendor: {
+				id: vendor._id,
+				contactEmail: vendor.contactEmail,
+				contactPhone: vendor.contactPhone,
+				user: {
+					firstName: vendorUser.firstName,
+					lastName: vendorUser.lastName,
+					email: vendorUser.email,
+					imageUrl: vendorUser.imageUrl,
+				},
+				shop: {
+					id: vendorShop._id,
+					name: vendorShop.name,
+					slug: vendorShop.slug,
+					description: vendorShop.description,
+					bannerImage: vendorShop.bannerImage,
+					logo: vendorShop.logo,
+				},
+			},
+
+			// Categories
+			categories: validCategories.map((category) => ({
+				id: category?._id,
+				name: category?.name,
+				slug: category?.slug,
+				parentId: category?.parentId,
+			})),
+
+			// Reviews with user details
+			reviews: reviewsWithUserDetails,
+			reviewStats: {
+				totalReviews: reviews.length,
+				averageRating,
 			},
 		};
 	},

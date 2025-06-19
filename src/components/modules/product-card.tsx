@@ -1,14 +1,15 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { Heart, Plus, Trash2 } from "lucide-react";
-import Image from "next/image";
-import React, { useEffect, useState } from "react";
-import { Doc, Id } from "../../../convex/_generated/dataModel";
 import { cn } from "@/lib/utils";
 import { useMutation } from "convex/react";
-import { api } from "../../../convex/_generated/api";
+import { Heart, Plus, Trash2 } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { api } from "../../../convex/_generated/api";
+import { Doc, Id } from "../../../convex/_generated/dataModel";
 
 type Product = {
 	_id: string;
@@ -23,6 +24,7 @@ type Product = {
 	stock: number;
 	image: string;
 	isActive: boolean;
+	isInCart?: boolean;
 	isFeatured: boolean;
 	isWishlisted?: boolean;
 	viewCount?: number;
@@ -49,6 +51,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
 	showWishlist = true,
 }) => {
 	const [isWishlisted, setIsWishlisted] = useState(false);
+	const [isInCart, setIsInCart] = useState(product?.isInCart || false);
 
 	const primaryImage = product.image;
 	const discountedPrice = product.isDiscounted
@@ -60,7 +63,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
 		: product.originalPrice;
 
 	const addToWishlist = useMutation(api.wishlist.addToWishlist);
+	const addToCart = useMutation(api.cart.addToCart);
 	const removeFromWishlist = useMutation(api.wishlist.removeFromWishlist);
+	const removeFromCart = useMutation(api.cart.removeFromCart);
 
 	const handleWishlistToggle = async () => {
 		if (!isWishlisted) {
@@ -84,6 +89,36 @@ const ProductCard: React.FC<ProductCardProps> = ({
 			} catch (err) {
 				console.error("Failed to remove from wishlist", err);
 				setIsWishlisted(true);
+			}
+		}
+	};
+
+	const handleCartToggle = async () => {
+		const productId = product?._id as Id<"products">;
+		if (!productId) {
+			toast.error("Invalid product");
+			return;
+		}
+
+		if (!isInCart) {
+			setIsInCart(true);
+			try {
+				await addToCart({ productId, quantity: 1 });
+				toast.success("Product added to cart");
+			} catch (err) {
+				console.error("Failed to add to cart", err);
+				setIsInCart(false);
+				toast.error("Something went wrong while adding to cart");
+			}
+		} else {
+			setIsInCart(false);
+			try {
+				await removeFromCart({ productId });
+				toast.success("Product removed from cart");
+			} catch (err) {
+				console.error("Failed to remove from cart", err);
+				setIsInCart(true);
+				toast.error("Something went wrong while removing from cart");
 			}
 		}
 	};
@@ -127,7 +162,12 @@ const ProductCard: React.FC<ProductCardProps> = ({
 						className="text-lg font-semibold text-white truncate"
 						title={product.name}
 					>
-						{product.name}
+						<Link
+							href={`/shop/product/${product.slug}`}
+							className="text-white"
+						>
+							{product.name}
+						</Link>
 					</h3>
 					<div className="flex flex-wrap gap-1">
 						{product.categories?.length ? (
@@ -152,11 +192,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
 				<div className="flex items-center justify-between">
 					<div className="flex items-center gap-2">
 						<span className="text-2xl font-bold text-white">
-							${finalPrice.toFixed(0)}
+							₹{finalPrice.toFixed(0)}
 						</span>
 						{product.isDiscounted && (
 							<span className="text-lg text-gray-500 line-through">
-								${product.originalPrice.toFixed(0)}
+								₹{product.originalPrice.toFixed(0)}
 							</span>
 						)}
 					</div>
@@ -192,17 +232,32 @@ const ProductCard: React.FC<ProductCardProps> = ({
 						</button>
 					)}
 
-					<button
-						disabled={product.stock === 0}
-						className={`flex-1 h-10 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all duration-200 ${
-							product.stock > 0
-								? "bg-white text-gray-900 hover:bg-gray-100 hover:scale-[1.02]"
-								: "bg-gray-700 text-gray-500 cursor-not-allowed"
-						}`}
-					>
-						<Plus className="w-5 h-5" />
-						{product.stock > 0 ? "Add to Cart" : "Out of Stock"}
-					</button>
+					{product.stock <= 0 ? (
+						<button
+							disabled
+							className="flex-1 h-10 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all duration-200 bg-gray-700 text-gray-500 cursor-not-allowed"
+						>
+							Out of Stock
+						</button>
+					) : (
+						<button
+							className={`flex-1 h-10 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all duration-200 ${
+								!isInCart
+									? "bg-white text-gray-900 hover:bg-gray-100 hover:scale-[1.02]"
+									: "bg-transparent text-white border-white border"
+							}`}
+							onClick={handleCartToggle}
+						>
+							{isInCart ? (
+								"Remove from Cart"
+							) : (
+								<>
+									<Plus className="w-5 h-5" />
+									Add to Cart
+								</>
+							)}
+						</button>
+					)}
 				</div>
 			</div>
 		</div>

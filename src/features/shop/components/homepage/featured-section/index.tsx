@@ -7,7 +7,6 @@ import { formatValueWithIndianNumericPrefix } from "@/lib/utils";
 import {
 	ChevronLeft,
 	ChevronRight,
-	Heart,
 	MoveRight,
 	Package,
 	Pause,
@@ -15,10 +14,11 @@ import {
 	ShoppingCart,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import FeaturesLoading, { ErrorState } from "./features-loading";
 import Image from "next/image";
+import Link from "next/link";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Doc } from "../../../../../../convex/_generated/dataModel";
+import FeaturesLoading, { ErrorState } from "./features-loading";
 
 type Product = {
 	_id: string;
@@ -328,25 +328,21 @@ export default function FeaturedSection({ products }: FeaturedSectionProps) {
 
 									{/* Action Buttons */}
 									<div className="flex gap-3 pt-2">
-										<Button
-											className="flex-1 md:flex-none md:px-8 py-6 font-bold rounded-full group transition-all duration-300 hover:scale-105"
-											disabled={
-												currentProduct.stock === 0
-											}
+										<Link
+											href={`/shop/product/${currentProduct.slug}`}
 										>
-											{currentProduct.stock > 0
-												? "View Deal"
-												: "Notify Me"}
-											<MoveRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-										</Button>
-
-										<Button
-											variant="outline"
-											size="icon"
-											className="h-12 w-12 rounded-full hover:scale-105 transition-all duration-300"
-										>
-											<Heart className="h-4 w-4" />
-										</Button>
+											<Button
+												className="flex-1 md:flex-none md:px-8 py-6 font-bold rounded-full group transition-all duration-300 hover:scale-105"
+												disabled={
+													currentProduct.stock === 0
+												}
+											>
+												{currentProduct.stock > 0
+													? "View Deal"
+													: "Notify Me"}
+												<MoveRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+											</Button>
+										</Link>
 									</div>
 								</motion.div>
 							</div>

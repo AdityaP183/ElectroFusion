@@ -1,13 +1,19 @@
 import ProductsCarousel from "@/components/modules/products-carousel";
 import BecomeASeller from "@/features/shop/components/homepage/become-a-seller";
+import FeaturedSection from "@/features/shop/components/homepage/featured-section";
 import SearchByCategory from "@/features/shop/components/homepage/search-by-category";
 import { fetchQuery } from "convex/nextjs";
 import { Flame } from "lucide-react";
 import Link from "next/link";
 import { api } from "../../../convex/_generated/api";
-import FeaturedSection from "@/features/shop/components/homepage/featured-section";
+import { currentUser } from "@clerk/nextjs/server";
 
 export default async function Home() {
+	const clerkUser = await currentUser();
+	const dbUser = await fetchQuery(api.users.getUser, {
+		userId: clerkUser?.id || "",
+	});
+
 	const latestProducts = await fetchQuery(
 		api.vendorProducts.getHomePageLatestProducts
 	);
@@ -49,9 +55,11 @@ export default async function Home() {
 			</section>
 
 			{/* Ad: Become a seller */}
-			<section className="py-20">
-				<BecomeASeller />
-			</section>
+			{dbUser?.role === "customer" && (
+				<section className="py-20">
+					<BecomeASeller />
+				</section>
+			)}
 
 			{/* Trending Products Carousel */}
 			<section className="py-20">
