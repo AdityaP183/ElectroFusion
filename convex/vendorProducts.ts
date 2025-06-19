@@ -279,3 +279,123 @@ export const deleteProduct = mutation({
 		return product;
 	},
 });
+
+export const getHomePageLatestProducts = query({
+	args: {},
+	handler: async (ctx, args) => {
+		const products = await ctx.db.query("products").order("desc").take(10);
+		const productsWithCategories = await Promise.all(
+			products.map(async (product) => {
+				const categories = await Promise.all(
+					product.categoryIds.map(async (categoryId) => {
+						const category = await ctx.db.get(categoryId);
+						// If category has a parent, get parent data too
+						if (category?.parentId) {
+							const parentCategory = await ctx.db.get(
+								category.parentId
+							);
+							return {
+								...category,
+								parent: parentCategory,
+							};
+						}
+						return category;
+					})
+				);
+				return {
+					...product,
+					categories: categories.filter(Boolean),
+				};
+			})
+		);
+		return productsWithCategories;
+	},
+});
+
+export const getHomePageTrendingProducts = query({
+	args: {},
+	handler: async (ctx, args) => {
+		const products = await ctx.db
+			.query("products")
+			.withIndex("by_isActive", (q) => q.eq("isActive", true))
+			.filter((q) => q.gte(q.field("purchaseCount"), 30))
+			.take(20);
+
+		const sorted = products
+			.sort((a, b) => (b.purchaseCount ?? 0) - (a.purchaseCount ?? 0))
+			.slice(0, 10);
+
+		const productsWithCategories = await Promise.all(
+			sorted.map(async (product) => {
+				const categories = await Promise.all(
+					product.categoryIds.map(async (categoryId) => {
+						const category = await ctx.db.get(categoryId);
+						// If category has a parent, get parent data too
+						if (category?.parentId) {
+							const parentCategory = await ctx.db.get(
+								category.parentId
+							);
+							return {
+								...category,
+								parent: parentCategory,
+							};
+						}
+						return category;
+					})
+				);
+				return {
+					...product,
+					categories: categories.filter(Boolean),
+				};
+			})
+		);
+
+		return productsWithCategories;
+	},
+});
+
+export const getHomePageFeaturedProducts = query({
+	args: {},
+	handler: async (ctx, args) => {
+		const products = await ctx.db
+			.query("products")
+			.withIndex("by_isFeatured", (q) => q.eq("isFeatured", true))
+			.take(5);
+
+		const productsWithCategories = await Promise.all(
+			products.map(async (product) => {
+				// Compute discounted price
+				const discountedPrice =
+					product.isDiscounted && product.discountPercent
+						? product.originalPrice *
+						  (1 - product.discountPercent / 100)
+						: product.originalPrice;
+
+				const categories = await Promise.all(
+					product.categoryIds.map(async (categoryId) => {
+						const category = await ctx.db.get(categoryId);
+						if (category?.parentId) {
+							const parentCategory = await ctx.db.get(
+								category.parentId
+							);
+							return {
+								...category,
+								parent: parentCategory,
+							};
+						}
+						return category;
+					})
+				);
+
+				return {
+					...product,
+					discountedPrice: parseFloat(discountedPrice.toFixed(2)),
+					categories: categories.filter(Boolean),
+				};
+			})
+		);
+
+		return productsWithCategories;
+	},
+});
+

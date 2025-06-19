@@ -4,7 +4,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatValueWithIndianNumericPrefix } from "@/lib/utils";
-import { useQuery } from "convex/react";
 import {
 	ChevronLeft,
 	ChevronRight,
@@ -17,9 +16,36 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { api } from "../../../../../../convex/_generated/api";
 import FeaturesLoading, { ErrorState } from "./features-loading";
 import Image from "next/image";
+import { Doc } from "../../../../../../convex/_generated/dataModel";
+
+type Product = {
+	_id: string;
+	name: string;
+	slug: string;
+	description: string;
+	originalPrice: number;
+	discountedPrice?: number;
+	isDiscounted: boolean;
+	discountPercent?: number;
+	discountStartDate?: string;
+	discountEndDate?: string;
+	stock: number;
+	image: string;
+	isActive: boolean;
+	isFeatured: boolean;
+	viewCount?: number;
+	purchaseCount?: number;
+	shopId: string;
+	categoryIds: string[];
+	categories: (
+		| (Doc<"categories"> & {
+				parent?: Doc<"categories"> | null;
+		  })
+		| null
+	)[];
+};
 
 const slideVariants = {
 	enter: (direction: number) => ({
@@ -81,23 +107,20 @@ const imageVariants = {
 	},
 };
 
-export default function FeaturedSection() {
+interface FeaturedSectionProps {
+	products: Product[];
+}
+
+export default function FeaturedSection({ products }: FeaturedSectionProps) {
 	const [currentSlide, setCurrentSlide] = useState(0);
 	const [direction, setDirection] = useState(0);
 	const [isPaused, setIsPaused] = useState(false);
 	const [imageError, setImageError] = useState<Record<string, boolean>>({});
 
-	const featuredProducts = useQuery(
-		api.vendorProducts.getFeaturedProductsWithCategories,
-		{
-			limit: 3,
-		}
-	);
-
 	const currentProduct = useMemo(() => {
-		if (!featuredProducts?.length) return null;
-		return featuredProducts[currentSlide];
-	}, [featuredProducts, currentSlide]);
+		if (!products?.length) return null;
+		return products[currentSlide];
+	}, [products, currentSlide]);
 
 	const primaryImage = useMemo(() => {
 		if (!currentProduct?.image) return null;
@@ -106,47 +129,42 @@ export default function FeaturedSection() {
 
 	const paginate = useCallback(
 		(newDirection: number) => {
-			if (!featuredProducts?.length) return;
+			if (!products?.length) return;
 
 			setDirection(newDirection);
 			setCurrentSlide((prevSlide) => {
 				if (newDirection === 1) {
-					return prevSlide === featuredProducts.length - 1
+					return prevSlide === products.length - 1
 						? 0
 						: prevSlide + 1;
 				} else {
 					return prevSlide === 0
-						? featuredProducts.length - 1
+						? products.length - 1
 						: prevSlide - 1;
 				}
 			});
 		},
-		[featuredProducts]
+		[products]
 	);
 
 	useEffect(() => {
-		if (
-			!featuredProducts?.length ||
-			featuredProducts.length <= 1 ||
-			isPaused
-		)
-			return;
+		if (!products?.length || products.length <= 1 || isPaused) return;
 
 		const interval = setInterval(() => {
 			paginate(1);
 		}, 6000);
 
 		return () => clearInterval(interval);
-	}, [featuredProducts, isPaused, currentSlide, paginate]);
+	}, [products, isPaused, currentSlide, paginate]);
 
 	const goToSlide = useCallback(
 		(index: number) => {
-			if (!featuredProducts?.length || index === currentSlide) return;
+			if (!products?.length || index === currentSlide) return;
 
 			setDirection(index > currentSlide ? 1 : -1);
 			setCurrentSlide(index);
 		},
-		[currentSlide, featuredProducts]
+		[currentSlide, products]
 	);
 
 	const handleImageError = useCallback((productId: string) => {
@@ -154,15 +172,15 @@ export default function FeaturedSection() {
 	}, []);
 
 	// Error state
-	if (featuredProducts === undefined) {
+	if (products === undefined) {
 		return <FeaturesLoading />;
 	}
 
-	if (featuredProducts === null) {
+	if (products === null) {
 		return <ErrorState />;
 	}
 
-	if (featuredProducts.length === 0 || !currentProduct) {
+	if (products.length === 0 || !currentProduct) {
 		return null;
 	}
 
@@ -252,12 +270,12 @@ export default function FeaturedSection() {
 										<div className="flex items-baseline gap-3 flex-wrap">
 											<span className="text-2xl md:text-3xl font-bold text-green-600">
 												{formatValueWithIndianNumericPrefix(
-													currentProduct.currentPrice,
+													currentProduct.discountedPrice,
 													"price"
 												)}
 											</span>
 
-											{currentProduct.isDiscountActive && (
+											{currentProduct.isDiscounted && (
 												<>
 													<span className="text-lg md:text-xl text-muted-foreground line-through">
 														{formatValueWithIndianNumericPrefix(
@@ -274,19 +292,6 @@ export default function FeaturedSection() {
 												</>
 											)}
 										</div>
-
-										{/* Savings */}
-										{currentProduct.isDiscountActive &&
-											currentProduct.savingsAmount >
-												0 && (
-												<p className="text-sm md:text-base font-semibold text-orange-600">
-													You Save:{" "}
-													{formatValueWithIndianNumericPrefix(
-														currentProduct.savingsAmount,
-														"price"
-													)}
-												</p>
-											)}
 									</div>
 
 									{/* Stats */}
@@ -350,23 +355,27 @@ export default function FeaturedSection() {
 							<div className="flex-1 p-4 md:p-6 flex items-center justify-center">
 								<motion.div
 									variants={imageVariants}
-									className="relative w-full max-w-sm md:max-w-md lg:max-w-lg"
+									className="relative w-full max-w-sm md:max-w-md lg:max-w-lg aspect-[4/3]"
 								>
 									{!imageError[currentProduct._id] &&
 									primaryImage ? (
-										<Image
-											src={primaryImage}
-											alt={currentProduct.name}
-											className="w-full h-auto max-h-80 object-contain rounded-lg shadow-lg"
-											onError={() =>
-												handleImageError(
-													currentProduct._id
-												)
-											}
-											loading="lazy"
-										/>
+										<div className="w-full h-full flex items-center justify-center bg-white rounded-lg shadow-lg overflow-hidden">
+											<Image
+												src={primaryImage}
+												alt={currentProduct.name}
+												className="object-contain w-full h-full"
+												onError={() =>
+													handleImageError(
+														currentProduct._id
+													)
+												}
+												width={600}
+												height={600}
+												loading="lazy"
+											/>
+										</div>
 									) : (
-										<div className="w-full h-80 bg-muted rounded-lg flex items-center justify-center">
+										<div className="w-full h-full bg-muted rounded-lg flex items-center justify-center">
 											<Package className="h-16 w-16 text-muted-foreground" />
 										</div>
 									)}
@@ -376,7 +385,7 @@ export default function FeaturedSection() {
 					</AnimatePresence>
 
 					{/* Navigation Controls */}
-					{featuredProducts.length > 1 && (
+					{products.length > 1 && (
 						<>
 							{/* Previous/Next Buttons */}
 							<Button
@@ -413,7 +422,7 @@ export default function FeaturedSection() {
 
 							{/* Navigation Dots */}
 							<div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-								{featuredProducts.map((_, index) => (
+								{products.map((_, index) => (
 									<Button
 										key={index}
 										size="sm"

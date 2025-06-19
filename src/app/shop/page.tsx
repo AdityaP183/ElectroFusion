@@ -1,14 +1,27 @@
 import ProductsCarousel from "@/components/modules/products-carousel";
 import BecomeASeller from "@/features/shop/components/homepage/become-a-seller";
 import SearchByCategory from "@/features/shop/components/homepage/search-by-category";
+import { fetchQuery } from "convex/nextjs";
 import { Flame } from "lucide-react";
 import Link from "next/link";
+import { api } from "../../../convex/_generated/api";
+import FeaturedSection from "@/features/shop/components/homepage/featured-section";
 
-export default function Home() {
+export default async function Home() {
+	const latestProducts = await fetchQuery(
+		api.vendorProducts.getHomePageLatestProducts
+	);
+	const trendingProducts = await fetchQuery(
+		api.vendorProducts.getHomePageTrendingProducts
+	);
+	const featuredProducts = await fetchQuery(
+		api.vendorProducts.getHomePageFeaturedProducts
+	);
+
 	return (
 		<div className="mx-20 space-y-10">
 			{/* Featured Hero Section */}
-			{/* <FeaturedSection /> */}
+			<FeaturedSection products={featuredProducts} />
 
 			{/* Recent Order Summary */}
 
@@ -32,7 +45,7 @@ export default function Home() {
 						View all
 					</Link>
 				</div>
-				<ProductsCarousel />
+				<ProductsCarousel products={latestProducts} />
 			</section>
 
 			{/* Ad: Become a seller */}
@@ -57,7 +70,7 @@ export default function Home() {
 						View all
 					</Link>
 				</div>
-				<ProductsCarousel />
+				<ProductsCarousel products={trendingProducts} />
 			</section>
 		</div>
 	);

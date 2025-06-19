@@ -4,14 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { Heart, Plus } from "lucide-react";
 import Image from "next/image";
 import React, { useState } from "react";
-
-type Category = {
-	_id: string;
-	name: string;
-	slug: string;
-	parentId?: string;
-	_creationTime: number;
-};
+import { Doc } from "../../../convex/_generated/dataModel";
+import { cn } from "@/lib/utils";
 
 type Product = {
 	_id: string;
@@ -24,30 +18,30 @@ type Product = {
 	discountStartDate?: string;
 	discountEndDate?: string;
 	stock: number;
-	images: {
-		url: string;
-		altText: string;
-		isPrimary: boolean;
-		sortOrder: number;
-	}[];
+	image: string;
 	isActive: boolean;
 	isFeatured: boolean;
 	viewCount?: number;
 	purchaseCount?: number;
 	shopId: string;
 	categoryIds: string[];
-	categories: Category[];
+	categories: (
+		| (Doc<"categories"> & {
+				parent?: Doc<"categories"> | null;
+		  })
+		| null
+	)[];
 };
 
 type ProductCardProps = {
 	product: Product;
+	className?: string;
 };
 
-const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
 	const [isWishlisted, setIsWishlisted] = useState(false);
 
-	const primaryImage =
-		product.images.find((img) => img.isPrimary) || product.images[0];
+	const primaryImage = product.image;
 	const discountedPrice = product.isDiscounted
 		? product.originalPrice * (1 - (product.discountPercent || 0) / 100)
 		: product.originalPrice;
@@ -59,12 +53,18 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 	const handleWishlistToggle = () => setIsWishlisted(!isWishlisted);
 
 	return (
-		<div className="relative w-full bg-transparent rounded-2xl shadow-2xl">
+		<div
+			className={cn(
+				"relative w-[300px] bg-transparent rounded-2xl shadow-2xl",
+				className
+			)}
+		>
 			{/* Image Section */}
 			<div className="relative aspect-square overflow-hidden rounded-md">
 				<Image
-					src={primaryImage?.url || "/fallback.png"}
-					alt={primaryImage?.altText || "Product image"}
+					fill
+					src={primaryImage || "/fallback.png"}
+					alt={product?.slug || "Product image"}
 					className="w-full h-full object-cover"
 				/>
 				{/* Low stock */}
@@ -91,11 +91,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 						{product.categories?.length ? (
 							product.categories.map((cat) => (
 								<Badge
-									key={cat._id}
+									key={cat?._id}
 									variant="outline"
 									className="text-xs"
 								>
-									{cat.name}
+									{cat?.name}
 								</Badge>
 							))
 						) : (

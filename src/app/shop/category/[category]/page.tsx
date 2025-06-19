@@ -1,5 +1,3 @@
-import ProductCard from "@/components/modules/product-card";
-import { allProducts } from "@/lib/app-data";
 import { z } from "zod";
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
@@ -25,9 +23,9 @@ export default async function Page({ params, searchParams }: Props) {
 	return (
 		<div className="w-full min-h-screen overflow-y-auto">
 			<div className="grid grid-cols-5 gap-x-10 gap-y-20">
-				{allProducts.map((product) => (
+				{/* {allProducts.map((product) => (
 					<ProductCard key={product._id} product={product} />
-				))}
+				))} */}
 			</div>
 		</div>
 	);
