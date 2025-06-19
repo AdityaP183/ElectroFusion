@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/sidebar";
 import { useClerk, useUser } from "@clerk/nextjs";
 import { ChevronsUpDown, Home, Link, LogOut } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { Doc } from "../../../../../convex/_generated/dataModel";
 
 interface Props {
@@ -29,14 +28,8 @@ export default function AppSidebarUserControls({ dbUser }: Props) {
 	const { isLoaded, isSignedIn } = useUser();
 	const { signOut } = useClerk();
 	const { isMobile } = useSidebar();
-	const router = useRouter();
 
 	if (!isLoaded || !isSignedIn) return null;
-
-	const handleSignOut = async () => {
-		await signOut();
-		router.push("/sign-in");
-	};
 
 	return (
 		<SidebarMenu>
@@ -110,7 +103,7 @@ export default function AppSidebarUserControls({ dbUser }: Props) {
 							</DropdownMenuItem>
 						</DropdownMenuGroup>
 						<DropdownMenuSeparator />
-						<DropdownMenuItem onClick={handleSignOut}>
+						<DropdownMenuItem onClick={() => signOut()}>
 							<LogOut />
 							Log out
 						</DropdownMenuItem>
