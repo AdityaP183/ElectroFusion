@@ -23,17 +23,11 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { useVendorStore } from "@/store/use-vendor";
 import { api } from "../../../../../convex/_generated/api";
-import { Id } from "../../../../../convex/_generated/dataModel";
 import { allOrdersColumn, Order } from "./columns";
 
 export default function DataTable() {
-	const { activeShopId } = useVendorStore();
-
-	const orders = useQuery(api.order.getVendorOrders, {
-		shopId: activeShopId as Id<"vendorShops">,
-	});
+	const orders = useQuery(api.order.getAllOrders);
 
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] =

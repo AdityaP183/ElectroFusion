@@ -164,6 +164,34 @@ export const getVendorOrders = query({
 	},
 });
 
+export const getAllOrders = query({
+	args: {},
+	handler: async (ctx) => {
+		const productQuery = ctx.db.query("products");
+
+		const allProducts = await productQuery.collect();
+		const vendorProductIds = allProducts
+			.filter((p) => p.shopId) // redundant safety
+			.map((p) => p._id);
+
+		if (vendorProductIds.length === 0) return [];
+
+		// 2. Get all orders (could filter by time if needed)
+		const allOrders = await ctx.db.query("order").collect();
+
+		// 3. Filter orders containing at least one matching product
+		const filteredOrders = allOrders.filter((order) =>
+			order.items.some((item) =>
+				vendorProductIds.some(
+					(vpid) => vpid.toString() === item.productId.toString()
+				)
+			)
+		);
+
+		return filteredOrders;
+	},
+});
+
 export const updateOrderStatus = mutation({
 	args: {
 		orderId: v.id("order"),
